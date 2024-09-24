@@ -1750,6 +1750,386 @@ SECTION13 문자열
 
 SECTION14 반복문
 ---
+- 데이터만 다르고 같은 작업을 여러 번 처리할 때 사용
+
+  - 빅분기 실기시 리스트에 있는 값을 하나씩 불러와 동일한 작업 수행 필요
+
+<br>
+
+### 01. for 함수
+- 리스트에 있는 모든 값 출력 가능
+
+  - for 변수명 in 리스트 :
+  
+    - 리스트에 있는 모든 값을 반복해 불러옴
+   
+    - 리스트의 값을 순서대로 불러와 '변수명'에 넣고, for 아래의 들여쓰기 된 코드 실행
+   
+  - 리스트에 있는 문자도 반복문으로 출력 가능
+
+<br>
+
+```python
+  listbox = [2, 4, 6, 8, 10]
+  for item in listbox :
+      print(item)
+```
+
+> 결과
+```
+  2
+  4
+  6
+  8
+  10
+```
+
+<br>
+
+```python
+  listbox = ['빅데이터', '분석', '기사']
+  for i in listbox :
+      print(i)
+```
+
+> 결과
+```
+  빅데이터
+  분석
+  기사
+```
+
+<br>
+
+### 02. for문 코드 범위
+- 반복문 안의 들여쓰기에 해당하는 코드가 모두 실행된 후 반복문 밖의 코드가 순서대로 실행
+
+```python
+  listbox = [2, 4, 6, 8, 10]
+  for item in listbox :
+      print(item)
+  print('끝')
+```
+
+> 결과
+```
+  2
+  4
+  6
+  8
+  10
+  끝
+```
+
+<br>
+
+```python
+  listbox = [2, 4, 6, 8, 10]
+  for item in listbox :
+      result = item + 1
+      print(result)
+```
+
+> 결과
+```
+  3
+  5
+  7
+  9
+  11
+```
+
+<br>
+
+### 03. range() 활용
+- 반복문을 활용할 때 list() 외에도 range() 활용 가능
+
+- range(N) : 0부터 N-1까지의 숫자를 나열
+
+  - 반복문에서 활용시 N개만큼 반복 가능
+ 
+- range(시작 숫자, 끝 숫자) : 시작 숫자부터 끝 숫자 앞까지의 숫자를 나열
+ 
+```python
+  for item in range(5) :
+      print(item)
+```
+
+> 결과
+```
+  0
+  1
+  2
+  3
+  4
+```
+
+<br>
+
+```python
+  for item in range(5, 10) :
+      print(item)
+```
+
+> 결과
+```
+  5
+  6
+  7
+  8
+  9
+```
+
+<br>
+
+### 04. list.append()
+- 리스트에 값을 추가하는 함수
+
+```python
+  listbox = []
+  for i in range(1,6) :
+      listbox.append(i)
+      
+  listbox
+```
+
+> 결과
+```
+  [1, 2, 3, 4, 5]
+```
+
+<br>
+
+### 05. enumerate()
+- 리스트에 있는 값을 출력할 때 인덱스 번호를 함께 알고 싶은 경우 사용
+
+- 반복문에 사용되며, 인덱스와 값을 함께 반환
+
+  - for문 안에 2개 변수 작성
+ 
+    - 첫 번째 변수 : 인덱스
+   
+    - 두 번째 변수 : 리스트에 있는 값을 받을 변수
+
+```python
+  listbox = ['빅데이터', '분석', '기사', '합격']
+  for index, item in enumerate(listbox) :
+      print(index, item)
+```
+
+> 결과
+```
+  0 빅데이터
+  1 분석
+  2 기사
+  3 합격
+```
+
+<br>
+
+### 06. zip()
+- 여러 개의 값을 묶어주는 역할
+
+```python
+  person_info = {
+      'name' : '윤정한',
+      'age' : 30,
+      'city' : '서울',
+      'hobbies' : ['돌키우기', '레고조립', '웨이크보드']
+  }
+  
+  for k, v in zip(person_info.keys(), person_info.values()) :
+      print(k, v)
+```
+
+> 결과
+```
+  name 윤정한
+  age 30
+  city 서울
+  hobbies ['돌키우기', '레고조립', '웨이크보드']
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION15 함수
+---
+- 프로그램에서 재사용 가능한 코드 블록
+
+- 필요한 함수가 있다면 def로 함수를 만들어 사용 가능 (def는 define 약자)
+
+- 함수 정의를 먼저 하고 함수를 실행해야 함
+
+<br>
+
+### 01. 일반 함수
+- def 함수명() 으로 함수 정의 후 여러 번 실행 가능
+
+```python
+  def hello() :   # 함수 정의
+      print('안녕하세요!')
+      
+  hello()         # 함수 호출
+  hello()         # 함수 호출
+  hello()         # 함수 호출
+```
+
+> 결과
+```
+  안녕하세요!
+  안녕하세요!
+  안녕하세요!
+```
+
+<br>
+
+### 02. 매개변수가 있는 함수
+- 매개변수(parameters) : 함수를 사용할 때 과호 안에 넣는 변수
+
+  - 함수에 전달되는 값을 받기 위해 사용되는 변수
+ 
+  - 함수를 실행할 때 괄호 안에 값을 넘겨주고 함수에서 매개변수 name에 그 값을 대입
+ 
+```python
+  def hello(name) :
+      print('hello ' + name)
+      
+  hello('빅분기')
+```
+
+> 결과
+```
+  hello 빅분기
+```
+
+<br>
+
+#### 💡 매개변수의 범위
+- 매개변수 name은 일반 변수와 달리, hello() 함수 안에서만 사용 가능
+
+  - 함수 밖에서 print(name) 출력시 'name 변수를 알 수 없다'라는 에러 발생
+
+```python
+  def hello(name) :
+      print(name)
+  print(name)
+  
+  hello('빅분기')
+```
+
+> 결과
+```
+  NameError                                 Traceback (most recent call last)
+  Cell In[5], line 3
+        1 def hello(name) :
+        2     print(name)
+  ----> 3 print(name)
+        5 hello('빅분기')
+  
+  NameError: name 'name' is not defined
+```
+
+<br>
+
+```python
+  def plus(x, y) :
+      print(x + y)
+      
+  # 함수 호출
+  a = 2
+  b = 3
+  plus(a, b)
+```
+
+> 결과
+```
+  5
+```
+
+<br>
+
+### 03. 반환 값이 있는 함수
+- 함수에서 가장 많이 활용하는 것은 반환(return)
+
+  - 함수 안에서 작업이 진행되고 작업 결과를 반환받음
+ 
+- ex) len() 함수는 개수를 return, max() 함수는 최댓값을 return
+
+- 반환 값은 복수도 가능
+
+```python
+  def plus(x, y) :
+      result = x + y
+      return result
+  
+  a = plus(2, 3)
+  print(a)
+```
+
+> 결과
+```
+  5
+```
+
+<br>
+
+```python
+  listbox = [15, 46, 78, 24, 56]
+  def min_max(data) :
+      mi = min(data)
+      ma = max(data)
+      return mi, ma
+  
+  a, b = min_max(listbox)
+  print(a, b)
+```
+
+> 결과
+```
+  15 78
+```
+
+<br>
+
+```python
+  listbox = [15, 46, 78, 24, 56]
+  def mean(data) :
+      return sum(data) / len(data)
+  
+  mean(listbox)
+```
+
+> 결과
+```
+  43.8
+```
+
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
