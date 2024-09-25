@@ -1757,11 +1757,11 @@ SECTION11 필터링
 > 결과
 ```python
   	메뉴	가격	칼로리	원산지
-  0	아메리카노	4500	10	콜롬비아
+  0	아메리카노 4500	10	콜롬비아
   1	카페라떼	5000	110	NaN
   2	카페모카	5500	250	과테말라
   3	카푸치노	5000	110	과테말라
-  4	에스프레소	4000	20	NaN
+  4	에스프레소 4000	20	NaN
   5	밀크티	5900	210	NaN
   7	딸기라떼	5700	280	NaN
 ```
@@ -1832,6 +1832,541 @@ SECTION11 필터링
 
 <br>
 
+---
 
+<br>
+
+SECTION2 결측치 처리
+---
+> cafe2.csv 데이터프레임 불러오기
+
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe2.csv')
+  df.head(2)
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리	원산지
+  0	아메리카노 4500	10	콜롬비아
+  1	카페라떼	5000	110	NaN
+```
+
+<br>
+
+### 01. 결측치 탐색
+- df.isnull() : 결측치 확인
+
+  - 각 값마다 True/False 반환
+ 
+    - 결측치(NaN)면 True
+   
+    - 값이 있다면 False
+   
+  - sum() 붙이면 컬럼별 합산 가능
+ 
+    - True = 1, False = 0
+   
+    - 컬럼별로 더하면 결측치 수 확인 가능
+   
+    - df.isna().sum() 도 같은 결과
+
+```python
+  df.isnull()
+```
+
+> 결과
+```python
+    메뉴	가격	칼로리	원산지
+  0	False	False	False	False
+  1	False	False	False	True
+  2	False	False	False	False
+  3	False	False	False	False
+  4	False	False	False	True
+  5	False	False	False	True
+  6	False	False	False	True
+  7	False	False	False	True
+```
+
+<br>
+
+```python
+  df.isnull().sum()
+```
+
+> 결과
+```python
+  메뉴     0
+  가격     0
+  칼로리    0
+  원산지    5
+  dtype: int64
+```
+
+<br>
+
+```python
+  df.isna().sum()
+```
+
+> 결과
+```python
+  메뉴     0
+  가격     0
+  칼로리    0
+  원산지    5
+  dtype: int64
+```
+
+<br>
+
+### 02. 결측치 채우기
+- fillna() : 컬럼에 있는 결측치를 임의의 값으로 채우기
+
+```python
+  df['원산지'].fillna('코스타리카', inplace = True)
+  df
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리	원산지
+  0	아메리카노 4500	10	콜롬비아
+  1	카페라떼	5000	110	코스타리카
+  2	카페모카	5500	250	과테말라
+  3	카푸치노	5000	110	과테말라
+  4	에스프레소 4000	20	코스타리카
+  5	밀크티	5900	210	코스타리카
+  6	녹차	5300	0	코스타리카
+  7	딸기라떼	5700	280	코스타리카
+```
+
+<br>
+
+> 결측치가 처리된 결과값을 cafe3.csv로 저장
+```python
+  df.to_csv('./data/cafe3.csv', index = False)
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION13 값 변경
+---
+- replace() : 특정 값을 찾아 변경
+
+<br>
+
+> cafe2.csv 데이터프레임 불러오기
+
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe3.csv')
+  df.head(2)
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리	원산지
+  0	아메리카노 4500	10	콜롬비아
+  1	카페라떼	5000	110	코스타리카
+```
+
+<br>
+
+### 01. replace() 활용
+- replace(변경 전 값, 변경 후 값)
+
+- 여러 개의 값을 변경하려면?
+
+  - replace() 여러 번 사용
+
+  - '변경 전 값 : 변경 후 값' 형태로 딕셔너리 생성 후 replace() 괄호 안에 넣어주기
+
+```python
+  df.replace('아메리카노', '룽고', inplace = True)
+  df.replace('녹차', '그린티', inplace = True)
+  df
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리	원산지
+  0	룽고	4500	10	콜롬비아
+  1	카페라떼	5000	110	코스타리카
+  2	카페모카	5500	250	과테말라
+  3	카푸치노	5000	110	과테말라
+  4	에스프레소 4000	20	코스타리카
+  5	밀크티	5900	210	코스타리카
+  6	그린티	5300	0	코스타리카
+  7	딸기라떼	5700	280	코스타리카
+```
+
+<br>
+
+```python
+  change = {'룽고':'아메리카노', '그린티':'녹차'}
+  df.replace(change, inplace = True)
+  df
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리	원산지
+  0	아메리카노 4500	10	콜롬비아
+  1	카페라떼	5000	110	코스타리카
+  2	카페모카	5500	250	과테말라
+  3	카푸치노	5000	110	과테말라
+  4	에스프레소 4000	20	코스타리카
+  5	밀크티	5900	210	코스타리카
+  6	녹차	5300	0	코스타리카
+  7	딸기라떼	5700	280	코스타리카
+```
+
+<br>
+
+### 02. loc/iloc 활용
+- loc는 인덱스 사용
+
+- 새로운 컬럼을 만들고 값을 대입하지 않으면 자동으로 'NaN' 적용
+
+```python
+  df.loc[6, '원산지'] = '대한민국'
+  df.tail(3)
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리	원산지
+  5	밀크티	5900	210	코스타리카
+  6	녹차	5300	0	대한민국
+  7	딸기라떼	5700	280	코스타리카
+```
+
+<br>
+
+```python
+  df.loc[1:2, '이벤트가'] = 1000
+  df.head(3)
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리	원산지	이벤트가
+  0	아메리카노	4500	10	콜롬비아	NaN
+  1	카페라떼	5000	110	코스타리카	1000.0
+  2	카페모카	5500	250	과테말라	1000.0
+```
+
+<br>
+
+> 변경된 데이터 프레임을 cafe4.csv로 저장
+```python
+  df.to_csv('./data/cafe4.csv', index = False)
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION14 문자열
+---
+- 문자열(string) : 일련의 문자로 구성된 데이터 유형
+
+  - 문자, 숫자, 구두점, 공백, 특수 문자 등의 문자를 포함
+ 
+  - 파이썬에서는 문자열을 큰따옴표 또는 작은따옴표로 둘러싸서 표현
+ 
+- 판다스에서는 str 접근자를 사용해 문자열 데이터를 다룸
+
+<br>
+
+> 예제 데이터 생성
+```python
+  import pandas as pd
+  
+  df = pd.DataFrame({
+      'A' : ['데이터 분석', '웹 프로그래밍', '앱 개발'],
+      'B' : [10, 20, 30],
+      'C' : ['ab cd', 'AB CD', 'ab cd ']  # 의도적으로 마지막 데이터 뒤에 공백 추가
+  })
+  df
+```
+
+> 결과
+```python
+  	A	B	C
+  0	데이터 분석	10	ab cd
+  1	웹 프로그래밍	20	AB CD
+  2	앱 개발	30	ab cd
+```
+
+<br>
+
+### 01. 문자열 변경(치환)
+- 예제 데이터에서 replace()를 이용해 A컬럼 '분석' 단어를 '시각화'로 변경
+
+  - 결과 : 변경되지 않음
+ 
+  - 이유 : 0행 0열에 있는 전체 문자열은 '데이터 분석'
+ 
+    - replace()만으로 전체 단어인 '데이터 분석'을 다른 단어로 변경 가능
+   
+    - '데이더 분석'이라는 문자열에서 '분석'이라는 일부 단어만 변경 불가
+   
+- str : 전체 문자열 중 일부만 변경할 때 사용
+
+  - 데이터프레임의 값을 문자열로 인식
+ 
+  - str.replace('변경 전 단어', '변경 후 단어')
+
+- 데이터가 숫자일 때 str 접근자 사용시 에러 발생
+
+  - 숫자 데이터는 replace()로 변경
+
+- 정리
+
+  - replace() : 문자열 뿐만 아니라 다른 유형도 변경 가능
+ 
+  - str.replace() : 문자열만 적용 가능
+
+```python
+  df['A'] = df['A'].replace('분석', '시각화')
+  df
+```
+
+> 결과
+```python
+  	A	B	C
+  0	데이터 분석	10	ab cd
+  1	웹 프로그래밍	20	AB CD
+  2	앱 개발	30	ab cd
+```
+
+<br>
+
+```python
+  df['A'] = df['A'].str.replace('분석', '시각화')
+  df
+```
+
+> 결과
+```python
+  	A	B	C
+  0	데이터 시각화	10	ab cd
+  1	웹 프로그래밍	20	AB CD
+  2	앱 개발	30	ab cd
+```
+
+<br>
+
+```python
+  df['B'] = df['B'].replace(10, 100)
+  df
+```
+
+> 결과
+```python
+  	A	B	C
+  0	데이터 시각화	100	ab cd
+  1	웹 프로그래밍	20	AB CD
+  2	앱 개발	30	ab cd
+```
+
+<br>
+
+```python
+  df['B'] = df['B'].str.replace(20, 200)
+  df
+```
+
+> 결과
+```python
+  AttributeError: Can only use .str accessor with string values!
+```
+
+<br>
+
+### 02. 문자열 분리
+- str.split() : 문자열 분리
+
+  - 괄호 안에 값이 없을 때는 기본적으로 띄어쓰기를 기준으로 분리
+ 
+  - 괄호 안에 구분자가 들어가면 해당 구분자를 기준으로 분리
+ 
+  - 대괄호를 사용해 분리한 데이터의 특정 행만 선택 가능
+ 
+- 분리 후 첫 번째 단어만 필요하다면 각 행별 첫 번째 값 선택
+
+  - str.split() : 문자열을 리스트로 나눠 시리즈 자료형으로 반환
+
+  - str[0] : 각 리스트의 첫 번째 값 선ㅌ택
+  
+```python
+  df['A'].str.split()
+```
+
+> 결과
+```python
+  0    [데이터, 시각화]
+  1    [웹, 프로그래밍]
+  2       [앱, 개발]
+  Name: A, dtype: object
+```
+
+<br>
+
+```python
+  df['A'].str.split()[0]
+```
+
+> 결과
+```python
+  ['데이터', '시각화']
+```
+
+<br>
+
+```python
+  df['D'] = df['A'].str.split().str[0]
+  df
+```
+
+> 결과
+```python
+  	A	B	C	D
+  0	데이터 시각화	100	ab cd	데이터
+  1	웹 프로그래밍	20	AB CD	웹
+  2	앱 개발	30	ab cd	앱
+```
+
+<br>
+
+#### 💡 str.split()[0] VS str.split().str[0]
+- str 접근자로 인해 차이 발생
+
+  - str.split()[0]
+ 
+    - [0] : 첫 번째 행(0번째 인덱스)을 선택
+   
+  - str.split().str[0]
+ 
+    - str[0] : 각 문자열 리스트 값에서 첫 번째 요소(0번째 인덱스)를 선택
+
+<br>
+
+### 03. 특정 문자열 검색
+- str.contains() : 특정 단어가 포함되어 있는지 확인
+
+```python
+  df['A'].str.contains('웹')
+```
+
+> 결과
+```python
+  0    False
+  1     True
+  2    False
+  Name: A, dtype: bool
+```
+
+<br>
+
+```python
+  df['웹 포함 유무'] = df['A'].str.contains('웹')
+  df
+```
+
+> 결과
+```python
+  	A	B	C	D	웹 포함 유무
+  0	데이터 시각화	100	ab cd	데이터	False
+  1	웹 프로그래밍	20	AB CD	웹	True
+  2	앱 개발	30	ab cd	앱	False
+```
+
+<br>
+
+#### 💡 str.contains() VS isin()
+- str.contains()
+
+  - 값을 찾거나 값의 일부를 찾음
+ 
+  - 데이터프레임 또는 시리즈에서 사용 가능
+ 
+  - 문장 속에서 특정 문자열 찾기 가느
+ 
+  - str을 통해 접근
+ 
+  - 찾고자 하는 1개 값만 입력값으로 대입 가능
+ 
+  - 리스트 형태가 아니므로 대괄호 필요 X
+
+- isin()
+
+  - 값을 찾음
+
+  - 데이터프레임 또는 시리즈에서 사용 가능
+ 
+  - 특정 값이 있는지 확인 및 괄호 안에는 리스트 형태로 데이터 입력
+ 
+    - 여러 개의 값을 찾을 수 있음
+   
+    - 필터링에서 유용하게 사용
+   
+    - 1개 값만 찾더라도 대괄호 필요
+
+```python
+  menu = pd.Series(['치즈버거 세트', '더블 불고기버기', '상하이 스파이시버거'])
+  menu.isin(['치즈버거 세트'])
+```
+
+> 결과
+```python
+  0     True
+  1    False
+  2    False
+  dtype: bool
+```
+
+<br>
+
+```python
+  menu.str.contains('세트')
+```
+
+> 결과
+```python
+  0     True
+  1    False
+  2    False
+  dtype: bool
+```
+
+<br>
+
+### 04. 문자열 길이
+```python
+  df['문자길이'] = df['A'].str.len()
+  df
+```
+
+> 결과
+```python
+  	A	B	C	D	웹 포함 유무	문자길이
+  0	데이터 시각화	100	ab cd	데이터	False	7
+  1	웹 프로그래밍	20	AB CD	웹	True	7
+  2	앱 개발	30	ab cd	앱	False	4
+```
+
+<br>
 
 
