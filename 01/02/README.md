@@ -793,7 +793,538 @@ SECTION04 자료형 변환
 
 > 가격은 float형, 칼로리는 object형인 예제 데이터 생성
 ```python
-
+  import pandas as pd
+  
+  # 가격은 float형, 칼로리는 object형인 예제 데이터 생성
+  data = {
+      '메뉴' : ['아메리카노', '카페라떼', '카페모카', '카푸치노', '에스프레소', '밀크티', '녹차'],
+      '가격' : [4500.0, 5000.0, 5500.0, 5000.0, 4000.0, 5900.0, 5300.0],
+      '칼로리' : ['10', '110', '250', '110', '20', '210', '0']
+  }
+  df = pd.DataFrame(data)
+  df.info()
 ```
+
+> 결과
+```python
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 7 entries, 0 to 6
+  Data columns (total 3 columns):
+   #   Column  Non-Null Count  Dtype  
+  ---  ------  --------------  -----  
+   0   메뉴      7 non-null      object 
+   1   가격      7 non-null      float64
+   2   칼로리     7 non-null      object 
+  dtypes: float64(1), object(2)
+  memory usage: 300.0+ bytes
+```
+
+<br>
+
+### 01. int로 변환
+- astype('변경할 자료형')
+
+```python
+  df['가격'] = df['가격'].astype('int')
+  df.info()
+```
+
+> 결과
+```python
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 7 entries, 0 to 6
+  Data columns (total 3 columns):
+   #   Column  Non-Null Count  Dtype 
+  ---  ------  --------------  ----- 
+   0   메뉴      7 non-null      object
+   1   가격      7 non-null      int32 
+   2   칼로리     7 non-null      object
+  dtypes: int32(1), object(2)
+  memory usage: 272.0+ bytes
+```
+
+<br>
+
+### 02. float로 변환
+- object 자료형을 float 자료형으로 변경
+
+  - object가 정수형으로 변경 가능한 데이터라면 문제 x
+ 
+  - object가 문자형 데이터라면 에러 발생
+ 
+```python
+  df['칼로리'] = df['칼로리'].astype('float')
+  df.info()
+```
+
+> 결과
+```python
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 7 entries, 0 to 6
+  Data columns (total 3 columns):
+   #   Column  Non-Null Count  Dtype  
+  ---  ------  --------------  -----  
+   0   메뉴      7 non-null      object 
+   1   가격      7 non-null      int32  
+   2   칼로리     7 non-null      float64
+  dtypes: float64(1), int32(1), object(1)
+  memory usage: 272.0+ bytes
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION05 새로운 컬럼 추가
+---
+> cafe.csv 데이터프레임 불러오기
+```python
+import pandas as pd
+
+df = pd.read_csv('./data/cafe.csv')
+df.head(2)
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리
+  0	아메리카노 4500	10
+  1	카페라떼	5000	110
+```
+
+<br>
+
+### 01. 새로운 컬럼 추가
+-  df['새 컬럼명']
+```python
+  df['new'] = 0
+  df.head(2)
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리	new
+  0	아메리카노 4500	10	0
+  1	카페라떼	5000	110	0
+```
+
+<br>
+
+### 02. 기존 컬럼을 사용한 계산
+```python
+  # 새로운 컬럼에 메뉴별 정상가에서 20% 할인한 금액 대입
+  discount = 0.2
+  df['할인가'] = df['가격'] * (1 - discount)
+  df.head(2)
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리	new	할인가
+  0	아메리카노 4500	10	0	3600.0
+  1	카페라떼	5000	110	0	4000.0
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION06 데이터 삭제
+---
+- 축(axis) : 데이터의 방향을 나타매녀 0과 1의 두 가지 값 사용
+
+  - axis = 0 : 행(row) - 특정 행을 삭제하고 싶을 때
+ 
+  - axis = 1 : 열(column) - 특정 열을 삭제하고 싶을 때
+
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe.csv')
+  df.head(3)
+```
+
+> 결과
+```python
+  	메뉴	가격	칼로리
+  0	아메리카노 4500	10
+  1	카페라떼	5000	110
+  2	카페모카	5500	250
+```
+
+<br>
+
+#### 💡 행 또는 열 삭제시 주의사항
+- 행 또는 열을 삭제하는 코드(셸) 실행 후 재실행시 에러 발생
+
+  - 행 : "KeyError: ['인덱스'] not found in axis"
+ 
+  - 열 : "KeyError: ['컬럼명'] not found in axis"
+
+  - 위 에러 내용은 이미 삭제했기 때문에 특정 컬럼명(인덱스)를 찾을 수 없다는 의미
+ 
+- 현재 셀부터 다시 실행하고 싶다면 "런타임 → 이전 셀 실행"
+
+  - 처음부터 현재 셀 이전까지 모두 실행
+ 
+<br>
+
+### 01. 행 삭제
+- DataFrame.drop('index명', axis = 0)
+
+  - 삭제된 결과값이 자동 저장되지는 않음
+ 
+  - 저장하는 방법으로 drop에 있는 inplace 파라미터 활용
+ 
+    - False :  기본값, drop 결과값 저장 X
+   
+    - True : drop 결과값 저장 O
+
+```python
+  df.drop(1, axis = 0, inplace = True)
+  df.head(3)
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리
+  0	아메리카노 4500	10
+  2	카페모카	5500	250
+  3	카푸치노	5000	110
+```
+
+<br>
+
+### 02. 컬럼(열) 삭제
+- DataFrame.drop('컬럼명', axis = 1)
+
+  - inplace 대신 대입(=) 연산자로 결과 저장 가능
+
+```python
+  df = df.drop('칼로리', axis = 1)
+  df.head(3)
+```
+
+> 결과
+```python
+      메뉴	가격
+  0 아메리카노	4500
+  2	카페모카	5500
+  3	카푸치노	5000
+```
+
+<br>
+
+### 03. 삭제 후 저장 방법
+- inplace 사용시 반환값 X, 사용하지 않으면 반환값으로 대입 가능
+
+  - 함께 사용 불가
+ 
+<br>
+
+|구분|예|반환값|
+|:-:|:-:|:-:|
+|inplace 활용|df.drop('가격', axis=1, inplace=True)|없음|
+|대입 연산자 활용|df = df.drop('가격', axis=1)|있음|
+
+<br>
+
+#### 💡 삭제 전후의 데이터 크기 확인
+- 삭제할 때는 실수를 방지하기 위해 삭제 전후의 데이터 크기를 df.shape로 확인
+
+```python
+  df.shape  # 삭제 전
+  df.drop(1, axis = 0, inplace = True)  # 행 또는 열 삭제 코드
+  df.shape  # 삭제 후
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION07 인덱싱/슬라이싱(loc)
+---
+- 인덱스로 값을 찾거나 슬라이싱으로 특정 영역 추출
+
+> cafe.csv 데이터프레임 불러오기
+
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe.csv')
+  df.head(2)
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리
+  0	아메리카노 4500	10
+  1	카페라떼	5000	110
+```
+
+<br>
+
+### 01. 인덱싱
+- df.loc[인덱스명] : 해당 인덱스 데이터에 접근
+
+  - loc는 location의 약자로 인덱스명 또는 컬럼명을 통해 데이터에 접근
+ 
+  - 인덱스명이 숫자(loc[숫자]) : 그대로 작성
+  
+  - 인덱스명이 문자(loc['문자']) : 따옴표로 묶기
+
+- df.loc[인덱스명, 컬럼명] : 특정 행과 특정 컬럼(열)의 교차점에 있는 단일값 출력
+
+```python
+  df.loc[0]
+```
+
+> 결과
+```python
+  메뉴     아메리카노
+  가격      4500
+  칼로리       10
+  Name: 0, dtype: object
+```
+
+<br>
+
+```python
+  df.loc[1, '가격']
+```
+
+> 결과
+```python
+  5000
+```
+
+<br>
+
+### 02. 슬라이싱
+- loc[행 범위 또는 특정 행, 컬럼(열)의 범위 또는 특정 컬럼]
+
+  - 범위 : '시작 인덱스:끝 인덱스'
+ 
+    - 시작 인덱스 생략시 처음부터
+   
+    - 끝 인덱스 생략시 마지막까지
+   
+    - 시작 인덱스와 끝 인덱스 모두 생략 : 전체
+   
+  - 특정 컬럼을 선택해 슬라이싱하고 싶으면 컬럼을 리스트 형태로 작성
+
+```python
+  df.loc[:, '가격']
+```
+
+> 결과
+```python
+  0    4500
+  1    5000
+  2    5500
+  3    5000
+  4    4000
+  5    5900
+  6    5300
+  Name: 가격, dtype: int64
+```
+
+<br>
+
+```python
+  df.loc[2, '메뉴':'칼로리']
+```
+
+> 결과
+```python
+  메뉴     카페모카
+  가격     5500
+  칼로리     250
+  Name: 2, dtype: object
+```
+
+<br>
+
+```python
+  df.loc[2, ['메뉴', '칼로리']]
+```
+
+> 결과
+```python
+  메뉴     카페모카
+  칼로리     250
+  Name: 2, dtype: object
+```
+
+<br>
+
+```python
+  df.loc[1:3, '메뉴':'가격']
+```
+
+> 결과
+```python
+    	메뉴	가격
+  1	카페라떼 5000
+  2	카페모카	5500
+  3	카푸치노	5000
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION08 인덱싱/슬라이싱(iloc)
+---
+- df.iloc[]
+
+  - iloc는 interger location의 약자
+ 
+  - 데이터프레임의 행이나 열의 순서에 따른 인덱스 번호로 값 슬라이싱
+
+<br>
+
+> cafe.csv 데이터 불러와 인덱스가 0인 첫 번째 행 삭제
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe.csv')
+  df.drop(0, axis = 0, inplace = True)    # 첫 번째 행 삭제
+  df.head(2)
+```
+
+> 결과
+```python
+  	  메뉴	가격	칼로리
+  1	카페라떼 5000	110
+  2	카페모카	5500	250
+```
+
+<br>
+
+### 01. 인덱싱
+- iloc에서 대괄호 안의 숫자는 순서를 의미
+
+  - 0은 첫 번째 행(또는 컬럼), 1은 두 번째 행(또는 컬럼)
+ 
+  - 비교 : loc에서 대괄호는 인덱스명을 의미해 순서가 변경되더라도 상관X
+
+- cafe.csv 데이터에서 카페라떼 선택하는 방법
+
+  - loc[1, '메뉴']
+ 
+  - iloc[0, 0]
+
+```python
+  df.iloc[0]
+```
+
+> 결과
+```python
+  메뉴     카페라떼
+  가격     5000
+  칼로리     110
+  Name: 1, dtype: object
+```
+
+<br>
+
+### 02. 슬라이싱
+- 특정 컬럼 값만 출력할 때도 인덱스 번호 활용
+
+- iloc[행 인덱싱, 열 슬라이싱] : 1개의 행과 2개의 열을 추출할 때
+
+  - 슬라이싱 범위 : 마지막 인덱스 번호 앞까지 결과 반환
+
+- iloc 대괄호 안에 번위가 1개만 있다면 행 인덱스 범위
+
+  - 컬럼 범위는 전체를 의미
+ 
+  - df.iloc[1:3] 과 결과가 같음
+
+```python
+  df.iloc[:, 1]
+```
+
+> 결과
+```python
+  1    5000
+  2    5500
+  3    5000
+  4    4000
+  5    5900
+  6    5300
+  Name: 가격, dtype: int64
+```
+
+<br>
+
+```python
+  df.iloc[2, 0:2]
+```
+
+> 결과
+```python
+  메뉴    카푸치노
+  가격    5000
+  Name: 3, dtype: object
+```
+
+<br>
+
+```python
+  df.iloc[1:3]
+```
+
+> 결과
+```python
+      메뉴	가격	칼로리
+  2	카페모카	5500	250
+  3	카푸치노	5000	110
+```
+
+<br>
+
+> loc로 위와 같은 결과 출력해보기
+```python
+  df.loc[2:3, '메뉴':'칼로리']    # 컬럼 범위는 전체이므로 생략 가능
+```
+
+> 결과
+```python
+  	  메뉴	가격	칼로리
+  2	카페모카	5500	250
+  3	카푸치노	5000	110
+```
+
+<br>
+
+#### 💡 loc와 iloc 범위 차이
+|구분|방식|범위|예시|
+|:-:|:-:|:-:|:-:|
+|loc|인덱스명, 컬럼명|끝 인덱스 포함|[0:2] 일 때 2 포함<br>(0, 1, 2 선택)|
+|iloc|인덱스 번호(위치 숫자),<br>컬럼 번호(위치 숫자)<br>*번호는 0부터 시작|끝 인덱스 포함 X<br>(끝 인덱스 - 1)|[0:2] 일 때 2 미포함<br>(0, 1 선택)|
+
+<br>
+
+---
+
+<br>
+
+SECTION09 데이터 추가/변경
+---
+
+
+
+
+
 
 
