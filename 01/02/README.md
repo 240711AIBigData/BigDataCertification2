@@ -543,26 +543,257 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 
 <br>
 
+### 04. 상관관계
+- corr() : 상관관계 확인
 
+```python
+  df.corr(numeric_only = True)
+```
 
+> 결과
+```python
+  	가격	칼로리
+  가격	1.000000	0.713227
+  칼로리	0.713227	1.000000
+```
+▲ 가격과 칼로리는 0.7의 양의 상관관계
 
+<br>
 
+#### 💡 코랩에서 발생하는 에러와 해결방법
+- 데이터프레임에 숫자형과 문자형 컬럼이 혼합되어 있을 때
 
+  - corr(), mean(), sum() 등 함수 사용시 에러 발생
+ 
+    - 문자열 데이터를 숫자로 변환할 수 없기 때문
 
+```python
+  # 에러 예
+  ValueError : Could not convert string to float: '아메리카노'
+```
 
+<br>
 
+- 해결방법
 
+  - 해당 함수에 numeric_only = True 옵션 추가
+ 
+    - 함수가 숫자형 데이터에만 적용되도록 함
+   
+  - ex
+ 
+    - 상관계수 계산시
+   
+      - 코랩 환경 : corr(numeric_only = True)
+     
+      - 시험 환경 : corr()
 
+```python
+  df.corr(numeric_only = True)
+```
 
+> 결과
+```python
+  	가격	칼로리
+  가격	1.000000	0.713227
+  칼로리	0.713227	1.000000
+```
 
+<br>
 
+### 05. 범주형 데이터 탐색
+```python
+  # 자동차의 종류와 크기를 나타낸 중복 값이 있는 데이터
+  df_car = pd.DataFrame({
+      'car' : ['Sedan', 'SUV', 'Sedan', 'SUV', 'SUV', 'SUV', 'Sedan', 'Sedan', 'Sedan', 'Sedan', 'Sedan'],
+      'size' : ['S', 'M', 'S', 'S', 'M', 'M', 'L', 'S', 'S', 'M', 'S']
+  })
+  df_car.head(3)
+```
 
+> 결과
+```python
+      car	size
+  0	Sedan	S
+  1	SUV	M
+  2	Sedan	S
+```
 
+<br>
 
+### 06. 고유한 값의 개수
+- nunique() : 데이터프레임에서 컬럼별로 고유한 값의 개수 확인
 
+  - 종류의 수는 파악 가능하지만, 어떤 데이터인지는 확인 불가
 
+```python
+  df_car.nunique()
+```
 
+> 결과
+```python
+  car     2
+  size    3
+  dtype: int64
+```
 
+#### (1) 고유한 값
+- unique() : 고유한 값(구체적인 항목) 파악
 
+```python
+  print(df_car['car'].unique())
+  print(df_car['size'].unique())
+```
+
+> 결과
+```python
+  ['Sedan' 'SUV']
+  ['S' 'M' 'L']
+```
+
+<br>
+
+#### (2) 고유한 값과 개수
+- value_counts() : 고유한 값과 개수(nunique()와 unique() 결과 내용 한번에 파악)
+
+  - 항목별로 개수를 출력해 데이터 탐색하는데 유용함
+
+```python
+  print(df_car['car'].value_counts())
+  print(df_car['size'].value_counts())
+```
+
+> 결과
+```python
+  car
+  Sedan    7
+  SUV      4
+  Name: count, dtype: int64
+  size
+  S    6
+  M    4
+  L    1
+  Name: count, dtype: int64
+```
+
+<br>
+
+#### 💡 value_counts()
+- 작업형2에서 빈번하게 사용
+
+- 주로 시리즈(데이터프레임 특정 컬럼)에 적용
+
+  - 데이터프레임에서 특정 컬럼 1개만 선택하면 시리즈 형태
+ 
+- df['컬럼명'].value_counts()
+
+- 판다스 1.1.0 이상에서는 데이터프레임에도 df.value_counts() 사용 가능
+
+  - 결과 보기가 불편하므로 시리즈에서 사용하기를 추천함
+
+<br>
+
+#### (3) 기술통계
+- describe() : 데이터의 기술통계량 확인
+
+  - 기본적으로 수치형 데이터(int, float)만 적용해 기술통계 결과 확인 가능
+ 
+    - count : 값이 있는 데이터 수
+   
+    - mean : 평균
+   
+    - std : 표준편차
+   
+    - min : 최솟값
+   
+    - 00% : 백분위수에서 00%
+   
+    - max : 최댓값
+
+- 실습시 변수 활용 관련
+  
+  - 수치형 데이터를 확인할 때 : 기존에 사용했던 df 변수 활용
+ 
+  - 범주형 데이터를 확인할 때 : 새로 만들었던 df_car 변수 활용
+
+```python
+  df.describe()
+```
+
+> 결과
+```python
+          가격	    칼로리
+  count	7.000000	7.000000
+  mean	5028.571429	101.428571
+  std	631.702160	99.402980
+  min	4000.000000	0.000000
+  25%	4750.000000	15.000000
+  50%	5000.000000	110.000000
+  75%	5400.000000	160.000000
+  max	5900.000000	250.000000
+```
+
+<br>
+
+#### (4) 기술통계(object 자료형)
+- include 파라미터 활용 : 데이터 타입이 object인 기술통계 확인
+
+  - "O"(대문자) or "object" 입력
+ 
+    - count : 값이 있는 데이터 수
+   
+    - unique : 고유한 데이터 수(종류)
+   
+    - top : 가장 많이 나오는 값(최빈값)
+   
+    - freq : 가장 많이 나오는 값의 빈도 수
+
+```python
+  df_car.describe(include = 'O')
+```
+
+> 결과
+```python
+    car	size
+  count	11	11
+  unique 2	3
+  top	Sedan	S
+  freq	7	6
+```
+
+<br>
+
+```python
+  df.describe(include = 'object')
+```
+
+> 결과
+```python
+      메뉴
+  count	7
+  unique 7
+  top	아메리카노
+  freq	1
+```
+▲ '메뉴' 컬럼 데이터 전체가 고유값을 가졌기 때문에 top과 freq는 큰 의미 X
+
+<br>
+
+---
+
+<br>
+
+SECTION04 자료형 변환
+---
+- 판다스에서 주로 볼 수 있는 자료형 : int(정수), float(실수), object(문자)
+
+  - 문제 상황에 따라 문자를 숫자로 변환하거나 실수형을 정수형으로 변환
+
+<br>
+
+> 가격은 float형, 칼로리는 object형인 예제 데이터 생성
+```python
+
+```
 
 
