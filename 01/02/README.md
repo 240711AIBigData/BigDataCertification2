@@ -5631,9 +5631,821 @@ SECTION16 그룹핑
 
 <br>
 
+### 05. reset_index()
+- 그룹핑된 데이터프레임의 인덱스는 기존과 모양이 다른 묶음
 
+  - 그룹핑된 상태에서 추가적인 데이터 처리 또는 특정 값을 선택해 출력해야 할 경우
+ 
+    - 그룹핑된 데이터프레임 뒤에 reset_index()
 
+```python
+  df.groupby(['원산지', '메뉴']).mean(numeric_only = True).reset_index()
+```
 
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>원산지</th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>과테말라</td>
+      <td>카페모카</td>
+      <td>5500.0</td>
+      <td>250.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>과테말라</td>
+      <td>카푸치노</td>
+      <td>5000.0</td>
+      <td>110.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>대한민국</td>
+      <td>녹차</td>
+      <td>5300.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>코스타리카</td>
+      <td>딸기라떼</td>
+      <td>5700.0</td>
+      <td>280.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>코스타리카</td>
+      <td>밀크티</td>
+      <td>5900.0</td>
+      <td>210.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>코스타리카</td>
+      <td>에스프레소</td>
+      <td>4000.0</td>
+      <td>20.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>코스타리카</td>
+      <td>카페라떼</td>
+      <td>5000.0</td>
+      <td>110.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>콜롬비아</td>
+      <td>아메리카노</td>
+      <td>4500.0</td>
+      <td>10.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+---
+
+<br>
+
+SECTION17 시계열 데이터(datetime)
+---
+- 날짜, 시간 관련 데이터
+
+  - 시간의 순서에 따른 측정값, 기간 설정 등 다양한 분석과 작업에 사용
+ 
+<br>
+
+### 01. 날짜와 시간 데이터
+- 일반적으로 날짜는 하이픈(-)
+
+  - 연도-월-일(2024-09-26) 형태
+ 
+- 일반적으로 시간은 콜론(:)
+
+  - 시간:분:초(13:50:30) 형태
+ 
+- 주어진 데이터
+
+  - 하이픈(-), 콜론(:), 슬러시(/), 띄어쓰기 등 다양한 형태로 구분
+
+<br>
+
+> 예제 데이터 생성
+```python
+  import pandas as pd
+  
+  data = {
+      'Date1' : ['2024-02-17', '2024-02-18', '2024-02-19', '2024-02-20'],
+      'Date2' : ['2024:02:17', '2024:02:18', '2024:02:19', '2024:02:20'],
+      'Date3' : ['24/02/17', '24/02/18', '24/02/19', '24/02/20'],
+      'Date4' : ['02/17/2024', '02/18/2024', '02/19/2024', '02/20/2024'],
+      'Date5' : ['17-Feb-2024', '18-Feb-2024', '19-Feb-2024', '20-Feb-2024'],
+      'DateTime1' : ['24-02-17 13:50:30', '24-02-18 14:55:45', '24-02-19 15:30:15', '24-02-20 16:10:50'],
+      'DateTime2' : ['2024-02-17 13-50-30', '2024-02-18 14-55-45', '2024-02-19 15-30-15', '2024-02-20 16-10-50'],
+      'DateTime3' : ['02/17/2024 01:50:30 PM', '02/18/2024 02:55:45 PM', '02/19/2024 03:30:15 AM', '02/20/2024 04:10:50 AM'],
+      'DateTime4' : ['17 Feb 2024 13:50:30', '18 Feb 2024 14:55:45', '19 Feb 2024 15:30:15', '20 Feb 2024 16:10:50']    
+  }
+  
+  df = pd.DataFrame(data)
+  df.to_csv('./data/date_data.csv', index = False)
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date1</th>
+      <th>Date2</th>
+      <th>Date3</th>
+      <th>Date4</th>
+      <th>Date5</th>
+      <th>DateTime1</th>
+      <th>DateTime2</th>
+      <th>DateTime3</th>
+      <th>DateTime4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17</td>
+      <td>2024:02:17</td>
+      <td>24/02/17</td>
+      <td>02/17/2024</td>
+      <td>17-Feb-2024</td>
+      <td>24-02-17 13:50:30</td>
+      <td>2024-02-17 13-50-30</td>
+      <td>02/17/2024 01:50:30 PM</td>
+      <td>17 Feb 2024 13:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18</td>
+      <td>2024:02:18</td>
+      <td>24/02/18</td>
+      <td>02/18/2024</td>
+      <td>18-Feb-2024</td>
+      <td>24-02-18 14:55:45</td>
+      <td>2024-02-18 14-55-45</td>
+      <td>02/18/2024 02:55:45 PM</td>
+      <td>18 Feb 2024 14:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19</td>
+      <td>2024:02:19</td>
+      <td>24/02/19</td>
+      <td>02/19/2024</td>
+      <td>19-Feb-2024</td>
+      <td>24-02-19 15:30:15</td>
+      <td>2024-02-19 15-30-15</td>
+      <td>02/19/2024 03:30:15 AM</td>
+      <td>19 Feb 2024 15:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20</td>
+      <td>2024:02:20</td>
+      <td>24/02/20</td>
+      <td>02/20/2024</td>
+      <td>20-Feb-2024</td>
+      <td>24-02-20 16:10:50</td>
+      <td>2024-02-20 16-10-50</td>
+      <td>02/20/2024 04:10:50 AM</td>
+      <td>20 Feb 2024 16:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+<br>
+
+- 파이썬은 데이터를 불러올 때 날짜와 시간 자동 인식 불가
+
+  - 문자열 데이터로 인식해 자료형은 object
+
+```python
+  df.info()
+```
+
+> 결과
+```python
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 4 entries, 0 to 3
+  Data columns (total 9 columns):
+   #   Column     Non-Null Count  Dtype 
+  ---  ------     --------------  ----- 
+   0   Date1      4 non-null      object
+   1   Date2      4 non-null      object
+   2   Date3      4 non-null      object
+   3   Date4      4 non-null      object
+   4   Date5      4 non-null      object
+   5   DateTime1  4 non-null      object
+   6   DateTime2  4 non-null      object
+   7   DateTime3  4 non-null      object
+   8   DateTime4  4 non-null      object
+  dtypes: object(9)
+  memory usage: 420.0+ bytes
+```
+
+<br>
+
+### 02. datetime 자료형
+- 날짜와 시간 데이터를 다루기 위해 object에서 datetime으로 자료형 변경(파싱)
+
+  - 문자열을 의미 있는 단위로 분해하고 구조를 식별하는 과정
+ 
+  - 판다스의 to_datetime(df['컬럼명]) 사용해 자료형 변경
+ 
+- 대부분의 날짜와 시간 형태는 판다스가 자동으로 인식해 변경
+
+  - 제대로 인식 못했을 때는 format 설정 필요
+
+```python
+  df = pd.read_csv('./data/date_data.csv')
+  
+  df['Date1'] = pd.to_datetime(df['Date1'])
+  df['Date2'] = pd.to_datetime(df['Date2'], format = '%Y:%m:%d')
+  df['Date3'] = pd.to_datetime(df['Date3'])
+  df['Date4'] = pd.to_datetime(df['Date4'])
+  df['Date5'] = pd.to_datetime(df['Date5'])
+  df['DateTime1'] = pd.to_datetime(df['DateTime1'])
+  df['DateTime2'] = pd.to_datetime(df['DateTime2'], format = '%Y-%m-%d %H-%M-%S')
+  df['DateTime3'] = pd.to_datetime(df['DateTime3'])
+  df['DateTime4'] = pd.to_datetime(df['DateTime4'])
+  
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date1</th>
+      <th>Date2</th>
+      <th>Date3</th>
+      <th>Date4</th>
+      <th>Date5</th>
+      <th>DateTime1</th>
+      <th>DateTime2</th>
+      <th>DateTime3</th>
+      <th>DateTime4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17</td>
+      <td>2024-02-17</td>
+      <td>2017-02-24</td>
+      <td>2024-02-17</td>
+      <td>2024-02-17</td>
+      <td>2017-02-24 13:50:30</td>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-02-17 13:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18</td>
+      <td>2024-02-18</td>
+      <td>2018-02-24</td>
+      <td>2024-02-18</td>
+      <td>2024-02-18</td>
+      <td>2018-02-24 14:55:45</td>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-02-18 14:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19</td>
+      <td>2024-02-19</td>
+      <td>2019-02-24</td>
+      <td>2024-02-19</td>
+      <td>2024-02-19</td>
+      <td>2019-02-24 15:30:15</td>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-02-19 03:30:15</td>
+      <td>2024-02-19 15:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20</td>
+      <td>2024-02-20</td>
+      <td>2020-02-24</td>
+      <td>2024-02-20</td>
+      <td>2024-02-20</td>
+      <td>2020-02-24 16:10:50</td>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-02-20 04:10:50</td>
+      <td>2024-02-20 16:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 03. 날짜와 시간 format
+- pd.to_datetime()에서 날짜와 시간 표현 방식에 따라 문제 발생 가능성 있음
+
+  - 가능하면 format 기본적으로 함께 작성
+
+<br>
+
+#### 에러가 발생한 케이스 : Date2 컬럼 (연도 4자리:월:일)
+- 일반적으로 콜론은 시간을 나타낼 때 사용하므로 자동 인식 불가
+
+- 자료 형태와 같은 형태로 포맷 작성 (대소문자 구분)
+
+  - format = '%Y:%m:%d'
+ 
+    - %Y : 연도 4자리 (에: 2024)
+   
+    - %m : 월 (에: 01 ~ 12)
+   
+    - %d : 일 (에: 01 ~ 31)
+   
+<br>
+
+#### 잘못 인식한 케이스 : Date3 컬럼 (연도 2자리/월/일)
+- 연도가 2자리라서 '연도/월/일'이 아니라 '일/월/연도'로 인식
+
+  - 에러 발생하지 않는 경우이므로 주의
+ 
+  - format = '%y/%m/%d'
+ 
+    - %y : 연도 2자리 (예: 24)
+
+<br>
+
+#### 잘못 인식한 케이스 : DateTime1 컬럼 (연도 2자리-월-일 시간:분:초)
+- 연도가 2자리라서 잘못 인식
+
+  - format = '%y-%m-%d %H:%M:%S'
+ 
+    - %H : 시간 (예: 00 ~ 23)
+   
+    - %M : 분 (예: 00 ~ 59)
+   
+    - %S : 초 (예: 00 ~ 59)
+
+<br>
+
+#### 에러가 발생한 케이스 : DateTime2 컬럼(연도 4자리-월-일 시간-분-초)
+- 일반적으로 시간을 나타낼 때 콜론(:)을 사용하지 않으면 자동 인식 불가
+
+  - format = '%Y-%m-%d %H-%M-%S'
+
+ <br>
+
+ ```python
+  df = pd.read_csv('./data/date_data.csv')
+  
+  df['Date2'] = pd.to_datetime(df['Date2'], format = '%Y:%m:%d')
+  df['Date3'] = pd.to_datetime(df['Date3'], format = '%y/%m/%d')
+  df['DateTime1'] = pd.to_datetime(df['DateTime1'], format = '%y-%m-%d %H:%M:%S')
+  df['DateTime2'] = pd.to_datetime(df['DateTime2'], format = '%Y-%m-%d %H-%M-%S')
+  
+  df[['Date2', 'Date3', 'DateTime1', 'DateTime2']]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date2</th>
+      <th>Date3</th>
+      <th>DateTime1</th>
+      <th>DateTime2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17</td>
+      <td>2024-02-17</td>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-02-17 13:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18</td>
+      <td>2024-02-18</td>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-02-18 14:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19</td>
+      <td>2024-02-19</td>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-02-19 15:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20</td>
+      <td>2024-02-20</td>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-02-20 16:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  df.info()
+```
+
+> 결과
+```python
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 4 entries, 0 to 3
+  Data columns (total 9 columns):
+   #   Column     Non-Null Count  Dtype         
+  ---  ------     --------------  -----         
+   0   Date1      4 non-null      object        
+   1   Date2      4 non-null      datetime64[ns]
+   2   Date3      4 non-null      datetime64[ns]
+   3   Date4      4 non-null      object        
+   4   Date5      4 non-null      object        
+   5   DateTime1  4 non-null      datetime64[ns]
+   6   DateTime2  4 non-null      datetime64[ns]
+   7   DateTime3  4 non-null      object        
+   8   DateTime4  4 non-null      object        
+  dtypes: datetime64[ns](4), object(5)
+  memory usage: 420.0+ bytes
+```
+
+<br>
+
+#### 💡 DataFrame에 대괄호를 2개 사용하는 이유
+- df[[]]
+
+  - 2개 이상의 컬럼을 출력하기 위해 사용
+  
+  - 1개 컬럼이지만 시리즈가 아닌 데이터프레임 형태로 출력하기 위해 사용
+
+- 대괄호 2개 대신 컬럼명을 리스트 변수에 담아 출력 가능
+
+```python
+  cols = ['Date2', 'Date3', 'DateTime1', 'DateTime2']
+  df[cols]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date2</th>
+      <th>Date3</th>
+      <th>DateTime1</th>
+      <th>DateTime2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17</td>
+      <td>2024-02-17</td>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-02-17 13:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18</td>
+      <td>2024-02-18</td>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-02-18 14:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19</td>
+      <td>2024-02-19</td>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-02-19 15:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20</td>
+      <td>2024-02-20</td>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-02-20 16:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 04. 날짜와 시간 데이터 분할(datetime dt 속성)
+- 판다스의 dt를 활용해 연도, 월, 일, 시간, 분, 초를 별도의 변수로 분리 생성
+
+  - datetime 자료형만 dt 사용 가능
+
+- 문제에서 특정 연도, 월 등을 묻는 경우 필터링으로 유용하게 사용 가능
+
+```python
+  df['year'] = df['DateTime1'].dt.year
+  df['month'] = df['DateTime1'].dt.month
+  df['day'] = df['DateTime1'].dt.day
+  df['hour'] = df['DateTime1'].dt.hour
+  df['minute'] = df['DateTime1'].dt.minute
+  df['second'] = df['DateTime1'].dt.second
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date1</th>
+      <th>Date2</th>
+      <th>Date3</th>
+      <th>Date4</th>
+      <th>Date5</th>
+      <th>DateTime1</th>
+      <th>DateTime2</th>
+      <th>DateTime3</th>
+      <th>DateTime4</th>
+      <th>year</th>
+      <th>month</th>
+      <th>day</th>
+      <th>hour</th>
+      <th>minute</th>
+      <th>second</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17</td>
+      <td>2024-02-17</td>
+      <td>2024-02-17</td>
+      <td>02/17/2024</td>
+      <td>17-Feb-2024</td>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-02-17 13:50:30</td>
+      <td>02/17/2024 01:50:30 PM</td>
+      <td>17 Feb 2024 13:50:30</td>
+      <td>2024</td>
+      <td>2</td>
+      <td>17</td>
+      <td>13</td>
+      <td>50</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18</td>
+      <td>2024-02-18</td>
+      <td>2024-02-18</td>
+      <td>02/18/2024</td>
+      <td>18-Feb-2024</td>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-02-18 14:55:45</td>
+      <td>02/18/2024 02:55:45 PM</td>
+      <td>18 Feb 2024 14:55:45</td>
+      <td>2024</td>
+      <td>2</td>
+      <td>18</td>
+      <td>14</td>
+      <td>55</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19</td>
+      <td>2024-02-19</td>
+      <td>2024-02-19</td>
+      <td>02/19/2024</td>
+      <td>19-Feb-2024</td>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-02-19 15:30:15</td>
+      <td>02/19/2024 03:30:15 AM</td>
+      <td>19 Feb 2024 15:30:15</td>
+      <td>2024</td>
+      <td>2</td>
+      <td>19</td>
+      <td>15</td>
+      <td>30</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20</td>
+      <td>2024-02-20</td>
+      <td>2024-02-20</td>
+      <td>02/20/2024</td>
+      <td>20-Feb-2024</td>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-02-20 16:10:50</td>
+      <td>02/20/2024 04:10:50 AM</td>
+      <td>20 Feb 2024 16:10:50</td>
+      <td>2024</td>
+      <td>2</td>
+      <td>20</td>
+      <td>16</td>
+      <td>10</td>
+      <td>50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 05. 요일 찾기
+- df['DataTime1'].dt.dayofweek
+
+  - 해당 날짜의 요일을 숫자로 변경한 값 반환
+ 
+  - 0 = 월요일, 1 = 화요일, 2 = 수요일, 3 = 목요일, 4 = 금요일, 5 = 토요일, 6 = 일요일
+
+```python
+  df['DateTime1'].dt.dayofweek
+```
+
+> 결과
+```python
+  0    5
+  1    6
+  2    0
+  3    1
+  Name: DateTime1, dtype: int32
+```
+
+<br>
+
+### 06. 특정 시점과 특정 구간
+- 특정 시점
+
+  - datetime : 특정 날짜와 시간
+ 
+  - ex) 2024-02-17 11:11:11
+ 
+- 특정 구간
+
+  - period : 특정 시간의 범위나 구간
+ 
+  - ex) 2024-02 (2024년 2월 전체)
+
+<br>
+
+|구분|코드|예시|
+|:-:|:-:|:-:|
+|Y(연도)|dt.to_period('Y')|'2024-02-17' → '2024'|
+|Q(분기)|dt.to_period('Q')|'2024-02-17' → '2024Q1'|
+|M(월)|dt.to_period('M')|'2024-02-17' → '2023-02'|
+|D(일)|dt.to_period('D')|'2024-02-17 15:30:24' → '2024-02-17'|
+|H(시간)|dt.to_period('H')|'2024-02-17 15:30:24' → '2024-02-17 15:30'|
+
+<br>
+
+```python
+  print(df['DateTime1'].dt.to_period('Y'))
+  print(df['DateTime1'].dt.to_period('Q'))
+  print(df['DateTime1'].dt.to_period('M'))
+  print(df['DateTime1'].dt.to_period('D'))
+  print(df['DateTime1'].dt.to_period('H'))
+```
+
+> 결과
+```python
+  0    2024
+  1    2024
+  2    2024
+  3    2024
+  Name: DateTime1, dtype: period[Y-DEC]
+  0    2024Q1
+  1    2024Q1
+  2    2024Q1
+  3    2024Q1
+  Name: DateTime1, dtype: period[Q-DEC]
+  0    2024-02
+  1    2024-02
+  2    2024-02
+  3    2024-02
+  Name: DateTime1, dtype: period[M]
+  0    2024-02-17
+  1    2024-02-18
+  2    2024-02-19
+  3    2024-02-20
+  Name: DateTime1, dtype: period[D]
+  0    2024-02-17 13:00
+  1    2024-02-18 14:00
+  2    2024-02-19 15:00
+  3    2024-02-20 16:00
+  Name: DateTime1, dtype: period[H]
+```
+
+<br>
+
+#### 💡 시계열 데이터를 다룰 때 주의점
+- 오타 조심
+
+  - date, datetime, to_datetime 등을 입력할 때 data로 입력하는 경우 많음
+
+<br>
+
+---
+
+<br>
+
+SECTION18 시계열 데이터(Timedelta)
+---
+- 날짜와 시간을 더하거나 빼서 새로운 시점 계산 가능
+  
+  - datetime : 특정 시점의 날짜와 시간
+ 
+    - datetime 자료형을 빼거나 더하면 결과값은 Timedelta 자료형
+  
+  - Timedelta : 두 시점 사이의 차이
+
+<br>
+
+> 날짜 컬럼 불러오기
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/date_data.csv', 
+                   usecols = ['DateTime4'], # usecols로 DateTime4 컬럼 선택
+                   parse_dates = ['DateTime4'])   # parse_dates로 datetime 자료형으로 변환
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DateTime4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17 13:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18 14:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19 15:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20 16:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 01. 특정 시간과의 차이
 
 
 
