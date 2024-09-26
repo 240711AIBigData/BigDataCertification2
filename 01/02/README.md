@@ -100,12 +100,34 @@ SECTION01 데이터프레임(DataFrame)과 시리즈(Series)
 ```
 
 > 결과
-```python
-    menu	price
-  0	아메리카노 4500
-  1	카페라떼	5000
-  2	카페모카	5500
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>menu</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 - 데이터프레임을 만들 때 시리즈를 꼭 거치지 않아도 ok
 
@@ -122,12 +144,38 @@ SECTION01 데이터프레임(DataFrame)과 시리즈(Series)
 ```
 
 > 결과
-```python
-  	메뉴	가격	원두
-  0	아메리카노 4500	케냐
-  1	카페라떼	5000	콜롬비아
-  2	카페모카	5500	케냐
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>원두</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>케냐</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>케냐</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -284,16 +332,62 @@ SECTION02 데이터 저장 및 불러오기
 ```
 
 > 결과
-```python
-  	     메뉴	가격	칼로리
-  0	아메리카노	4500	   10
-  1	  카페라떼	5000	  110
-  2	  카페모카	5500	  250
-  3	  카푸치노	5000	  110
-  4	에스프레소	4000	   20
-  5	    밀크티	5900	  210
-  6	      녹차	5300	    0
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -321,16 +415,70 @@ SECTION02 데이터 저장 및 불러오기
 ```
 
 > 결과
-```python
-  	Unnamed: 0	     메뉴 	가격	칼로리
-  0	         0	아메리카노 	4500	   10
-  1	         1	  카페라떼 	5000	  110
-  2              2	  카페모카 	5500	  250
-  3	         3	  카푸치노 	5000	  110
-  4	         4	에스프레소 	4000	   20
-  5	         5	   밀크티  	5900	  210
-  6	         6	     녹차 	5300	    0
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -346,14 +494,50 @@ SECTION02 데이터 저장 및 불러오기
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  1	카페라떼	  5000	110
-  2	카페모카	  5500	250
-  3	카푸치노	  5000	110
-  4	에스프레소 4000	20
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -453,11 +637,32 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  1	카페라떼	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -466,12 +671,38 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리
-  4	에스프레소 4000	20
-  5	밀크티	5900	210
-  6	녹차	5300	0
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -480,12 +711,38 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리
-  6	녹차 5300	0
-  4	에스프레소 4000	20
-  2	카페모카	5500	250
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -593,11 +850,29 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-  	가격	칼로리
-  가격	1.000000	0.713227
-  칼로리	0.713227	1.000000
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>가격</th>
+      <td>1.000000</td>
+      <td>0.713227</td>
+    </tr>
+    <tr>
+      <th>칼로리</th>
+      <td>0.713227</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -612,12 +887,34 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-      car	size
-  0	Sedan	S
-  1	SUV	M
-  2	Sedan	S
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>car</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Sedan</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>SUV</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Sedan</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -721,17 +1018,59 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-          가격	    칼로리
-  count	7.000000	7.000000
-  mean	5028.571429	101.428571
-  std	631.702160	99.402980
-  min	4000.000000	0.000000
-  25%	4750.000000	15.000000
-  50%	5000.000000	110.000000
-  75%	5400.000000	160.000000
-  max	5900.000000	250.000000
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>7.000000</td>
+      <td>7.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>5028.571429</td>
+      <td>101.428571</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>631.702160</td>
+      <td>99.402980</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>4000.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>4750.000000</td>
+      <td>15.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>5000.000000</td>
+      <td>110.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>5400.000000</td>
+      <td>160.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>5900.000000</td>
+      <td>250.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -753,13 +1092,39 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-    car	size
-  count	11	11
-  unique 2	3
-  top	Sedan	S
-  freq	7	6
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>car</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>11</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>Sedan</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>7</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -768,13 +1133,35 @@ SECTION03 탐색적 데이터 분석(EDA, Exploratory Data Analysis)
 ```
 
 > 결과
-```python
-      메뉴
-  count	7
-  unique 7
-  top	아메리카노
-  freq	1
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>아메리카노</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 ▲ '메뉴' 컬럼 데이터 전체가 고유값을 가졌기 때문에 top과 freq는 큰 의미 X
 
 <br>
@@ -888,11 +1275,32 @@ df.head(2)
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  1	카페라떼	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -904,11 +1312,35 @@ df.head(2)
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	new
-  0	아메리카노 4500	10	0
-  1	카페라떼	5000	110	0
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>new</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -921,11 +1353,38 @@ df.head(2)
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	new	할인가
-  0	아메리카노 4500	10	0	3600.0
-  1	카페라떼	5000	110	0	4000.0
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>new</th>
+      <th>할인가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>0</td>
+      <td>3600.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>0</td>
+      <td>4000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -949,12 +1408,38 @@ SECTION06 데이터 삭제
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  1	카페라떼	5000	110
-  2	카페모카	5500	250
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -990,12 +1475,38 @@ SECTION06 데이터 삭제
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  2	카페모카	5500	250
-  3	카푸치노	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1010,12 +1521,34 @@ SECTION06 데이터 삭제
 ```
 
 > 결과
-```python
-      메뉴	가격
-  0 아메리카노	4500
-  2	카페모카	5500
-  3	카푸치노	5000
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1062,11 +1595,32 @@ SECTION07 인덱싱/슬라이싱(loc)
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  1	카페라떼	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1169,12 +1723,34 @@ SECTION07 인덱싱/슬라이싱(loc)
 ```
 
 > 결과
-```python
-    	메뉴	가격
-  1	카페라떼 5000
-  2	카페모카	5500
-  3	카푸치노	5000
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1202,11 +1778,32 @@ SECTION08 인덱싱/슬라이싱(iloc)
 ```
 
 > 결과
-```python
-  	  메뉴	가격	칼로리
-  1	카페라떼 5000	110
-  2	카페모카	5500	250
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1285,11 +1882,32 @@ SECTION08 인덱싱/슬라이싱(iloc)
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리
-  2	카페모카	5500	250
-  3	카푸치노	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1299,11 +1917,32 @@ SECTION08 인덱싱/슬라이싱(iloc)
 ```
 
 > 결과
-```python
-  	  메뉴	가격	칼로리
-  2	카페모카	5500	250
-  3	카푸치노	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1331,11 +1970,32 @@ SECTION09 데이터 추가/변경
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리
-  0	아메리카노 4500	10
-  1	카페라떼	5000	110
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1361,16 +2021,70 @@ SECTION09 데이터 추가/변경
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	NaN
-  1	카페라떼	5000	110	NaN
-  2	카페모카	5500	250	NaN
-  3	카푸치노	5000	110	NaN
-  4	에스프레소	4000	20	NaN
-  5	밀크티	5900	210	NaN
-  6	녹차	5300	0	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1386,13 +2100,49 @@ SECTION09 데이터 추가/변경
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	NaN
-  2	카페모카	5500	250	과테말라
-  3	카푸치노	5000	110	과테말라
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1409,12 +2159,42 @@ SECTION09 데이터 추가/변경
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  5	밀크티 5900	210	NaN
-  6	녹차	5300	0	NaN
-  시즌	크리스마스라떼	6000	300	한국
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>시즌</th>
+      <td>크리스마스라떼</td>
+      <td>6000</td>
+      <td>300</td>
+      <td>한국</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1426,13 +2206,47 @@ SECTION09 데이터 추가/변경
   - 딕셔너리 : 특정 컬럼이 없다면 결측치(NaN)로 입력됨
 
 ```python
-  
+  df.loc[7] = {'메뉴':'딸기라떼', '가격':5700, '칼로리':280}
+  df.tail(3)
 ```
 
 > 결과
-```python
-  
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>시즌</th>
+      <td>크리스마스라떼</td>
+      <td>6000</td>
+      <td>300</td>
+      <td>한국</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1466,11 +2280,35 @@ SECTION10 정렬
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1498,17 +2336,77 @@ SECTION10 정렬
 ```
 
 > 결과
-```python
-    	메뉴	가격	칼로리	원산지
-  7	딸기라떼 5700	280	NaN
-  6	녹차	5300	0	NaN
-  5	밀크티	5900	210	NaN
-  4	에스프레소 4000	20	NaN
-  3	카푸치노	5000	110	과테말라
-  2	카페모카	5500	250	과테말라
-  1	카페라떼	5000	110	NaN
-  0	아메리카노 4500	10	콜롬비아
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1522,17 +2420,77 @@ SECTION10 정렬
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  3	카푸치노 5000	110	과테말라
-  2	카페모카	5500	250	과테말라
-  1	카페라떼	5000	110	NaN
-  4	에스프레소 4000	20	NaN
-  0	아메리카노 4500	10	콜롬비아
-  5	밀크티	5900	210	NaN
-  7	딸기라떼	5700	280	NaN
-  6	녹차	5300	0	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1551,17 +2509,77 @@ SECTION10 정렬
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  5	밀크티 5900	210	NaN
-  7	딸기라떼	5700	280	NaN
-  2	카페모카	5500	250	과테말라
-  6	녹차	5300	0	NaN
-  1	카페라떼	5000	110	NaN
-  3	카푸치노	5000	110	과테말라
-  0	아메리카노 4500	10	콜롬비아
-  4	에스프레소 4000	20	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1581,17 +2599,77 @@ SECTION10 정렬
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	밀크티 5900	210	NaN
-  1	딸기라떼	5700	280	NaN
-  2	카페모카	5500	250	과테말라
-  3	녹차	5300	0	NaN
-  4	카페라떼	5000	110	NaN
-  5	카푸치노	5000	110	과테말라
-  6	아메리카노 4500	10	콜롬비아
-  7	에스프레소 4000	20	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1611,11 +2689,35 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1649,12 +2751,42 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  4	에스프레소 4000	20	NaN
-  6	녹차	5300	0	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1665,12 +2797,43 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  4	에스프레소 4000	20	NaN
-  6	녹차	5300	0	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 ▲ 방법1은 조건이 2개 이상일 때 괄호 수가 많아지고 가독성 좋지 않으므로 방법2 추천
 
 <br>
@@ -1688,14 +2851,56 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	  메뉴	가격	칼로리	원산지
-  1	카페라떼	5000	110	NaN
-  2	카페모카	5500	250	과테말라
-  3	카푸치노	5000	110	과테말라
-  5	밀크티	5900	210	NaN
-  7	딸기라떼	5700	280	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1739,11 +2944,35 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  1	카페라떼	5000	110	NaN
-  3	카푸치노	5000	110	과테말라
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1755,16 +2984,70 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	NaN
-  2	카페모카	5500	250	과테말라
-  3	카푸치노	5000	110	과테말라
-  4	에스프레소 4000	20	NaN
-  5	밀크티	5900	210	NaN
-  7	딸기라떼	5700	280	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1809,10 +3092,28 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  6	녹차	5300	0	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1823,12 +3124,42 @@ SECTION11 필터링
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  1	카페라떼	5000	110	NaN
-  3	카푸치노	5000	110	과테말라
-  6	녹차	5300	0	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1836,7 +3167,7 @@ SECTION11 필터링
 
 <br>
 
-SECTION2 결측치 처리
+SECTION12 결측치 처리
 ---
 > cafe2.csv 데이터프레임 불러오기
 
@@ -1848,11 +3179,35 @@ SECTION2 결측치 처리
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	NaN
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1878,17 +3233,77 @@ SECTION2 결측치 처리
 ```
 
 > 결과
-```python
-    메뉴	가격	칼로리	원산지
-  0	False	False	False	False
-  1	False	False	False	True
-  2	False	False	False	False
-  3	False	False	False	False
-  4	False	False	False	True
-  5	False	False	False	True
-  6	False	False	False	True
-  7	False	False	False	True
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1931,17 +3346,77 @@ SECTION2 결측치 처리
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	코스타리카
-  2	카페모카	5500	250	과테말라
-  3	카푸치노	5000	110	과테말라
-  4	에스프레소 4000	20	코스타리카
-  5	밀크티	5900	210	코스타리카
-  6	녹차	5300	0	코스타리카
-  7	딸기라떼	5700	280	코스타리카
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1972,11 +3447,35 @@ SECTION13 값 변경
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	코스타리카
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -1996,17 +3495,77 @@ SECTION13 값 변경
 ```
 
 > 결과
-```python
-      메뉴	가격	칼로리	원산지
-  0	룽고	4500	10	콜롬비아
-  1	카페라떼	5000	110	코스타리카
-  2	카페모카	5500	250	과테말라
-  3	카푸치노	5000	110	과테말라
-  4	에스프레소 4000	20	코스타리카
-  5	밀크티	5900	210	코스타리카
-  6	그린티	5300	0	코스타리카
-  7	딸기라떼	5700	280	코스타리카
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>룽고</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>그린티</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2017,17 +3576,77 @@ SECTION13 값 변경
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  0	아메리카노 4500	10	콜롬비아
-  1	카페라떼	5000	110	코스타리카
-  2	카페모카	5500	250	과테말라
-  3	카푸치노	5000	110	과테말라
-  4	에스프레소 4000	20	코스타리카
-  5	밀크티	5900	210	코스타리카
-  6	녹차	5300	0	코스타리카
-  7	딸기라떼	5700	280	코스타리카
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2042,12 +3661,42 @@ SECTION13 값 변경
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지
-  5	밀크티	5900	210	코스타리카
-  6	녹차	5300	0	대한민국
-  7	딸기라떼	5700	280	코스타리카
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>대한민국</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2057,12 +3706,46 @@ SECTION13 값 변경
 ```
 
 > 결과
-```python
-  	메뉴	가격	칼로리	원산지	이벤트가
-  0	아메리카노	4500	10	콜롬비아	NaN
-  1	카페라떼	5000	110	코스타리카	1000.0
-  2	카페모카	5500	250	과테말라	1000.0
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+      <td>1000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2102,12 +3785,38 @@ SECTION14 문자열
 ```
 
 > 결과
-```python
-  	A	B	C
-  0	데이터 분석	10	ab cd
-  1	웹 프로그래밍	20	AB CD
-  2	앱 개발	30	ab cd
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 분석</td>
+      <td>10</td>
+      <td>ab cd</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2144,12 +3853,38 @@ SECTION14 문자열
 ```
 
 > 결과
-```python
-  	A	B	C
-  0	데이터 분석	10	ab cd
-  1	웹 프로그래밍	20	AB CD
-  2	앱 개발	30	ab cd
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 분석</td>
+      <td>10</td>
+      <td>ab cd</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2159,12 +3894,38 @@ SECTION14 문자열
 ```
 
 > 결과
-```python
-  	A	B	C
-  0	데이터 시각화	10	ab cd
-  1	웹 프로그래밍	20	AB CD
-  2	앱 개발	30	ab cd
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 시각화</td>
+      <td>10</td>
+      <td>ab cd</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2174,12 +3935,38 @@ SECTION14 문자열
 ```
 
 > 결과
-```python
-  	A	B	C
-  0	데이터 시각화	100	ab cd
-  1	웹 프로그래밍	20	AB CD
-  2	앱 개발	30	ab cd
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 시각화</td>
+      <td>100</td>
+      <td>ab cd</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2241,12 +4028,42 @@ SECTION14 문자열
 ```
 
 > 결과
-```python
-  	A	B	C	D
-  0	데이터 시각화	100	ab cd	데이터
-  1	웹 프로그래밍	20	AB CD	웹
-  2	앱 개발	30	ab cd	앱
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 시각화</td>
+      <td>100</td>
+      <td>ab cd</td>
+      <td>데이터</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+      <td>웹</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+      <td>앱</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2286,12 +4103,46 @@ SECTION14 문자열
 ```
 
 > 결과
-```python
-  	A	B	C	D	웹 포함 유무
-  0	데이터 시각화	100	ab cd	데이터	False
-  1	웹 프로그래밍	20	AB CD	웹	True
-  2	앱 개발	30	ab cd	앱	False
-```
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>웹 포함 유무</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 시각화</td>
+      <td>100</td>
+      <td>ab cd</td>
+      <td>데이터</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+      <td>웹</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+      <td>앱</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -2360,13 +4211,1429 @@ SECTION14 문자열
 ```
 
 > 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>웹 포함 유무</th>
+      <th>문자길이</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>데이터 시각화</td>
+      <td>100</td>
+      <td>ab cd</td>
+      <td>데이터</td>
+      <td>False</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>웹 프로그래밍</td>
+      <td>20</td>
+      <td>AB CD</td>
+      <td>웹</td>
+      <td>True</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>앱 개발</td>
+      <td>30</td>
+      <td>ab cd</td>
+      <td>앱</td>
+      <td>False</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 05. 문자열 대(소)문자 변경
+- 파이썬에서는 대소문자 구분
+
+- str.lower() : 영어로 된 문자열을 모두 소문자로 변경
+
+- str.upper() : 영어로 된 문자열을 모두 대문자로 변경
+
+- 문제에서 특정 영문 단어의 수를 물었을 때
+
+  - 단어의 대소문자가 다른 경우
+ 
+  - 공백이 포함된 경우
+ 
+    - 소문자(또는 대문자)로 변경하고 공백도 제거하는 전처리 필요
+  
 ```python
-  	A	B	C	D	웹 포함 유무	문자길이
-  0	데이터 시각화	100	ab cd	데이터	False	7
-  1	웹 프로그래밍	20	AB CD	웹	True	7
-  2	앱 개발	30	ab cd	앱	False	4
+  'AB cd' == 'ab CD'
+```
+
+> 결과
+```python
+  False
 ```
 
 <br>
+
+```python
+  df['C'] = df['C'].str.lower()
+  df['C']
+```
+
+> 결과
+```python
+  0     ab cd
+  1     ab cd
+  2    ab cd 
+  Name: C, dtype: object
+```
+
+<br>
+
+```python
+  df['C'] = df['C'].str.upper()
+  df['C']
+```
+
+> 결과
+```python
+  0     AB CD
+  1     AB CD
+  2    AB CD 
+  Name: C, dtype: object
+```
+
+<br>
+
+```python
+  df['C'] == 'AB CD'
+```
+
+> 결과
+```python
+  0     True
+  1     True
+  2    False
+  Name: C, dtype: bool
+```
+
+<br>
+
+```python
+  df['C'] = df['C'].str.lower()
+  df['C'] = df['C'].str.replace(' ', '')
+  df['C']
+```
+
+> 결과
+```python
+  0    abcd
+  1    abcd
+  2    abcd
+  Name: C, dtype: object
+```
+
+<br>
+
+#### 💡 왼쪽, 오른쪽, 양쪽 공백 제거 방법
+```python
+  df['C'].str.strip()   # 양쪽 공백 제거
+  df['C'].str.lstrip()  # 왼쪽 공백 제거
+  df['C'].str.rstrip()  # 오른쪽 공백 제거
+```
+
+<br>
+
+### 06. 문자열 슬라이싱
+- str[시작 인덱스 번호:끝 인덱스 번호] : 데이터프레임에서 특정 구간만 슬라이싱
+
+```python
+  df['C'].str[1:3]
+```
+
+> 결과
+```python
+  0    bc
+  1    bc
+  2    bc
+  Name: C, dtype: object
+```
+
+<br>
+
+- str 없이 사용시 범위 내의 행 선택
+
+```python
+  df['C'][1:3]
+```
+
+> 결과
+```python
+  1    abcd
+  2    abcd
+  Name: C, dtype: object
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION15  내장 함수
+---
+> cafe4.csv 데이터프레임 불러오기
+
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe4.csv')
+  df.head(2)
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+      <td>1000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 01. len()
+- 리스트에서 데이터의 수 반환
+
+- 데이터프레임에서 행(row)의 수 반환
+
+- 파이썬 내장 함수지만, 데이터프레임의 행(레코드) 수를 구할 때 자주 사용
+
+- df.shape로도 행과 열의 수 확인 가능
+
+  - 행의 수 : df.shape[0]
+ 
+  - 열의 수 : df.shape[1]
+ 
+```python
+  print(len(df))
+  print(df.shape[0])
+```
+
+> 결과
+```python
+  8
+  8
+```
+
+<br>
+
+### 02. sum()
+- 합계 함수
+
+  - 이 함수를 잘 활용하면 조건에 맞는 데이터의 수 찾을 때 len() 보다 유용
+ 
+    - len() 함수로는 조건에 맞는 데이터프레임을 구한 후 데이터프레임의 개수 구해야 함
+ 
+- 조건문의 결과를 True/False로 반환받은 후 이를 모두 더하면 조건에 맞는 개수 확인 가능
+
+  - True = 1, False = 0
+
+- 기본적으로 컬럼별 합계 구함
+
+- 행별 합계 구하기
+
+  - 데이터프레임의 df의 행과 열 변경
+
+    - T(대문자, transpose 약자) 사용
+   
+    - 변경한 형태로 저장하고 싶다면 df = df.T 로 저장
+   
+  - 축(axis) 변경
+ 
+    - 기본적으로 axis = 0
+   
+    - axis = 1 로 변경하면 행별 합계 구하기 가능
+   
+    - drop에서 사용할 때와는 축설정을 반대라고 생각
+   
+      - sum(axis=0) : 컬럼별 합계
+     
+      - sum(axis=1) : 행별 합계
+
+<br>
+
+|-|axis = 0|axis = 1|
+|:-:|:-:|:-:|
+|drop()|행 삭제|컬럼 삭제|
+|sum()|컬럼별 합계|행별 합계|
+
+<br>
+
+```python
+  cond = df['가격'] > 5000
+  
+  # sum 으로 조건에 맞는 개수 구하기
+  print(sum(cond))
+  
+  # len 으로 조건에 맞는 개수 구하기
+  print(len(df[cond]))
+```
+
+> 결과
+```python
+  4
+  4
+```
+
+<br>
+
+```python
+  df.sum(numeric_only = True)
+```
+
+> 결과
+```python
+  가격      40900.0
+  칼로리       990.0
+  이벤트가     2000.0
+  dtype: float64
+```
+
+<br>
+
+```python
+  df.T
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>메뉴</th>
+      <td>아메리카노</td>
+      <td>카페라떼</td>
+      <td>카페모카</td>
+      <td>카푸치노</td>
+      <td>에스프레소</td>
+      <td>밀크티</td>
+      <td>녹차</td>
+      <td>딸기라떼</td>
+    </tr>
+    <tr>
+      <th>가격</th>
+      <td>4500</td>
+      <td>5000</td>
+      <td>5500</td>
+      <td>5000</td>
+      <td>4000</td>
+      <td>5900</td>
+      <td>5300</td>
+      <td>5700</td>
+    </tr>
+    <tr>
+      <th>칼로리</th>
+      <td>10</td>
+      <td>110</td>
+      <td>250</td>
+      <td>110</td>
+      <td>20</td>
+      <td>210</td>
+      <td>0</td>
+      <td>280</td>
+    </tr>
+    <tr>
+      <th>원산지</th>
+      <td>콜롬비아</td>
+      <td>코스타리카</td>
+      <td>과테말라</td>
+      <td>과테말라</td>
+      <td>코스타리카</td>
+      <td>코스타리카</td>
+      <td>대한민국</td>
+      <td>코스타리카</td>
+    </tr>
+    <tr>
+      <th>이벤트가</th>
+      <td>NaN</td>
+      <td>1000.0</td>
+      <td>1000.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 💡 데이터프레임 속성
+- df.T와 df.shape는 함수(메소드)가 아니라 데이터프레임 속성이므로 괄호 X
+
+<br>
+
+```python
+  df.sum(axis = 1, numeric_only = True)
+```
+
+> 결과
+```python
+  0    4510.0
+  1    6110.0
+  2    6750.0
+  3    5110.0
+  4    4020.0
+  5    6110.0
+  6    5300.0
+  7    5980.0
+  dtype: float64
+```
+
+<br>
+
+#### 💡 sum(df) VS df.sum()
+- 계산 결과는 같으나 차이점 존재
+
+  - sum(df)
+ 
+    - 함수가 밖에서 데이터프레임을 감싸고 있으면 파이썬 내장함수
+   
+  - df.sum()
+ 
+    - 데이터프레임 뒤에 점(.)과 함께 함수가 붙으면 판다스의 데이터프레임에서 제공하는 함수(메소드)
+
+<br>
+
+### 03. max(), min(), mean(), median(), sum(), std(), var()
+- 기초 통계 함수
+
+```python
+  print('최대값: ', df['가격'].max())
+  print('최소값: ', df['가격'].min())
+  print('평균값: ', df['가격'].mean())
+  print('중앙값: ', df['가격'].median())
+  print('합계: ', df['가격'].sum())
+  print('표준편차: ', df['가격'].std())
+  print('분산: ', df['가격'].var())
+```
+
+> 결과
+```python
+  최대값:  5900
+  최소값:  4000
+  평균값:  5112.5
+  중앙값:  5150.0
+  합계:  40900
+  표준편차:  631.1836952447815
+  분산:  398392.85714285716
+```
+
+<br>
+
+### 04. quantile()
+- quantile(0 ~ 1 사이 값) : 분위수 확인 (소수점 앞의 0 생략 가능)
+
+  - 0.1 : 데이터의 하위 10%
+
+  - 0.25 : 1사분위수(데이터의 하위 25%)
+ 
+  - 0.5 : 2사분위수(데이터의 중앙값)
+ 
+  - 0.75 : 3사분위수(데이터의 하위 75%)
+ 
+  - 0.9 : 데이터의 하위 90%
+ 
+```python
+  print('분위수 25% 값 : ', df['가격'].quantile(0.25))
+  print('분위수 75% 값 : ', df['가격'].quantile(.75))
+```
+
+> 결과
+```python
+  분위수 25% 값 :  4875.0
+  분위수 75% 값 :  5550.0
+```
+
+<br>
+
+```python
+  cond = df['가격'].quantile(.25) > df['가격']
+  df[cond]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  cond = df['가격'].quantile(.75) < df['가격']
+  df[cond]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 05. mode()
+- 최빈값을 찾아 시리즈 형태로 반환 (값만 반환하지 않음)
+
+  - 반환 값이 1개가 아니라 여러 개일 수도 있기 때문
+
+- 인덱스를 제외하고 최빈값만 얻고 싷다면 뒤에 인덱스 0 붙이기
+ 
+```python
+  df['원산지'].mode()[0]
+```
+
+> 결과
+```python
+  '코스타리카'
+```
+
+<br>
+
+### 06. idxmax()와 idxmin()
+- idxmax()
+
+  - 데이터프레임 또는 시리즈의 열에서 최댓값을 갖는 인덱스를 반환
+ 
+- idxmin()
+
+  - 최소값을 갖는 인덱스를 반환
+
+```python
+  df['가격'].idxmax()
+```
+
+> 결과
+```python
+  5
+```
+
+<br>
+
+```python
+  max_ind = df['가격'].idxmax()
+  df.loc[max_ind]
+```
+
+> 결과
+```python
+  메뉴        밀크티
+  가격       5900
+  칼로리       210
+  원산지     코스타리카
+  이벤트가      NaN
+  Name: 5, dtype: object
+```
+
+<br>
+
+```python
+  print(df.loc[max_ind, '메뉴'])
+  print(df.loc[max_ind]['메뉴'])
+```
+
+> 결과
+```python
+  밀크티
+  밀크티
+```
+
+<br>
+
+### 07. nlargest()와 nsmallest()
+- nlargest(반환 개수, 컬럼명)
+
+  - 데이터프레임의 특정 컬럼에서 가장 큰 값 반환
+
+- nsmallest(반환 개수, 컬럼명)
+
+  - 데이터프레임의 특정 컬럼에서 가장 작은 값 반환
+ 
+  - 결과는 오름차순으로 정렬
+ 
+  - 대체로 Sort_Values() 사용 가능
+
+```python
+  df.nlargest(3, '가격')
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+      <td>1000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  df.nsmallest(2, '가격')
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 08. apply()
+- apply(적용할 함수명) : 데이터를 변경하거나 파생변수를 생성할 때 유용하게 활용
+
+```python
+  # 입력값이 100보다 크거나 같으면 No, 작으면 Yes 반환하는 함수
+  def cal(x) :
+      if x >= 100 :
+          return 'No'
+      else :
+          return 'Yes'
+  
+  # apply(적용할 함수명)으로 '칼로리' 컬럼의 각 데이터를 cal()의 입력값으로 넣고
+  # 각 결과값을 새로운 컬럼에 대입
+  df['먹어도 될까요'] = df['칼로리'].apply(cal)
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+      <th>먹말?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+      <td>NaN</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+      <td>1000.0</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>카페모카</td>
+      <td>5500</td>
+      <td>250</td>
+      <td>과테말라</td>
+      <td>1000.0</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>카푸치노</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>과테말라</td>
+      <td>NaN</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>에스프레소</td>
+      <td>4000</td>
+      <td>20</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>밀크티</td>
+      <td>5900</td>
+      <td>210</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>녹차</td>
+      <td>5300</td>
+      <td>0</td>
+      <td>대한민국</td>
+      <td>NaN</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>딸기라떼</td>
+      <td>5700</td>
+      <td>280</td>
+      <td>코스타리카</td>
+      <td>NaN</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 09. melt()
+- 데이터프레임을 재구조화하는 데 사용
+
+- '넓은 형태(wide format)'의 데이터를 '긴 형태(long format)'의 데이터로 변환하는데 유용
+
+  - 넓은 형태
+ 
+    - 각 행이 한 사람의 모든 정보를 담고 있고, 열이 다양한 변수를 나타내는 형태
+   
+  - 긴 형태
+ 
+    - 각 행이 단 하나의 관측값만을 갖고, 다양한 변수들이 행으로 길게 나열되는 형태
+   
+- melt() 함수에서 인자 사용
+
+  - id_vars(필수)
+ 
+    - 데이터를 재구조화할 때 유지하고 싶은 열들 지정
+   
+  - value_vars(선택)
+ 
+    - 재구조화할 열들 지정
+   
+    - 컬럼을 지정하면 해당 컬럼만 긴 형태로 변형됨
+   
+    - 지정하지 않으면 id_vars를 제외한 모든 열이 사용됨
+
+> 예제 데이터 생성
+```python
+  df = pd.DataFrame({
+      'Name' : {0:'최승철', 1:'윤정한', 2:'홍지수'},
+      '수학' : {0:90, 1:92, 2:85},
+      '영어' : {0:92, 1:84, 2:86},
+      '국어' : {0:91, 1:94, 2:83}
+  })
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>최승철</td>
+      <td>90</td>
+      <td>92</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>윤정한</td>
+      <td>92</td>
+      <td>84</td>
+      <td>94</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>홍지수</td>
+      <td>85</td>
+      <td>86</td>
+      <td>83</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  pd.melt(df, id_vars=['Name'])
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>variable</th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>최승철</td>
+      <td>수학</td>
+      <td>90</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>윤정한</td>
+      <td>수학</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>홍지수</td>
+      <td>수학</td>
+      <td>85</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>최승철</td>
+      <td>영어</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>윤정한</td>
+      <td>영어</td>
+      <td>84</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>홍지수</td>
+      <td>영어</td>
+      <td>86</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>최승철</td>
+      <td>국어</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>윤정한</td>
+      <td>국어</td>
+      <td>94</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>홍지수</td>
+      <td>국어</td>
+      <td>83</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  pd.melt(df, id_vars=['Name'], value_vars=['수학', '영어'])
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>variable</th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>최승철</td>
+      <td>수학</td>
+      <td>90</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>윤정한</td>
+      <td>수학</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>홍지수</td>
+      <td>수학</td>
+      <td>85</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>최승철</td>
+      <td>영어</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>윤정한</td>
+      <td>영어</td>
+      <td>84</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>홍지수</td>
+      <td>영어</td>
+      <td>86</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+---
+
+<br>
+
+SECTION16 그룹핑
+---
+- groupby(컬럼명) : 데이터를 다양한 방식으로 집계하고 분석할 때 사용
+
+  - 특정 컬럼을 기준으로 여러 그룹으로 나눔
+ 
+  - 각 그룹에 대해 합계, 평균, 최대, 최소, 빈도 등 구할 수 있음
+ 
+  - 괄호 안에 대괄호 사용여부 (리스트 형식이므로)
+ 
+    - 일반적으로 하나일 때 사용 X
+   
+    - 2개 이상일 때는 사용 O
+
+<br>
+
+> cafe4.csv 데이터프레임 불러오기
+
+```python
+  import pandas as pd
+  
+  df = pd.read_csv('./data/cafe4.csv')
+  df.head(2)
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>메뉴</th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>원산지</th>
+      <th>이벤트가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>아메리카노</td>
+      <td>4500</td>
+      <td>10</td>
+      <td>콜롬비아</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>카페라떼</td>
+      <td>5000</td>
+      <td>110</td>
+      <td>코스타리카</td>
+      <td>1000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 01. 그룹 기준 1개
+```python
+  df.groupby(['원산지']).mean(numeric_only = True)
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>가격</th>
+      <th>칼로리</th>
+      <th>이벤트가</th>
+    </tr>
+    <tr>
+      <th>원산지</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>과테말라</th>
+      <td>5250.0</td>
+      <td>180.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>대한민국</th>
+      <td>5300.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>코스타리카</th>
+      <td>5150.0</td>
+      <td>155.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>콜롬비아</th>
+      <td>4500.0</td>
+      <td>10.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br> 
+
+#### 💡 코랩에서 발생하는 에러
+- 최근 코랩의 판다스 라이브러리가 업데이트되면서 df.groupby(['원산지']).mean() 입력시 에러 발생
+
+```
+  TypeError: Could not convert 카페모카카푸치노 to numeric
+```
+
+- 해결 방법
+
+  - 코랩 환경 : df.groupby(['원산지']).mean(numeric_only=True)
+ 
+  - 시험 환경 : df.groupby(['원산지']).mean()
+
+<br>
+
+### 02. 집계 연산
+- 그룹화된 결과에 다양한 연산 적용 가능
+
+  - mean() : 평균
+ 
+  - sum() : 합계
+ 
+  - max(), min() : 최대, 최소
+ 
+  - count() : 개수(단, 결측치 NaN 제외)
+ 
+  - size() : 개수(모든 값 빈도, 결측치 포함)
+ 
+  - agg() : 여러 연산을 한번에 적용
+ 
+<br>
+
+### 03. 그룹 기준 2개 이상
+- 대괋호 필수
+
+- 리스트 형태로 컬럼 입력
+
+```python
+  df.groupby(['원산지', '칼로리']).mean(numeric_only=True)
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>가격</th>
+      <th>이벤트가</th>
+    </tr>
+    <tr>
+      <th>원산지</th>
+      <th>칼로리</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">과테말라</th>
+      <th>110</th>
+      <td>5000.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>250</th>
+      <td>5500.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>대한민국</th>
+      <th>0</th>
+      <td>5300.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">코스타리카</th>
+      <th>20</th>
+      <td>4000.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>110</th>
+      <td>5000.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>5900.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>280</th>
+      <td>5700.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>콜롬비아</th>
+      <th>10</th>
+      <td>4500.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 04. agg()
+- 여러 개의 컬럼(열)에 대해 다양한 집계 연산을 동시에 수행 가능
+
+```python
+  df.groupby(['원산지', '메뉴']).agg(['mean', 'sum'])
+```
+
+> 결과
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th colspan="2" halign="left">가격</th>
+      <th colspan="2" halign="left">칼로리</th>
+      <th colspan="2" halign="left">이벤트가</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>mean</th>
+      <th>sum</th>
+      <th>mean</th>
+      <th>sum</th>
+      <th>mean</th>
+      <th>sum</th>
+    </tr>
+    <tr>
+      <th>원산지</th>
+      <th>메뉴</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">과테말라</th>
+      <th>카페모카</th>
+      <td>5500.0</td>
+      <td>5500</td>
+      <td>250.0</td>
+      <td>250</td>
+      <td>1000.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>카푸치노</th>
+      <td>5000.0</td>
+      <td>5000</td>
+      <td>110.0</td>
+      <td>110</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>대한민국</th>
+      <th>녹차</th>
+      <td>5300.0</td>
+      <td>5300</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">코스타리카</th>
+      <th>딸기라떼</th>
+      <td>5700.0</td>
+      <td>5700</td>
+      <td>280.0</td>
+      <td>280</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>밀크티</th>
+      <td>5900.0</td>
+      <td>5900</td>
+      <td>210.0</td>
+      <td>210</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>에스프레소</th>
+      <td>4000.0</td>
+      <td>4000</td>
+      <td>20.0</td>
+      <td>20</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>카페라떼</th>
+      <td>5000.0</td>
+      <td>5000</td>
+      <td>110.0</td>
+      <td>110</td>
+      <td>1000.0</td>
+      <td>1000.0</td>
+    </tr>
+    <tr>
+      <th>콜롬비아</th>
+      <th>아메리카노</th>
+      <td>4500.0</td>
+      <td>4500</td>
+      <td>10.0</td>
+      <td>10</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+
+
+
+
 
 
