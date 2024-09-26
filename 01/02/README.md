@@ -6446,6 +6446,489 @@ SECTION18 시계열 데이터(Timedelta)
 <br>
 
 ### 01. 특정 시간과의 차이
+- pd.Timedelta() : 특정 일로부터 날짜 계산
 
+  - pd.Timedelta(days=더하려는 일자) : 일(day) 더하기
+ 
+  - pd.Timedelta(hours=시간) : ~ 시간 뒤 계산
+ 
+  - 특점 시점에서 ~주, ~일, ~시간, ~분, ~초 이전 계산
+ 
+    - pd.Timedelta()로 데이터 만들고 날짜와 시간에서 빼기
+   
+    - weeks : 주(7일), days : 일, hours : 시간, minutes : 분, seconds : 초
 
+```python
+  day = pd.Timedelta(days = 99)
+  df['After-100day'] = df['DateTime4'] + day
+  df
+```
 
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DateTime4</th>
+      <th>After-100day</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-05-26 13:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-05-27 14:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-05-28 15:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-05-29 16:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  hour = pd.Timedelta(hours = 100)
+  df['After-100hour'] = df['DateTime4'] + hour
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DateTime4</th>
+      <th>After-100day</th>
+      <th>After-100hour</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-05-26 13:50:30</td>
+      <td>2024-02-21 17:50:30</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-05-27 14:55:45</td>
+      <td>2024-02-22 18:55:45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-05-28 15:30:15</td>
+      <td>2024-02-23 19:30:15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-05-29 16:10:50</td>
+      <td>2024-02-24 20:10:50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  difference = pd.Timedelta(weeks=7, days=7, hours=7, minutes=7, seconds=7)
+  df['difference'] = df['DateTime4'] - difference
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>DateTime4</th>
+      <th>After-100day</th>
+      <th>After-100hour</th>
+      <th>difference</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2024-02-17 13:50:30</td>
+      <td>2024-05-26 13:50:30</td>
+      <td>2024-02-21 17:50:30</td>
+      <td>2023-12-23 06:43:23</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2024-02-18 14:55:45</td>
+      <td>2024-05-27 14:55:45</td>
+      <td>2024-02-22 18:55:45</td>
+      <td>2023-12-24 07:48:38</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2024-02-19 15:30:15</td>
+      <td>2024-05-28 15:30:15</td>
+      <td>2024-02-23 19:30:15</td>
+      <td>2023-12-25 08:23:08</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2024-02-20 16:10:50</td>
+      <td>2024-05-29 16:10:50</td>
+      <td>2024-02-24 20:10:50</td>
+      <td>2023-12-26 09:03:43</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 02. 두 시간 사이의 차이
+- 두 자료형 간에 차이를 계산하면 Timedelta 자료형
+
+- dt.total_seconds()
+
+  - 데이터프레임(시리즈)에 있는 두 날짜와의 일, 시간, 분, 초 계산
+ 
+  - Timedelta 자료형에 사용시 전체 시간을 초 단위로 변경 가능
+
+    - 60을 나누면 분이 되고, 또 60을 나누면 시간, 24를 나누면 일
+
+```python
+  diff = df['After-100hour'] - df['difference']
+  diff
+```
+
+> 결과
+```python
+  0   60 days 11:07:07
+  1   60 days 11:07:07
+  2   60 days 11:07:07
+  3   60 days 11:07:07
+  dtype: timedelta64[ns]
+```
+
+<br>
+
+```python
+  print(diff.dt.total_seconds())          # 초
+  print(diff.dt.total_seconds()/60)       #분
+  print(diff.dt.total_seconds()/60/60)    # 시간
+  print(diff.dt.total_seconds()/60/60/24) # 일
+```
+
+> 결과
+```python
+  0    5224027.0
+  1    5224027.0
+  2    5224027.0
+  3    5224027.0
+  dtype: float64
+  0    87067.116667
+  1    87067.116667
+  2    87067.116667
+  3    87067.116667
+  dtype: float64
+  0    1451.118611
+  1    1451.118611
+  2    1451.118611
+  3    1451.118611
+  dtype: float64
+  0    60.463275
+  1    60.463275
+  2    60.463275
+  3    60.463275
+  dtype: float64
+```
+
+<br>
+
+### 03. Timedelta의 dt 속성
+- Timedelta에도 dt 속성 있음
+
+  - days : 일 수 반환
+ 
+  - seconds : 총 시간에서 일(day)를 제외한 초 반환
+ 
+    - total_seconds()는 ~일을 포함한 전체 시간을 초 단위로 반환
+
+```python
+  print(diff.dt.days)
+  print(diff.dt.seconds)
+```
+
+> 결과
+```python
+  0    60
+  1    60
+  2    60
+  3    60
+  dtype: int64
+  0    40027
+  1    40027
+  2    40027
+  3    40027
+  dtype: int32
+```
+
+<br>
+
+#### 💡 datetime의 dt VS Timedelta의 dt
+- datetime의 dt
+
+  - year, month, day, hour, minute 등 각 날짜와 시간에 대해 접근
+
+- Timedelta의 dt
+
+  - 시간의 차이 값을 days, seconds, microseconds 같은 속성과 total_seconds() 같은 메소드로 접근
+
+<br>
+
+### 04. 시간 반올림
+- round() : 시간을 반올림 할 때 사용
+
+  - ex) 5.41분
+ 
+    - 5분 41초 (X)
+   
+    - 5분 + 0.41분 = 5분  24.6초 (O)
+   
+      - 0.41분 = 0.41 * 60 = 24.6초
+
+```python
+  min = 5.41
+  print(int(min), '분')
+  print(0.41*60, '초')
+```
+
+> 결과
+```python
+  5 분
+  24.599999999999998 초
+```
+
+<br>
+
+```python
+  print(round(diff.dt.total_seconds()/60))
+```
+
+> 결과
+```python
+  0    87067.0
+  1    87067.0
+  2    87067.0
+  3    87067.0
+  dtype: float64
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION19 데이터프레임 합치기
+---
+- 여러 개의 데이터가 주어졌을 때 데이터를 합쳐야 하는 경우
+
+  - concat() or merge() 활용
+
+<br>
+
+### 01. 단순 병합
+- concat() : 데이터프레임을 위-아래 또는 왼쪽-오른쪽으로 단순히 연결할 때
+
+  - 기본적(axis=0)으로 위-아래로 합침
+ 
+    - axis=1 변경시 왼쪽-오른쪽 합침
+ 
+  - 합쳤을 때 기존 데이터에서 갖고 있던 인덱스 번호 유지
+ 
+    - ignore_index = Ture : 인덱스 새로 설정
+
+<br>
+
+> 예제 데이터 생성
+```python
+  import pandas as pd 
+  
+  # 에피타이저 메뉴
+  appetizer = pd.DataFrame({
+      'Menu' : ['Salad', 'Soup', 'Bread'],
+      'Price' : [12000, 9000, 7000]
+  })
+  
+  # 메인 메뉴
+  main = pd.DataFrame({
+      'Menu' : ['Steak', 'Pasta', 'Chicken'],
+      'Price' : [33000, 19000, 21000]
+  })
+  
+  print(appetizer)
+  print(main)
+```
+
+> 결과
+```python
+      Menu  Price
+  0  Salad  12000
+  1   Soup   9000
+  2  Bread   7000
+        Menu  Price
+  0    Steak  33000
+  1    Pasta  19000
+  2  Chicken  21000
+```
+
+<br>
+
+```python
+  full_menu = pd.concat([appetizer, main], ignore_index = True)
+  full_menu
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Menu</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Salad</td>
+      <td>12000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Soup</td>
+      <td>9000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Bread</td>
+      <td>7000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Steak</td>
+      <td>33000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Pasta</td>
+      <td>19000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Chicken</td>
+      <td>21000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+```python
+  full_menu = pd.concat([appetizer, main], axis=1)
+  full_menu
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Menu</th>
+      <th>Price</th>
+      <th>Menu</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Salad</td>
+      <td>12000</td>
+      <td>Steak</td>
+      <td>33000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Soup</td>
+      <td>9000</td>
+      <td>Pasta</td>
+      <td>19000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Bread</td>
+      <td>7000</td>
+      <td>Chicken</td>
+      <td>21000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 02. 키(key) 기준 병합
+- merge() : 주어진 2개의 데이터에서 특정 키(key)를 기준으로 합칠 때
+
+```python
+  # 메뉴와 가격
+  price = pd.DataFrame({
+      'Menu' : ['Salad', 'Soup', 'Steak', 'Pasta'],
+      'Price' : [12000, 9000, 33000, 19000]
+  })
+  
+  # 메뉴와 칼로리
+  cal = pd.DataFrame({
+      'Menu' : ['Soup', 'Steak', 'Pasta', 'Salad'],
+      'Calories' : [100, 500, 400, 150]
+  })
+  
+  # 두 데이터프레임을 'Menu'를 기준으로 병합
+  menu_info = pd.merge(price, cal, on='Menu')
+  print(menu_info)
+```
+
+> 결과
+```python
+      Menu  Price  Calories
+  0  Salad  12000       150
+  1   Soup   9000       100
+  2  Steak  33000       500
+  3  Pasta  19000       400
+```
+
+<br>
+
+---
