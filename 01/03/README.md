@@ -1686,7 +1686,7 @@ section04 값 변경, 정렬, 합계
 <br>
 
 <details>
-  <summary>풀이</summary>
+  <summary>풀이1</summary>
 
 <br>
 
@@ -2058,7 +2058,7 @@ section04 값 변경, 정렬, 합계
     - 이 위치에 있는 값을 모두 views_min 으로 변경
 
 > 결과
-```python
+```
   5      9877.0
   56     9877.0
   83     9877.0
@@ -2077,6 +2077,88 @@ section04 값 변경, 정렬, 합계
 > 코드
 ```python
   int(df['views'].sum())
+```
+
+> 결과
+```
+  652812
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>풀이2</summary>
+
+<br>
+
+> 코드
+```python
+  # 결측 데이터를 0으로 대체
+  df['views'].fillna(0, inplace = True)
+  df['views'].isna().sum()
+```
+
+> 결과
+```
+  0
+```
+
+<br>
+
+> 코드
+```python
+  # views 컬럼에서 10번째로 큰 값 구하기
+  value = df['views'].nlargest(10).iloc[-1]
+  value
+```
+- nlargest() : 시리즈에서 사용 가능한 함수(메소드)
+
+  - 데이터를 정렬하지 않고도 큰 값을 빠르게 찾을 수 있음
+ 
+- df['views'].nlargest(10) 으로 views 컬럼에서 가장 큰 값 10개가 큰 순으로 정령되어 반환
+
+  - 가장 마지막 값(=10번째 값)을 iloc[-1] 로 선택
+
+> 결과
+```
+  9877.0
+```
+
+<br>
+
+> 코드
+```python
+  # views 컬럼에서 가장 큰 9개의 값을 10번째로 큰 값으로 대체
+  df.loc[df['views'] > value, 'views'] = value
+  df['views'].nlargest(10)
+```
+- loc[행, 열] 사용시 조건 대입 가능
+
+  - df['views'] > value : 가장 큰 9개의 값을 10번째 큰 값으로 대체
+
+> 결과
+```
+  5      9877.0
+  9      9877.0
+  10     9877.0
+  32     9877.0
+  56     9877.0
+  83     9877.0
+  100    9877.0
+  104    9877.0
+  113    9877.0
+  114    9877.0
+  Name: views, dtype: float64
+```
+
+<br>
+
+> 코드
+```python
+  # views 컬럼의 합
+  print(int(df['views'].sum()))
 ```
 
 > 결과
