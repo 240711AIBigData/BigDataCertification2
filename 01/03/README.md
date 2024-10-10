@@ -2174,7 +2174,1099 @@ section04 값 변경, 정렬, 합계
 
 <br>
 
+section05 문자열 슬라이싱, 파생변수, 평균값
+---
+### 문제
+1. 'f4' 컬럼 데이터에 'FJ' 가 포함된 데이터를 찾으시오.
 
+2. 찾은 데이터 중에서 'f2' 컬럼의 평균값을 구하시오. (반올림 후 소수 둘째 자리까지 계산)
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/type1_data1.csv');
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 10 columns</p>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  DataFrame['컬럼명'].str[범위], mean()
+```
+
+<br>
+
+<details>
+  <summary>풀이1</summary>
+
+<br>
+
+> 코드
+```python
+  # f4 컬럼에서 뒤의 2개 값 슬라이싱
+  df['new'] = df['f4'].str[2:]
+  df['new']
+```
+- 데이터프레임의 특정 값을 문자열 슬라이싱하기 위해서는 우선 문자열로 변경
+
+- df['f4'].str[슬라이싱 범위] 로 문자열로 변경한 후 슬라이싱 범위 지정
+
+> 결과
+```
+  0      FJ
+  1      FJ
+  2      TJ
+  3      FP
+  4      FJ
+         ..
+  115    TP
+  116    TP
+  117    FP
+  118    FP
+  119    FJ
+  Name: new, Length: 120, dtype: object
+```
+
+<br>
+
+> 코드
+```python
+  # FJ 데이터만 찾기
+  cond = df['new'] == 'FJ'
+  df = df[cond]
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+      <th>new</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>id07</td>
+      <td>36.3</td>
+      <td>서울</td>
+      <td>60.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>9.796378</td>
+      <td>2024-01-11</td>
+      <td>61.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>id08</td>
+      <td>38.0</td>
+      <td>서울</td>
+      <td>101.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFJ</td>
+      <td>83.685380</td>
+      <td>2024-03-06</td>
+      <td>3260.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>id09</td>
+      <td>3.3</td>
+      <td>서울</td>
+      <td>35.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ESFJ</td>
+      <td>17.252986</td>
+      <td>2024-03-21</td>
+      <td>2764.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>id13</td>
+      <td>15.0</td>
+      <td>서울</td>
+      <td>68.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>83.685380</td>
+      <td>2024-12-30</td>
+      <td>5643.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>id18</td>
+      <td>41.0</td>
+      <td>서울</td>
+      <td>87.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ISFJ</td>
+      <td>80.138280</td>
+      <td>2024-03-03</td>
+      <td>7933.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>id24</td>
+      <td>80.0</td>
+      <td>부산</td>
+      <td>44.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INFJ</td>
+      <td>73.586397</td>
+      <td>2024-09-11</td>
+      <td>5976.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>id31</td>
+      <td>86.0</td>
+      <td>부산</td>
+      <td>77.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>73.586397</td>
+      <td>2024-02-11</td>
+      <td>8014.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>id32</td>
+      <td>25.0</td>
+      <td>부산</td>
+      <td>64.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ISFJ</td>
+      <td>13.049921</td>
+      <td>2024-05-24</td>
+      <td>17421.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>id33</td>
+      <td>47.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ENFJ</td>
+      <td>17.252986</td>
+      <td>2024-04-02</td>
+      <td>3880.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>id39</td>
+      <td>56.0</td>
+      <td>부산</td>
+      <td>50.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>INFJ</td>
+      <td>33.308999</td>
+      <td>2024-12-22</td>
+      <td>NaN</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>id41</td>
+      <td>81.0</td>
+      <td>대구</td>
+      <td>55.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>37.113739</td>
+      <td>2024-10-04</td>
+      <td>8640.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>id45</td>
+      <td>97.0</td>
+      <td>대구</td>
+      <td>88.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>13.049921</td>
+      <td>2024-06-21</td>
+      <td>8317.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>id52</td>
+      <td>97.0</td>
+      <td>대구</td>
+      <td>82.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISFJ</td>
+      <td>90.496999</td>
+      <td>2024-05-20</td>
+      <td>8518.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>id54</td>
+      <td>53.0</td>
+      <td>대구</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>69.730313</td>
+      <td>2024-06-21</td>
+      <td>5872.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>id57</td>
+      <td>3.0</td>
+      <td>대구</td>
+      <td>111.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-01-12</td>
+      <td>4421.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>id59</td>
+      <td>64.0</td>
+      <td>대구</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>ESFJ</td>
+      <td>20.129444</td>
+      <td>2024-06-23</td>
+      <td>4994.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>id63</td>
+      <td>88.0</td>
+      <td>경기</td>
+      <td>86.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-12-01</td>
+      <td>4053.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>id67</td>
+      <td>66.0</td>
+      <td>경기</td>
+      <td>52.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-06-17</td>
+      <td>1159.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>id73</td>
+      <td>90.0</td>
+      <td>경기</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-08-12</td>
+      <td>512.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>id81</td>
+      <td>86.0</td>
+      <td>경기</td>
+      <td>50.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>37.113739</td>
+      <td>2024-09-14</td>
+      <td>244.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>id85</td>
+      <td>83.6</td>
+      <td>경기</td>
+      <td>55.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INFJ</td>
+      <td>80.138280</td>
+      <td>2024-09-24</td>
+      <td>6719.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>id99</td>
+      <td>1.0</td>
+      <td>경기</td>
+      <td>47.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>97.381034</td>
+      <td>2024-12-02</td>
+      <td>6090.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>id104</td>
+      <td>21.0</td>
+      <td>서울</td>
+      <td>13.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>4556.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>106</th>
+      <td>id105</td>
+      <td>21.0</td>
+      <td>경기</td>
+      <td>24.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>7654.0</td>
+      <td>FJ</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+      <td>FJ</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # f2 평균 구하기
+  print(round(df['f2'].mean(), 2))
+```
+- 조건에 맞는 데이터를 찾고, mean() 함수로 평균 구하기
+
+> 결과
+```python
+  0.61
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>풀이2</summary>
+
+<br>
+
+> 코드
+```python
+  # FJ 인 데이터 찾기
+  cond = df['f4'].str.contains('FJ')
+  df = df[cond]
+  df
+```
+- str.contains() 로 특정 문자 찾기 가능
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>id07</td>
+      <td>36.3</td>
+      <td>서울</td>
+      <td>60.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>9.796378</td>
+      <td>2024-01-11</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>id08</td>
+      <td>38.0</td>
+      <td>서울</td>
+      <td>101.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFJ</td>
+      <td>83.685380</td>
+      <td>2024-03-06</td>
+      <td>3260.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>id09</td>
+      <td>3.3</td>
+      <td>서울</td>
+      <td>35.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ESFJ</td>
+      <td>17.252986</td>
+      <td>2024-03-21</td>
+      <td>2764.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>id13</td>
+      <td>15.0</td>
+      <td>서울</td>
+      <td>68.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>83.685380</td>
+      <td>2024-12-30</td>
+      <td>5643.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>id18</td>
+      <td>41.0</td>
+      <td>서울</td>
+      <td>87.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ISFJ</td>
+      <td>80.138280</td>
+      <td>2024-03-03</td>
+      <td>7933.0</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>id24</td>
+      <td>80.0</td>
+      <td>부산</td>
+      <td>44.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INFJ</td>
+      <td>73.586397</td>
+      <td>2024-09-11</td>
+      <td>5976.0</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>id31</td>
+      <td>86.0</td>
+      <td>부산</td>
+      <td>77.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>73.586397</td>
+      <td>2024-02-11</td>
+      <td>8014.0</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>id32</td>
+      <td>25.0</td>
+      <td>부산</td>
+      <td>64.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ISFJ</td>
+      <td>13.049921</td>
+      <td>2024-05-24</td>
+      <td>17421.0</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>id33</td>
+      <td>47.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ENFJ</td>
+      <td>17.252986</td>
+      <td>2024-04-02</td>
+      <td>3880.0</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>id39</td>
+      <td>56.0</td>
+      <td>부산</td>
+      <td>50.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>INFJ</td>
+      <td>33.308999</td>
+      <td>2024-12-22</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>id41</td>
+      <td>81.0</td>
+      <td>대구</td>
+      <td>55.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>37.113739</td>
+      <td>2024-10-04</td>
+      <td>8640.0</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>id45</td>
+      <td>97.0</td>
+      <td>대구</td>
+      <td>88.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>13.049921</td>
+      <td>2024-06-21</td>
+      <td>8317.0</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>id52</td>
+      <td>97.0</td>
+      <td>대구</td>
+      <td>82.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISFJ</td>
+      <td>90.496999</td>
+      <td>2024-05-20</td>
+      <td>8518.0</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>id54</td>
+      <td>53.0</td>
+      <td>대구</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>69.730313</td>
+      <td>2024-06-21</td>
+      <td>5872.0</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>id57</td>
+      <td>3.0</td>
+      <td>대구</td>
+      <td>111.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-01-12</td>
+      <td>4421.0</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>id59</td>
+      <td>64.0</td>
+      <td>대구</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>ESFJ</td>
+      <td>20.129444</td>
+      <td>2024-06-23</td>
+      <td>4994.0</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>id63</td>
+      <td>88.0</td>
+      <td>경기</td>
+      <td>86.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-12-01</td>
+      <td>4053.0</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>id67</td>
+      <td>66.0</td>
+      <td>경기</td>
+      <td>52.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-06-17</td>
+      <td>1159.0</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>id73</td>
+      <td>90.0</td>
+      <td>경기</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-08-12</td>
+      <td>512.0</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>id81</td>
+      <td>86.0</td>
+      <td>경기</td>
+      <td>50.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>37.113739</td>
+      <td>2024-09-14</td>
+      <td>244.0</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>id85</td>
+      <td>83.6</td>
+      <td>경기</td>
+      <td>55.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INFJ</td>
+      <td>80.138280</td>
+      <td>2024-09-24</td>
+      <td>6719.0</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>id99</td>
+      <td>1.0</td>
+      <td>경기</td>
+      <td>47.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>97.381034</td>
+      <td>2024-12-02</td>
+      <td>6090.0</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>id104</td>
+      <td>21.0</td>
+      <td>서울</td>
+      <td>13.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>4556.0</td>
+    </tr>
+    <tr>
+      <th>106</th>
+      <td>id105</td>
+      <td>21.0</td>
+      <td>경기</td>
+      <td>24.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>7654.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # f2 평균 구하기
+  print(round(df['f2'].mean(), 2))
+```
+
+> 결과
+```
+  0.61
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
 
 
 
