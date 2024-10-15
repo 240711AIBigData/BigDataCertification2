@@ -4859,7 +4859,276 @@ section07 값 변경(연산), 필터링 절댓값
 
 <br>
 
+section08 시계열 데이터, 필터링, 데이터 개수
+---
+### 문제
+1. 'subscribed' 컬럼이 2024년 2월인 데이터를 찾으시오.
 
+2. 위에서 찾은 데이터 중 'f3' 컬럼이 gold 인 데이터의 개수를 구하시오.
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/type1_data1.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 10 columns</p>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  to_datetime(), dt.year(), dt.month(), len()
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+
+```
+
+> 결과
+```
+
+```
+
+<br>
+
+> 코드
+```python
+
+```
+
+> 결과
+
+
+<br>
+
+> 코드
+```python
+
+```
+
+> 결과
+```python
+
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>풀이2</summary>
+
+<br>
+
+> 코드
+```python
+
+```
+
+> 결과
+
+
+<br>
+
+> 코드
+```python
+
+```
+
+> 결과
+```
+ 
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
 
 
 
