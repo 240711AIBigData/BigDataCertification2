@@ -6600,9 +6600,1881 @@ section10 그룹핑, 최댓값, 정렬
 
 <br>
 
+section11 슬라이싱, 사분위수, 결측치 제거
+---
+### 문제
+1. 데이터에서 결측치가 있는 데이터(행)을 모두 제거하시오.
 
+2. 결측치가 제거된 데이터를 사용하여 앞에서부터 70% 데이터를 구하시오. (단, 데이터 70% 지점의 index 가 소수점으로 계산될 경우 소수점 이하는 버림)
 
+3. 앞에서 구한 70% 데이터 중 'views' 컬럼의 3사분위수에서 1사분위수를 뺀 값을 정수로 구하시오.
 
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/type1_data1.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 10 columns</p>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  int(), dropna(), quantile()
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+  # 결측치가 있는 행 제거
+  df.dropna(inplace=True)
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>id06</td>
+      <td>22.0</td>
+      <td>서울</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>INTP</td>
+      <td>20.129444</td>
+      <td>2024-09-12</td>
+      <td>21550.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>id08</td>
+      <td>38.0</td>
+      <td>서울</td>
+      <td>101.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFJ</td>
+      <td>83.685380</td>
+      <td>2024-03-06</td>
+      <td>3260.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>id10</td>
+      <td>95.0</td>
+      <td>서울</td>
+      <td>74.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISFP</td>
+      <td>98.429899</td>
+      <td>2024-04-03</td>
+      <td>9992.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>id100</td>
+      <td>47.0</td>
+      <td>경기</td>
+      <td>53.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ESFP</td>
+      <td>33.308999</td>
+      <td>2024-02-21</td>
+      <td>15535.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>70 rows × 10 columns</p>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 70% 지점
+  end = int(len(df) * 0.7)
+  end
+```
+- 앞에서부터 70% 데이터를 찾기 위해 70% index 지점 찾기
+
+  - index 는 반드시 정수형이어야 하므로 int() 사용
+
+> 결과
+```python
+  49
+```
+
+<br>
+
+> 코드
+```python
+  # 70% 데이터 슬라이싱
+  df = df.iloc[:end]
+  df
+```
+- 70% 지점 인덱스까지 iloc() 활용하여 슬라이싱
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>id06</td>
+      <td>22.0</td>
+      <td>서울</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>INTP</td>
+      <td>20.129444</td>
+      <td>2024-09-12</td>
+      <td>21550.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>id08</td>
+      <td>38.0</td>
+      <td>서울</td>
+      <td>101.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFJ</td>
+      <td>83.685380</td>
+      <td>2024-03-06</td>
+      <td>3260.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>id10</td>
+      <td>95.0</td>
+      <td>서울</td>
+      <td>74.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISFP</td>
+      <td>98.429899</td>
+      <td>2024-04-03</td>
+      <td>9992.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>id100</td>
+      <td>47.0</td>
+      <td>경기</td>
+      <td>53.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ESFP</td>
+      <td>33.308999</td>
+      <td>2024-02-21</td>
+      <td>15535.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>id11</td>
+      <td>40.0</td>
+      <td>서울</td>
+      <td>68.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFP</td>
+      <td>98.429899</td>
+      <td>2024-10-29</td>
+      <td>6752.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>id13</td>
+      <td>15.0</td>
+      <td>서울</td>
+      <td>68.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>83.685380</td>
+      <td>2024-12-30</td>
+      <td>5643.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>id14</td>
+      <td>77.0</td>
+      <td>서울</td>
+      <td>50.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENTJ</td>
+      <td>67.886373</td>
+      <td>2024-09-19</td>
+      <td>5700.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>id15</td>
+      <td>22.0</td>
+      <td>서울</td>
+      <td>67.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENTP</td>
+      <td>9.796378</td>
+      <td>2024-05-26</td>
+      <td>7676.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>id16</td>
+      <td>68.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFP</td>
+      <td>16.283854</td>
+      <td>2024-07-25</td>
+      <td>9472.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>id18</td>
+      <td>41.0</td>
+      <td>서울</td>
+      <td>87.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ISFJ</td>
+      <td>80.138280</td>
+      <td>2024-03-03</td>
+      <td>7933.0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>id22</td>
+      <td>-6.3</td>
+      <td>부산</td>
+      <td>72.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENFP</td>
+      <td>52.667078</td>
+      <td>2024-02-09</td>
+      <td>6147.0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>id23</td>
+      <td>34.0</td>
+      <td>부산</td>
+      <td>75.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTP</td>
+      <td>69.730313</td>
+      <td>2024-05-21</td>
+      <td>6236.0</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>id24</td>
+      <td>80.0</td>
+      <td>부산</td>
+      <td>44.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INFJ</td>
+      <td>73.586397</td>
+      <td>2024-09-11</td>
+      <td>5976.0</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>id26</td>
+      <td>55.0</td>
+      <td>부산</td>
+      <td>57.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENFP</td>
+      <td>83.685380</td>
+      <td>2024-05-01</td>
+      <td>5857.0</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>id27</td>
+      <td>37.0</td>
+      <td>부산</td>
+      <td>60.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ESTP</td>
+      <td>73.586397</td>
+      <td>2024-10-13</td>
+      <td>4255.0</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>id28</td>
+      <td>38.0</td>
+      <td>부산</td>
+      <td>34.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENTP</td>
+      <td>80.138280</td>
+      <td>2024-10-31</td>
+      <td>5068.0</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>id29</td>
+      <td>-13.5</td>
+      <td>부산</td>
+      <td>47.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ENTP</td>
+      <td>67.886373</td>
+      <td>2024-08-28</td>
+      <td>6793.0</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>id31</td>
+      <td>86.0</td>
+      <td>부산</td>
+      <td>77.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESFJ</td>
+      <td>73.586397</td>
+      <td>2024-02-11</td>
+      <td>8014.0</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>id32</td>
+      <td>25.0</td>
+      <td>부산</td>
+      <td>64.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ISFJ</td>
+      <td>13.049921</td>
+      <td>2024-05-24</td>
+      <td>17421.0</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>id33</td>
+      <td>47.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ENFJ</td>
+      <td>17.252986</td>
+      <td>2024-04-02</td>
+      <td>3880.0</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>id36</td>
+      <td>68.0</td>
+      <td>부산</td>
+      <td>77.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>13.049921</td>
+      <td>2024-07-20</td>
+      <td>9713.0</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>id40</td>
+      <td>56.0</td>
+      <td>대구</td>
+      <td>75.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFP</td>
+      <td>17.252986</td>
+      <td>2024-01-22</td>
+      <td>8481.0</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>id41</td>
+      <td>81.0</td>
+      <td>대구</td>
+      <td>55.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>37.113739</td>
+      <td>2024-10-04</td>
+      <td>8640.0</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>id42</td>
+      <td>65.0</td>
+      <td>대구</td>
+      <td>48.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ESTP</td>
+      <td>33.308999</td>
+      <td>2024-02-09</td>
+      <td>5999.0</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>id43</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>60.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ISTP</td>
+      <td>29.269869</td>
+      <td>2024-05-18</td>
+      <td>3878.0</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>id45</td>
+      <td>97.0</td>
+      <td>대구</td>
+      <td>88.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>13.049921</td>
+      <td>2024-06-21</td>
+      <td>8317.0</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>id47</td>
+      <td>34.6</td>
+      <td>대구</td>
+      <td>75.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ESTJ</td>
+      <td>90.496999</td>
+      <td>2024-05-28</td>
+      <td>8628.0</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>id49</td>
+      <td>75.0</td>
+      <td>대구</td>
+      <td>88.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>37.113739</td>
+      <td>2024-03-31</td>
+      <td>9737.0</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>id52</td>
+      <td>97.0</td>
+      <td>대구</td>
+      <td>82.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISFJ</td>
+      <td>90.496999</td>
+      <td>2024-05-20</td>
+      <td>8518.0</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>id53</td>
+      <td>52.0</td>
+      <td>대구</td>
+      <td>50.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESTP</td>
+      <td>20.129444</td>
+      <td>2024-09-09</td>
+      <td>7012.0</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>id55</td>
+      <td>75.0</td>
+      <td>대구</td>
+      <td>63.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ENTP</td>
+      <td>13.049921</td>
+      <td>2024-02-06</td>
+      <td>6042.0</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>id57</td>
+      <td>3.0</td>
+      <td>대구</td>
+      <td>111.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-01-12</td>
+      <td>4421.0</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>id63</td>
+      <td>88.0</td>
+      <td>경기</td>
+      <td>86.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-12-01</td>
+      <td>4053.0</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>id64</td>
+      <td>43.0</td>
+      <td>경기</td>
+      <td>62.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ESFP</td>
+      <td>73.586397</td>
+      <td>2024-02-22</td>
+      <td>5995.0</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>id68</td>
+      <td>35.0</td>
+      <td>경기</td>
+      <td>45.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ISFP</td>
+      <td>67.886373</td>
+      <td>2024-07-29</td>
+      <td>8599.0</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>id70</td>
+      <td>-9.0</td>
+      <td>경기</td>
+      <td>96.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>ISTP</td>
+      <td>48.431184</td>
+      <td>2024-11-17</td>
+      <td>4442.0</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>id71</td>
+      <td>35.0</td>
+      <td>경기</td>
+      <td>84.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>ISFP</td>
+      <td>52.667078</td>
+      <td>2024-07-15</td>
+      <td>8087.0</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>id74</td>
+      <td>45.0</td>
+      <td>경기</td>
+      <td>98.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESTP</td>
+      <td>52.667078</td>
+      <td>2024-05-27</td>
+      <td>7739.0</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>id75</td>
+      <td>63.0</td>
+      <td>경기</td>
+      <td>47.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ESTP</td>
+      <td>20.129444</td>
+      <td>2024-06-12</td>
+      <td>6779.0</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>id78</td>
+      <td>92.0</td>
+      <td>경기</td>
+      <td>96.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>INTJ</td>
+      <td>69.730313</td>
+      <td>2024-10-27</td>
+      <td>7565.0</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>id80</td>
+      <td>67.0</td>
+      <td>경기</td>
+      <td>60.0</td>
+      <td>0</td>
+      <td>silver</td>
+      <td>ISFP</td>
+      <td>83.685380</td>
+      <td>2024-01-14</td>
+      <td>4381.0</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>id83</td>
+      <td>73.0</td>
+      <td>경기</td>
+      <td>50.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>80.138280</td>
+      <td>2024-09-26</td>
+      <td>19139.0</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>id84</td>
+      <td>66.0</td>
+      <td>경기</td>
+      <td>44.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>83.685380</td>
+      <td>2024-12-19</td>
+      <td>5650.0</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>id85</td>
+      <td>83.6</td>
+      <td>경기</td>
+      <td>55.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INFJ</td>
+      <td>80.138280</td>
+      <td>2024-09-24</td>
+      <td>6719.0</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>id89</td>
+      <td>34.0</td>
+      <td>경기</td>
+      <td>66.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ENTJ</td>
+      <td>33.308999</td>
+      <td>2024-10-14</td>
+      <td>6119.0</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>id91</td>
+      <td>6.0</td>
+      <td>경기</td>
+      <td>72.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>9.796378</td>
+      <td>2024-08-23</td>
+      <td>8988.0</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>id92</td>
+      <td>97.0</td>
+      <td>경기</td>
+      <td>78.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>97.381034</td>
+      <td>2024-05-08</td>
+      <td>9625.0</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>id95</td>
+      <td>77.0</td>
+      <td>경기</td>
+      <td>43.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>INTJ</td>
+      <td>91.297791</td>
+      <td>2024-05-21</td>
+      <td>8697.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 3사분위수, 1사분위수
+  q3 = df['views'].quantile(.75)
+  q1 = df['views'].quantile(.25)
+  print(q3)
+  print(q1)
+```
+- quantile() : 데이터의 분위수를 계산하는 데 사용
+
+  - 0.5 분위수는 중앙값(median), 0.25는 1사분위수(25%), 0.75는 3사분위수(75%)
+ 
+> 결과
+```python
+  8628.0
+  5857.0
+```
+
+<br>
+
+> 코드
+```python
+  # 결과 출력
+  print(int(q3 - q1))
+```
+
+> 결과
+```python
+   2771
+```
+
+<br>
+
+#### 💡 
+- 시험에서 quantile() 함수를 기억하지 못한다면 df['views'].describe() 를 활용해 25%, 75% 확인 가능
+
+> 코드
+```python
+  df['views'].describe()
+```
+
+> 결과
+```python
+  count       49.000000
+  mean      7804.795918
+  std       3700.967328
+  min       3260.000000
+  25%       5857.000000
+  50%       7012.000000
+  75%       8628.000000
+  max      21550.000000
+  Name: views, dtype: float64
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
+
+section12 결측치 처리, 최빈값, 데이터 개수
+---
+### 문제
+1. 결측치가 가장 많은 두 컬럼을 찾으시오.
+
+2. 첫 번째로 결측치가 많은 컬럼에서 결측치가 있는 데이터(행)을 삭제하시오.
+
+3. 두 번째로 결측치가 많은 컬럼을 최빈값으로 대체하시오.
+
+4. 'f3' 컬럼의 'gold' 값을 가진 데이터의 수를 정수형으로 구하시오.
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/type1_data1.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 10 columns</p>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  dropna(), mode(), sum()
+```
+
+<br>
+
+<details>
+  <summary>풀이1</summary>
+
+<br>
+
+> 코드
+```python
+  # 결측치가 가장 많은 컬럼 확인
+  df.isnull().sum()
+```
+- df.isnull().sum() 으로 결측치가 가장 많은 컬럼이 f1 임을 확인
+
+> 결과
+```python
+  id             0
+  age            0
+  city           0
+  f1            31
+  f2             0
+  f3            29
+  f4             0
+  f5             0
+  subscribed     0
+  views          4
+  dtype: int64
+```
+
+<br>
+
+> 코드
+```python
+  # 첫 번째로 결측치가 많은 컬럼에서 결측치가 있는 데이터 제거
+  df = df.dropna(subset=['f1'])
+  df
+```
+- df.dropna(subset=['f1']) 으로 결측치가 가장 많은 컬럼 제거
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>id06</td>
+      <td>22.0</td>
+      <td>서울</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>INTP</td>
+      <td>20.129444</td>
+      <td>2024-09-12</td>
+      <td>21550.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>id07</td>
+      <td>36.3</td>
+      <td>서울</td>
+      <td>60.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>9.796378</td>
+      <td>2024-01-11</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>89 rows × 10 columns</p>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 두 번째로 결측치가 많은 컬럼 최빈값 확인
+  freq = df['f3'].mode()[0]
+  freq
+```
+- mode()[0] 으로 최빈값 찾고, 두 번째로 결측치가 많은 컬럼 채우기
+
+> 결과
+```python
+  'gold'
+```
+
+<br>
+
+> 코드
+```python
+  # 최빈값 대체
+  df['f3'].fillna(freq, inplace=True)
+  df.isnull().sum()
+```
+
+> 결과
+```python
+  id            0
+  age           0
+  city          0
+  f1            0
+  f2            0
+  f3            0
+  f4            0
+  f5            0
+  subscribed    0
+  views         2
+  dtype: int64
+```
+
+<br>
+
+> 코드
+```python
+  # f3 컬럼이 gold 인 데이터의 수
+  print(sum(df['f3'] == 'gold'))
+```
+- df['f3'] == 'gold' 는 True(1) or False(0) 반환
+
+- sum(조건) 은 True(1) 의 합
+
+  - 조건에 부합하는 데이터 개수
+
+> 결과
+```python
+  63
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>풀이2</summary>
+
+<br>
+
+> 코드
+```python
+  # 결측치가 가장 많은 컬럼
+  col = df.isnull().sum().idxmax()
+  col
+```
+
+> 결과
+```python
+  'f1'
+```
+- df.isnull().sum() : 컬럼별 결측 수를 시리즈 형태로 반환
+
+  - 인덱스는 컬럼명
+ 
+- .idxmax() 활용해 결측 수가 가장 큰 값의 인덱스를 col 변수에 담기
+
+<br>
+
+> 코드
+```python
+  # 결측치가 가장 많은 컬럼 제거
+  df = df.dropna(subset = [col])
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>id06</td>
+      <td>22.0</td>
+      <td>서울</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>INTP</td>
+      <td>20.129444</td>
+      <td>2024-09-12</td>
+      <td>21550.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>id07</td>
+      <td>36.3</td>
+      <td>서울</td>
+      <td>60.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>9.796378</td>
+      <td>2024-01-11</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>89 rows × 10 columns</p>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 두 번째로 결측치가 많은 컬럼 최빈값 확인
+  freq = df['f3'].mode()[0]
+  freq
+```
+
+> 결과
+```python
+  'gold'
+```
+
+<br>
+
+> 코드
+```python
+  # 최빈값 대체
+  df['f3'] = df['f3'].fillna(freq)
+  df.isnull().sum()
+```
+
+> 결과
+```python
+  id            0
+  age           0
+  city          0
+  f1            0
+  f2            0
+  f3            0
+  f4            0
+  f5            0
+  subscribed    0
+  views         2
+  dtype: int64
+```
+
+<br>
+
+> 코드
+```python
+  # f3 컬럼이 gold 인 데이터 수
+  print(len(df[df['f3'] == 'gold']))
+```
+- 데이터 수를 구할 때 활용법
+
+  - sum() 활용
+ 
+  - len() 활용
+ 
+- df['f3'] == 'gold'
+
+  - 데이터프레임 df의 열 f3에서 값이 'gold'와 같은지 확인하는 조건 생성
+  
+  - True 또는 False 값을 포함하는 불리언 시리즈를 반환
+ 
+- df[df['f3'] == 'gold']
+
+  - 조건을 만족하는 행들을 필터링하여 새로운 데이터프레임 생성
+ 
+  - df['f3'] 열의 값이 'gold'인 행들만 반환
+ 
+- len()
+
+  - 필터링된 데이터프레임의 행의 개수 계산
+ 
+  - 'gold'라는 값을 가진 행이 몇 개인지 세는 것
+
+> 결과
+```python
+  63
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
 
 
 
