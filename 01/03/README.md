@@ -5425,9 +5425,1180 @@ section08 시계열 데이터, 필터링, 데이터 개수
 
 <br>
 
+section09 필터링, 카테고리, 최빈값
+---
+### 문제
+1. 'views' 컬럼 값이 1000 이하인 데이터(결측치 제외)를 찾으시오.
 
+2. 앞에서 구한 데이터 중 'f4' 컬럼의 최빈값을 구하시오.
 
+<br>
 
+```python
+  import pandas as pd 
+  df = pd.read_csv('./data/type1_data1.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 10 columns</p>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  value_counts(), index[]
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+  # views 수가 1000 이하
+  cond = df['views'] <= 1000
+  df = df[cond]
+  df
+```
+- views 수가 1000 이하의 데이터 선택
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>id07</td>
+      <td>36.3</td>
+      <td>서울</td>
+      <td>60.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>9.796378</td>
+      <td>2024-01-11</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>id30</td>
+      <td>16.0</td>
+      <td>부산</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>ESTJ</td>
+      <td>17.252986</td>
+      <td>2024-05-28</td>
+      <td>240.0</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>id44</td>
+      <td>44.0</td>
+      <td>대구</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>INTP</td>
+      <td>16.283854</td>
+      <td>2024-11-10</td>
+      <td>546.0</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>id61</td>
+      <td>87.0</td>
+      <td>경기</td>
+      <td>62.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INTP</td>
+      <td>69.730313</td>
+      <td>2024-02-03</td>
+      <td>218.0</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>id72</td>
+      <td>8.0</td>
+      <td>경기</td>
+      <td>97.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>ESTJ</td>
+      <td>97.381034</td>
+      <td>2024-01-30</td>
+      <td>602.0</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>id73</td>
+      <td>90.0</td>
+      <td>경기</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-08-12</td>
+      <td>512.0</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>id81</td>
+      <td>86.0</td>
+      <td>경기</td>
+      <td>50.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>37.113739</td>
+      <td>2024-09-14</td>
+      <td>244.0</td>
+    </tr>
+    <tr>
+      <th>93</th>
+      <td>id93</td>
+      <td>21.8</td>
+      <td>경기</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>ISFP</td>
+      <td>73.586397</td>
+      <td>2024-06-07</td>
+      <td>42.0</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>id98</td>
+      <td>39.0</td>
+      <td>경기</td>
+      <td>58.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>98.429899</td>
+      <td>2024-10-02</td>
+      <td>865.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # f4 컬럼 종류별 개수
+  df = df['f4'].value_counts()
+  df
+```
+- f4 컬럼의 종류별 개수를 value_counts() 활용해 구한 뒤 데이터프레임으로 만듦
+
+  - df['f4'].value_counts() 를 데이터프레임으로 변경하면 f4 컬럼 데이터가 인덱스가 됨
+ 
+  - value_counts() 는 기본적으로 내림차순 정렬되어 첫 번째 행이 최빈값
+
+> 결과
+```python
+  f4
+  ISFJ    3
+  INFP    2
+  ESTJ    2
+  INTP    2
+  ISFP    1
+  Name: count, dtype: int64
+```
+
+<br>
+
+> 코드
+```python
+  # f4 컬럼 최빈값
+  print(df.index[0])
+```
+- 첫 번째 인덱스 출력
+
+> 결과
+```python
+  ISFJ
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>풀이2</summary>
+
+<br>
+
+> 코드
+```python
+  # views 수가 1000 이하
+  cond = df['views'] <= 1000
+  df = df[cond]
+  df
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>id07</td>
+      <td>36.3</td>
+      <td>서울</td>
+      <td>60.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>9.796378</td>
+      <td>2024-01-11</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>id30</td>
+      <td>16.0</td>
+      <td>부산</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>ESTJ</td>
+      <td>17.252986</td>
+      <td>2024-05-28</td>
+      <td>240.0</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>id44</td>
+      <td>44.0</td>
+      <td>대구</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>INTP</td>
+      <td>16.283854</td>
+      <td>2024-11-10</td>
+      <td>546.0</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>id61</td>
+      <td>87.0</td>
+      <td>경기</td>
+      <td>62.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INTP</td>
+      <td>69.730313</td>
+      <td>2024-02-03</td>
+      <td>218.0</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>id72</td>
+      <td>8.0</td>
+      <td>경기</td>
+      <td>97.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>ESTJ</td>
+      <td>97.381034</td>
+      <td>2024-01-30</td>
+      <td>602.0</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>id73</td>
+      <td>90.0</td>
+      <td>경기</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>73.586397</td>
+      <td>2024-08-12</td>
+      <td>512.0</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>id81</td>
+      <td>86.0</td>
+      <td>경기</td>
+      <td>50.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>37.113739</td>
+      <td>2024-09-14</td>
+      <td>244.0</td>
+    </tr>
+    <tr>
+      <th>93</th>
+      <td>id93</td>
+      <td>21.8</td>
+      <td>경기</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>ISFP</td>
+      <td>73.586397</td>
+      <td>2024-06-07</td>
+      <td>42.0</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>id98</td>
+      <td>39.0</td>
+      <td>경기</td>
+      <td>58.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>98.429899</td>
+      <td>2024-10-02</td>
+      <td>865.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # f4 컬럼 최빈값
+  print(df['f4'].mode()[0])
+```
+- 최빈값을 구하기 위해 mode() 활용
+
+  - sum() 이나 mean() 과 달리, 시리즈(Series) 형태로 반환
+ 
+  - mode() 뒤에 [0] 을 붙여 첫 번째 값 출력
+ 
+- 최빈값은 여러 개일 수도 있음
+
+  - 시험에서는 정답을 1개만 입력해야 하므로 최빈값이 2개일 가능성은 낮음
+
+> 결과
+```python 
+   ISFJ
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
+
+section10 그룹핑, 최댓값, 정렬
+---
+### 문제
+1. 결측치가 있는 행을 삭제하시오.
+
+2. 결측치가 삭제된 데이터를 사용하여 지역별(city) 평균을 계산하시오.
+
+3. 앞에서 계산한 지역적 평균 데이터에서 'f2' 컬럼 값이 가장 큰 지역을 구하시오.
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/type1_data1.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id01</td>
+      <td>2.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>ENFJ</td>
+      <td>91.297791</td>
+      <td>2024-07-16</td>
+      <td>6820.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>id02</td>
+      <td>9.0</td>
+      <td>서울</td>
+      <td>70.0</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ENFJ</td>
+      <td>60.339826</td>
+      <td>2024-05-12</td>
+      <td>2534.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>id04</td>
+      <td>75.0</td>
+      <td>서울</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>INFP</td>
+      <td>52.667078</td>
+      <td>2024-07-21</td>
+      <td>493.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>id05</td>
+      <td>24.0</td>
+      <td>서울</td>
+      <td>85.0</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>ISFJ</td>
+      <td>29.269869</td>
+      <td>2024-03-07</td>
+      <td>1338.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 10 columns</p>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  dropna(), groupby(), mean(), sort_values() or idxmax()
+```
+
+<br>
+
+<details>
+  <summary>풀이1</summary>
+
+<br>
+
+> 코드
+```python
+  # 결측치가 있는 행 삭제
+  df.dropna(inplace=True)
+  df
+```
+- 결측치가 있는 행을 dropna() 로 삭제
+
+  - inplace=True : 해당 메서드가 원본 데이터프레임을 수정할지 여부를 결정
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>city</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f3</th>
+      <th>f4</th>
+      <th>f5</th>
+      <th>subscribed</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>id03</td>
+      <td>27.0</td>
+      <td>서울</td>
+      <td>61.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISTJ</td>
+      <td>17.252986</td>
+      <td>2024-03-16</td>
+      <td>7312.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>id06</td>
+      <td>22.0</td>
+      <td>서울</td>
+      <td>57.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>INTP</td>
+      <td>20.129444</td>
+      <td>2024-09-12</td>
+      <td>21550.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>id08</td>
+      <td>38.0</td>
+      <td>서울</td>
+      <td>101.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFJ</td>
+      <td>83.685380</td>
+      <td>2024-03-06</td>
+      <td>3260.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>id10</td>
+      <td>95.0</td>
+      <td>서울</td>
+      <td>74.0</td>
+      <td>1</td>
+      <td>gold</td>
+      <td>ISFP</td>
+      <td>98.429899</td>
+      <td>2024-04-03</td>
+      <td>9992.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>id100</td>
+      <td>47.0</td>
+      <td>경기</td>
+      <td>53.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ESFP</td>
+      <td>33.308999</td>
+      <td>2024-02-21</td>
+      <td>15535.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>id114</td>
+      <td>22.0</td>
+      <td>대구</td>
+      <td>23.0</td>
+      <td>0</td>
+      <td>gold</td>
+      <td>INTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>9747.0</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>id115</td>
+      <td>23.0</td>
+      <td>부산</td>
+      <td>65.0</td>
+      <td>0</td>
+      <td>vip</td>
+      <td>ENTP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>5628.0</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>id116</td>
+      <td>23.0</td>
+      <td>서울</td>
+      <td>12.0</td>
+      <td>1</td>
+      <td>silver</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>1267.0</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>id117</td>
+      <td>23.0</td>
+      <td>대구</td>
+      <td>65.0</td>
+      <td>2</td>
+      <td>gold</td>
+      <td>INFP</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>6543.0</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>id118</td>
+      <td>24.0</td>
+      <td>부산</td>
+      <td>94.0</td>
+      <td>1</td>
+      <td>vip</td>
+      <td>ESFJ</td>
+      <td>0.000000</td>
+      <td>2025-02-17</td>
+      <td>2356.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>70 rows × 10 columns</p>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 지역별 평균 계산
+  df = df.groupby(['city']).mean(numeric_only=True)    # 시험 환경은 mean() 사용
+  df
+```
+- numeric_only=True : 데이터 프레임이나 시리즈에서 숫자 데이터에만 연산을 적용하도록 하는 설정
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f5</th>
+      <th>views</th>
+    </tr>
+    <tr>
+      <th>city</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>경기</th>
+      <td>48.704000</td>
+      <td>61.360000</td>
+      <td>0.760000</td>
+      <td>52.106731</td>
+      <td>8127.880000</td>
+    </tr>
+    <tr>
+      <th>대구</th>
+      <td>49.773333</td>
+      <td>66.200000</td>
+      <td>0.666667</td>
+      <td>27.370166</td>
+      <td>6819.133333</td>
+    </tr>
+    <tr>
+      <th>부산</th>
+      <td>35.075000</td>
+      <td>65.875000</td>
+      <td>0.687500</td>
+      <td>38.638715</td>
+      <td>6945.437500</td>
+    </tr>
+    <tr>
+      <th>서울</th>
+      <td>38.000000</td>
+      <td>60.142857</td>
+      <td>0.785714</td>
+      <td>41.122705</td>
+      <td>7369.142857</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # f2 컬럼이 가장 큰 지역 출력
+  print(df.sort_values('f2', ascending=False).index[0])
+```
+- f2 컬럼이 가장 큰 지역을 구하기 위해 내림차순으로 정렬하고 인덱스 값 출력
+
+> 결과
+```python
+  서울
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>풀이2</summary>
+
+<br>
+
+> 코드
+```python
+  # 결측치가 있는 행 삭제
+  df.dropna(inplace=True)
+```
+
+<br>
+
+> 코드
+```python
+  # 지역별 평균 계산
+  df = df.groupby(['city']).mean(numeric_only = True)  # 시험 환경은 mean() 사용
+  df
+```
+- df.groupby() 활용시 컬럼이 1개면 groupby('city') 처럼 대괄호 없이 사용 가능
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>f1</th>
+      <th>f2</th>
+      <th>f5</th>
+      <th>views</th>
+    </tr>
+    <tr>
+      <th>city</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>경기</th>
+      <td>48.704000</td>
+      <td>61.360000</td>
+      <td>0.760000</td>
+      <td>52.106731</td>
+      <td>8127.880000</td>
+    </tr>
+    <tr>
+      <th>대구</th>
+      <td>49.773333</td>
+      <td>66.200000</td>
+      <td>0.666667</td>
+      <td>27.370166</td>
+      <td>6819.133333</td>
+    </tr>
+    <tr>
+      <th>부산</th>
+      <td>35.075000</td>
+      <td>65.875000</td>
+      <td>0.687500</td>
+      <td>38.638715</td>
+      <td>6945.437500</td>
+    </tr>
+    <tr>
+      <th>서울</th>
+      <td>38.000000</td>
+      <td>60.142857</td>
+      <td>0.785714</td>
+      <td>41.122705</td>
+      <td>7369.142857</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # f2 컬럼이 가장 큰 지역 출력
+  print(df['f2'].idxmax())
+```
+- df.sort_values('f2', ascending=False).index[0] 대신 df['f2'].idxmax() 활용해도 같은 결과 도출
+
+  - idxmax() : 최댓값의 인덱스 반환
+ 
+  - idxmin() : 최솟값의 인덱스 반환
+
+> 결과
+```python
+   서울
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
 
 
 
