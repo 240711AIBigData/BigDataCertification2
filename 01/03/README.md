@@ -10143,13 +10143,6 @@ df
 <p>5 rows × 120 columns</p>
 </div>
 
-</details>
-
-<br>
-
-<details>
-  <summary>풀이2</summary>
-
 <br>
 
 > 코드
