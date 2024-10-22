@@ -17502,13 +17502,4061 @@ section31 문자열, 형 변환
 
 <br>
 
+section32 합계(열 방향), 상위 값 선택
+---
+### 문제
+1. 수학, 영어, 국어 점수의 합을 구하시오.
+
+2. 합이 가장 큰 상위 10명을 찾으시오.
+
+3. 찾은 10명의 수학 평균 점수를 구하시오. (반올림 후 정수 출력)
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/school_data.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  sum(axis=1), nlargest()
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+  # 수학, 영어, 국어 점수 합계
+  df['total_score'] = df[['수학', '영어', '국어']].sum(axis=1)
+  df
+```
+- 수학, 영어, 국어 점수를 열(수평)을 따라 더하고 결과를 새로운 컬럼에 저장
+
+  - df[['수학', '영어', '국어']] : 데이터프레임 df에서 '수학', '영어', '국어' 열만 선택
+ 
+    - 대괄호 하나는 데이터프레임에서 열을 선택하기 위한 것, 그 안에 있는 대괄호는 선택할 열 이름들을 리스트로 감싸기 위한 것
+   
+      - df['수학'] : 하나의 열('수학')만 선택할 때는 대괄호 한 쌍만 사용
+     
+        - 선택된 결과는 시리즈(Series) 형식
+       
+      - df[['수학', '영어', '국어']] : 여러 열('수학', '영어', '국어')을 선택하려면 대괄호 두 쌍을 사용
+     
+        - 결과는 데이터프레임(DataFrame) 형식으로 반환
+ 
+  - .sum(axis=1) : 각 행(row)에 대해 선택된 열의 값을 더함
+  
+    - axis=1 : 행 단위로 합계를 계산하라는 의미
+   
+  - df['total_score'] : 합계를 계산한 값을 새로운 열 total_score에 저장
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+      <th>total_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>153</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>111</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>130</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>163</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>254</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>183</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>233</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>132</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>162</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>154</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>172</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>84</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>201</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>154</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>129</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>211</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>139</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>129</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>115</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>180</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>141</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>193</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>148</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>152</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>99</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>203</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>128</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 합계 점수를 기준으로 상위 10명 선택
+  top10 = df.nlargest(10, 'total_score')
+  top10
+```
+- nlargest() : 데이터프레임이나 시리즈에서 가장 큰 값을 가진 상위 n개의 데이터를 반환할 때 사용
+
+  - df.nlargest(n, columns, keep='first')
+ 
+    - n : 반환할 최댓값의 개수
+   
+    - columns : 비교할 열(컬럼) 이름, 이 열을 기준으로 상위 n개의 값을 찾음
+   
+    - keep : 동일한 값이 여러 개 있을 때 어떤 값을 유지할지 결정
+   
+      - 'first' (기본값) : 상위 n개 값을 가진 첫 번째 항목만 유지
+     
+      - 'last' : 상위 n개 값 중 마지막 항목을 유지
+     
+      - 'all' : 중복되는 모든 값을 반환
+
+- nlargest(10, 'total_score')로 총점 상위 10명 찾기
+
+  - 'total_score' 기준으로 내림차순 10개 데이터 반환
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+      <th>total_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>254</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>233</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>211</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>203</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>201</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>193</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>183</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 선택된 10명의 수학 평균 점수 계산
+  result = top10['수학'].mean()
+  print(round(result))
+```
+- 총점 상위 10명의 수학 평균 계산 후 출력
+
+> 결과
+```python
+  82
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
+
+section33 데이터프레임 재구조화
+---
+### 문제
+1. 과목에 상관없이 점수가 가장 작은 점수 25개를 찾으시오.
+
+2. 찾은 점수 25개의 합을 정수로 구하시오.
+
+<br>
+
+```python
+
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  melt(), nsmallset()
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+  # 이름을 유지하면서 수학, 영어, 국어 형태 변경
+  melted_df = df.melt(id_vars=['이름'], value_vars=['수학', '영어', '국어'])
+  melted_df
+```
+- melt() : 넓은 형식의 데이터를 긴 형식으로 변환할 때 사용하는 함수
+
+  - "와이드 포맷"을 "롱 포맷"으로 바꿀 때 사용
+ 
+  - 특정 컬럼은 수평으로 유지하면서 나머지 컬럼은 수평에서 수직으로 변경할 때 사용
+ 
+- id_vars : 유지할 컬럼, value_vars : 수평에서 수직으로 재구조화할 컬럼 대입
+
+  - id_vars=['이름'] : '이름' 열은 그대로 유지, 이 열은 데이터의 식별자 역할, 피벗되지 않음
+ 
+  - value_vars=['수학', '영어', '국어'] : '수학', '영어', '국어' 열들이 피벗(변환)
+  
+    - 이 열들이 긴 형식으로 변환되어 하나의 열로 합쳐짐
+   
+  - df.melt(...) : 원래 넓은 형식의 데이터프레임 df를 melt 함수로 긴 형식으로 변환
+ 
+  - melted_df : 변환된 긴 형식의 데이터프레임이 저장
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>variable</th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>수학</td>
+      <td>66</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>수학</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>수학</td>
+      <td>98</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>수학</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>수학</td>
+      <td>83</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>타조</td>
+      <td>국어</td>
+      <td>49</td>
+    </tr>
+    <tr>
+      <th>86</th>
+      <td>개구리</td>
+      <td>국어</td>
+      <td>86</td>
+    </tr>
+    <tr>
+      <th>87</th>
+      <td>펠리칸</td>
+      <td>국어</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>88</th>
+      <td>돌고래</td>
+      <td>국어</td>
+      <td>67</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>매</td>
+      <td>국어</td>
+      <td>11</td>
+    </tr>
+  </tbody>
+</table>
+<p>90 rows × 3 columns</p>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 가장 작은 값 25개 합
+  result = melted_df['value'].nsmallest(25).sum()
+  print(result)
+```
+- 변경된 데이터에서 과목에 상관없이 가장 작은 25개의 값을 nsmallest(25)로 찾고 합함
+
+- nsmallest() 도 nlargest() 와 사용법 같음
+
+  - 시리즈(value 컬럼만 선택)에 적용했으므로 결과값도 해당 값만 반환하는 시리즈 형태가 됨
+ 
+  - nsmallest() 는 nlargest() 와 반대로 오름차순으로 정렬해 데이터 반환함
+
+> 결과
+```python
+  420
+```
+
+</details>
+
+<br>
+
+---
+
+<br>
+
+section34 데이터 합치기(concat)
+---
+### 문제
+1. school_data.csv 와 school_data_science.csv 의 학생 순서는 동일하다.
+
+2. 학생별로 수학, 영어, 국어, 과학 점수의 평균을 구하시오.
+
+3. 평균 점수가 60점 이상인 인원 수를 계산하시오.
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/school_data.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</details>
+
+<br>
+
+```python
+  df_science = pd.read_csv('./data/school_data_science.csv')
+  df_science
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>과학</th>
+      <th>과학교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>황선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  concat(), mean(axis=1)
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+  # 두 데이터프레임 합치기
+  df = pd.concat([df, df_science], axis=1)
+  df
+```
+- 두 데이터를 확인해보면 학생의 순서가 동일
+
+  - 단순 병합 가능
+ 
+- 두 데이터를 왼쪽에서 오른쪽(axis=1)으로 합침
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+      <th>이름</th>
+      <th>과학</th>
+      <th>과학교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>강아지</td>
+      <td>66</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>고양이</td>
+      <td>92</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>토끼</td>
+      <td>98</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>사자</td>
+      <td>17</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>곰</td>
+      <td>57</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>기린</td>
+      <td>97</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>판다</td>
+      <td>47</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>늑대</td>
+      <td>73</td>
+      
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>여우</td>
+      <td>32</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>코알라</td>
+      <td>25</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>강치</td>
+      <td>83</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>뱀</td>
+      <td>36</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>독수리</td>
+      <td>96</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>하마</td>
+      <td>68</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>두더지</td>
+      <td>49</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>물소</td>
+      <td>55</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>참새</td>
+      <td>2</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>타조</td>
+      <td>84</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>개구리</td>
+      <td>39</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>황선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>임선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>매</td>
+      <td>47</td>
+      <td>황선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 수평(열)으로 평균 계산
+  df['평균'] = df[['수학', '영어', '국어', '과학']].mean(axis=1)
+  df
+```
+- 수학, 영어, 국어, 과학의 평균 구하기
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+      <th>이름</th>
+      <th>과학</th>
+      <th>과학교사</th>
+      <th>평균</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>강아지</td>
+      <td>66</td>
+      <td>황선생</td>
+      <td>54.75</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>고양이</td>
+      <td>92</td>
+      <td>임선생</td>
+      <td>78.00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>토끼</td>
+      <td>98</td>
+      <td>황선생</td>
+      <td>52.25</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>사자</td>
+      <td>17</td>
+      <td>임선생</td>
+      <td>36.75</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>임선생</td>
+      <td>83.25</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>곰</td>
+      <td>57</td>
+      <td>임선생</td>
+      <td>55.00</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>황선생</td>
+      <td>85.00</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>기린</td>
+      <td>97</td>
+      <td>황선생</td>
+      <td>70.00</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>황선생</td>
+      <td>82.25</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>판다</td>
+      <td>47</td>
+      <td>황선생</td>
+      <td>44.75</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>늑대</td>
+      <td>73</td>
+      <td>임선생</td>
+      <td>58.75</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>여우</td>
+      <td>32</td>
+      <td>임선생</td>
+      <td>46.50</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>황선생</td>
+      <td>54.50</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>황선생</td>
+      <td>79.00</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>코알라</td>
+      <td>25</td>
+      <td>임선생</td>
+      <td>27.25</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>강치</td>
+      <td>83</td>
+      <td>황선생</td>
+      <td>71.00</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>임선생</td>
+      <td>58.00</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>뱀</td>
+      <td>36</td>
+      <td>황선생</td>
+      <td>41.25</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>독수리</td>
+      <td>96</td>
+      <td>황선생</td>
+      <td>76.75</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>임선생</td>
+      <td>54.75</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>하마</td>
+      <td>68</td>
+      <td>황선생</td>
+      <td>49.25</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>두더지</td>
+      <td>49</td>
+      <td>임선생</td>
+      <td>41.00</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>물소</td>
+      <td>55</td>
+      <td>황선생</td>
+      <td>58.75</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>임선생</td>
+      <td>52.00</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>참새</td>
+      <td>2</td>
+      <td>황선생</td>
+      <td>48.75</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>타조</td>
+      <td>84</td>
+      <td>황선생</td>
+      <td>58.00</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>개구리</td>
+      <td>39</td>
+      <td>황선생</td>
+      <td>47.75</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>황선생</td>
+      <td>41.25</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>임선생</td>
+      <td>71.75</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>매</td>
+      <td>47</td>
+      <td>황선생</td>
+      <td>43.75</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 수학, 영어, 국어, 과학 평균이 60점 이상
+  result = sum(df['평균'] >= 60)
+  print(result)
+```
+- 60점 이상인 수를 필터링으로 찾아 빈도 출력
+
+> 결과
+```python
+  9
+```
+
+</details>
+
+<br>
+
+<details>
+  <summary>💡 수평이 열(column)을 의미하는 이유</summary>
+
+<br>
+
+- 데이터프레임이 **행(row)**과 **열(column)**로 구성된 2차원 구조이기 때문
+
+- 데이터프레임의 구조
+
+  - 행(row) : 각 가로줄에 해당, 데이터를 수평적으로 표현
+  
+    - 행 하나는 보통 데이터의 한 항목 또는 한 레코드를 의미
+    
+    - 예) 하나의 학생 정보 전체가 한 행에 해당
+   
+  - 열(column) : 각 세로줄에 해당, 특정 속성이나 특징을 수직적으로 나열
+
+    - 예) '이름', '수학 점수', '영어 점수'와 같은 개별적인 데이터 항목들
+   
+- 수평으로 데이터를 보는 이유
+
+  - 우리가 흔히 **"표"**를 볼 때, 데이터는 **속성(열)**을 기준으로 가로로 나열
+  
+  - 예) 학생들의 수학, 영어, 국어 점수를 가로로 나열시
+  
+    - **열(column)** : 각 과목
+  
+    - **행(row)** : 학생 한 명의 전체 성적(수학, 영어, 국어)
+
+<br>
+
+|이름|수학|영어|국어|
+|:-:|:-:|:-:|:-:|
+|Alice|85|78|90|
+|Bob|92|81|88|
+|Charlie|88|89|85|
+
+- 여기서 수학, 영어, 국어는 각각 세로줄에 해당하지만, 한 줄의 데이터로 볼 때는 수평적으로 데이터를 나열
+
+  - 열이 수평을 의미하는 것이 익숙한 관점
+
+<br>
+
+- 결론
+
+  - 열(column) : 수평으로 데이터를 나열한 개별 속성들이 모인 것을 의미
+  
+    - 데이터를 시각적으로나 구조적으로 다룰 때, 열은 같은 유형의 데이터가 수평적으로 배열된 데이터 단위를 의미
+
+</details>
+
+<br>
+
+---
+
+<br>
+
+section35 데이터 합치기(merge)
+---
+### 문제
+1. school_data.csv 와 school_data_social.csv 파일을 '이름'을 기준으로 합치시오.
+
+2. 영어교사가 장선생이면서 사회교사가 오선생인 학생들을 필터링하시오.
+
+3. 필터링된 학생들의 수학 점수를 모두 더한 후 정수로 구하시오.
+
+<br>
+
+```python
+  import pandas as pd
+  df = pd.read_csv('./data/school_data.csv')
+  df
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</details>
+
+<br>
+
+```python
+  df_social = pd.read_csv('./data/school_data_social.csv')
+  df_social
+```
+
+<details>
+  <summary>df 확인</summary>
+
+<br>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>사회</th>
+      <th>사회교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>기린</td>
+      <td>47</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>매</td>
+      <td>61</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>곰</td>
+      <td>48</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>개구리</td>
+      <td>7</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>코끼리</td>
+      <td>99</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>펠리칸</td>
+      <td>92</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>펭귄</td>
+      <td>52</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>두더지</td>
+      <td>97</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>여우</td>
+      <td>85</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>캥거루</td>
+      <td>94</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>독수리</td>
+      <td>27</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>호랑이</td>
+      <td>34</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>사자</td>
+      <td>97</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>참새</td>
+      <td>76</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>햄스터</td>
+      <td>40</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>코알라</td>
+      <td>3</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>하마</td>
+      <td>69</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>판다</td>
+      <td>64</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>강치</td>
+      <td>75</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>타조</td>
+      <td>34</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>강아지</td>
+      <td>58</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>고양이</td>
+      <td>10</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>22</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>늑대</td>
+      <td>77</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>침팬지</td>
+      <td>18</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>뱀</td>
+      <td>100</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>원숭이</td>
+      <td>15</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>돌고래</td>
+      <td>27</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>토끼</td>
+      <td>30</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>하이에나</td>
+      <td>52</td>
+      <td>우선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</details>
+
+<br>
+
+### 힌트
+```python
+  merge()
+```
+
+<br>
+
+<details>
+  <summary>풀이</summary>
+
+<br>
+
+> 코드
+```python
+  # '이름'을 기준으로 두 데이터프레임 합치기
+  merged_df = pd.merge(df, df_social, on='이름')
+  merged_df
+```
+- 두 데이터를 확인해보면 학생의 순서가 동일하지 않음
+
+  - 단순 병합 불가
+ 
+- 두 데이터는 merge() 를 활용해 이름을 기준으로 합쳐야 함
+
+- 왼쪽 이름을 기준으로 오른쪽 데이터를 합침
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+      <th>사회</th>
+      <th>사회교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>58</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>10</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>30</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>사자</td>
+      <td>17</td>
+      <td>99</td>
+      <td>14</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>97</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>34</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>곰</td>
+      <td>57</td>
+      <td>52</td>
+      <td>54</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>48</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>원숭이</td>
+      <td>86</td>
+      <td>97</td>
+      <td>71</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>15</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>기린</td>
+      <td>97</td>
+      <td>85</td>
+      <td>1</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>47</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>코끼리</td>
+      <td>96</td>
+      <td>94</td>
+      <td>43</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>99</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>판다</td>
+      <td>47</td>
+      <td>27</td>
+      <td>58</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>64</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>77</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>여우</td>
+      <td>32</td>
+      <td>97</td>
+      <td>25</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>85</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>52</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>하이에나</td>
+      <td>96</td>
+      <td>40</td>
+      <td>84</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>52</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>3</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>강치</td>
+      <td>83</td>
+      <td>69</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>75</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>햄스터</td>
+      <td>78</td>
+      <td>64</td>
+      <td>12</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>40</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>뱀</td>
+      <td>36</td>
+      <td>75</td>
+      <td>18</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>100</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>독수리</td>
+      <td>96</td>
+      <td>34</td>
+      <td>81</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>27</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>18</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>하마</td>
+      <td>68</td>
+      <td>10</td>
+      <td>51</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>69</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>두더지</td>
+      <td>49</td>
+      <td>22</td>
+      <td>44</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>97</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>물소</td>
+      <td>55</td>
+      <td>77</td>
+      <td>48</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>22</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>캥거루</td>
+      <td>67</td>
+      <td>18</td>
+      <td>56</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>94</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>참새</td>
+      <td>2</td>
+      <td>100</td>
+      <td>91</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>76</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>타조</td>
+      <td>84</td>
+      <td>15</td>
+      <td>49</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>34</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>7</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>펠리칸</td>
+      <td>66</td>
+      <td>30</td>
+      <td>3</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>92</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>돌고래</td>
+      <td>84</td>
+      <td>52</td>
+      <td>67</td>
+      <td>박선생</td>
+      <td>유선생</td>
+      <td>최선생</td>
+      <td>27</td>
+      <td>우선생</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>매</td>
+      <td>47</td>
+      <td>70</td>
+      <td>11</td>
+      <td>김선생</td>
+      <td>유선생</td>
+      <td>이선생</td>
+      <td>61</td>
+      <td>우선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+> 코드
+```python
+  # 교사 필터링
+  cond1 = merged_df['영어교사'] == '장선생'
+  cond2 = merged_df['사회교사'] == '오선생'
+  merged_df[cond1 & cond2]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>이름</th>
+      <th>수학</th>
+      <th>영어</th>
+      <th>국어</th>
+      <th>수학교사</th>
+      <th>영어교사</th>
+      <th>국어교사</th>
+      <th>사회</th>
+      <th>사회교사</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>강아지</td>
+      <td>66</td>
+      <td>61</td>
+      <td>26</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>58</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>고양이</td>
+      <td>92</td>
+      <td>48</td>
+      <td>80</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>10</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>토끼</td>
+      <td>98</td>
+      <td>7</td>
+      <td>6</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>30</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>호랑이</td>
+      <td>83</td>
+      <td>92</td>
+      <td>75</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>34</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>늑대</td>
+      <td>73</td>
+      <td>34</td>
+      <td>55</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>최선생</td>
+      <td>77</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>펭귄</td>
+      <td>46</td>
+      <td>76</td>
+      <td>50</td>
+      <td>김선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>52</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>코알라</td>
+      <td>25</td>
+      <td>3</td>
+      <td>56</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>3</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>침팬지</td>
+      <td>80</td>
+      <td>58</td>
+      <td>1</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>18</td>
+      <td>오선생</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>개구리</td>
+      <td>39</td>
+      <td>27</td>
+      <td>86</td>
+      <td>박선생</td>
+      <td>장선생</td>
+      <td>이선생</td>
+      <td>7</td>
+      <td>오선생</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
+<br>
+
+> 코드
+```python
+  # 필터링된 데이터에서 수학 점수 합
+  result = merged_df[cond1 & cond2]['수학'].sum()
+  print(result)
+```
+- 조건에 부합하는 필터링된 데이터에서 수학 점수의 합을 구함
+
+> 결과
+```python
+  602  
+```
+
+</details>
+
+<br>
 
 
+<br>
 
+---
 
-
+<br>
 
 
 
