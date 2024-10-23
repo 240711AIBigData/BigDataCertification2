@@ -654,8 +654,6 @@ SECTION03 탐색적 데이터 분석(EDA)
 </table>
 </div>
 
-<br>
-
 - test 데이터의 native.country 컬럼
 
   - 전체 데이터 수 : 3,211개
@@ -959,4 +957,585 @@ SECTION04 데이터 전처리
 - 모델 성능 1차 확인 후 다시 데이터 전처리 단계로 와서 채우고 2차 결과 확인 추천
 
 <br>
+
+#### (2) 결측치 채우기(범주형)
+- 범주형 데이터에서 결측치를 채울 때는 주로 최빈값으로 대체
+
+- 특정 컬럼에서 mode()[0] 을 통해 최빈값을 찾고, fillna() 로 값을 채울 수 있음
+
+- 결측치가 있는 이유 : 누락 or 해당 도메인 데이터에서 다른 이유로 결측치가 있을수도 있음
+
+  - 결측치를 새로운 카테고리로 분류하는 것도 방법
+ 
+  - ex) 임의의 표시로 결측 데이터를 'X'로 채울 수 있음
+ 
+    - X 는 의미가 있는게 아니라 단순히 결측을 나타내는 유니크한 값으로 채운 것
+
+- 데이터 전처리 시 train 뿐만 아니라 test 도 함께 적용
+
+  - train 에 적용한 전처리를 test 에도 적용
+
+> 코드
+```python
+  m = train['workclass'].mode()[0]
+  print(m)
+  train['workclass'] = train['workclass'].fillna(m)
+  
+  m = train['native.country'].mode()[0]
+  print(m)
+  train['native.country'] = train['native.country'].fillna(m)
+  
+  train.isnull().sum()
+```
+
+> 결과
+```python
+  Private
+  United-States
+  
+  id                   0
+  age                 12
+  workclass            0
+  fnlwgt               0
+  education            0
+  education.num        0
+  marital.status       0
+  occupation        1668
+  relationship         0
+  race                 0
+  sex                  0
+  capital.gain         0
+  capital.loss         0
+  hours.per.week      13
+  native.country       0
+  income               0
+  dtype: int64
+```
+
+<br>
+
+> 코드
+```python
+  train['occupation'] = train['occupation'].fillna('X')
+  train.isnull().sum()
+```
+
+> 결과
+```python
+  id                 0
+  age               12
+  workclass          0
+  fnlwgt             0
+  education          0
+  education.num      0
+  marital.status     0
+  occupation         0
+  relationship       0
+  race               0
+  sex                0
+  capital.gain       0
+  capital.loss       0
+  hours.per.week    13
+  native.country     0
+  income             0
+  dtype: int64
+```
+
+<br>
+
+> 코드
+```python
+  # test 데이터
+  test['workclass'] = test['workclass'].fillna(train['workclass'].mode()[0])
+  test['native.country'] = test['native.country'].fillna(train['native.country'].mode()[0])
+  test['occupation'] = test['occupation'].fillna('X')
+  test.isnull().sum()
+```
+
+> 결과
+```python
+  id                0
+  age               6
+  workclass         0
+  fnlwgt            0
+  education         0
+  education.num     0
+  marital.status    0
+  occupation        0
+  relationship      0
+  race              0
+  sex               0
+  capital.gain      0
+  capital.loss      0
+  hours.per.week    9
+  native.country    0
+  dtype: int64
+```
+
+<br>
+
+#### 💡 최빈값에는 왜 mode() 뒤에 [0] 이 붙을까?
+- mode() : 최빈값을 구할 때 mean(), max(), min() 과 달리 시리즈 자료형으로 반환
+
+  - 시리즈로 반환하는 이유
+ 
+    - 빈도 수가 같은 값이 1개가 아니라 여러 개일 수 있기 때문
+   
+  - 갑ㅄ만 반환받기 위해서는 인덱스 [0] 필요
+
+<br>
+
+#### (3) 결측치 채우기(수치형)
+- 결측치를 채울 컬럼의 평균값과 중앙값을 각각 train. 데이터에서 구해 train 과 test 에 채움
+
+- 결측치 처리 후에는 결측치가 다 채워졌는지 확인 필수
+
+<br>
+
+> 코드
+```python
+  # 평균값으로 채우기
+  value = int(train['age'].mean())
+  print('평균값: ', value)
+  train['age'] = train['age'].fillna(value)
+  test['age'] = test['age'].fillna(value)
+```
+- 나이가 소수점으로 채워지지 않도록 int() 함수로 자료형 변환
+
+  - ex) 31.23세라면 내림해 31세로 변경
+
+> 결과
+```python
+  평균값:  38
+```
+
+<br>
+
+> 코드
+```python
+  # 중앙값으로 채우기
+  value = int(train['hours.per.week'].median())
+  print('중앙값: ', value)
+  train['hours.per.week'] = train['hours.per.week'].fillna(value)
+  test['hours.per.week'] = test['hours.per.week'].fillna(value)
+```
+
+> 결과
+```python
+  중앙값:  40
+```
+
+<br>
+
+> 코드
+```python
+  train.isnull().sum()
+```
+
+> 결과
+```python
+  id                0
+  age               0
+  workclass         0
+  fnlwgt            0
+  education         0
+  education.num     0
+  marital.status    0
+  occupation        0
+  relationship      0
+  race              0
+  sex               0
+  capital.gain      0
+  capital.loss      0
+  hours.per.week    0
+  native.country    0
+  income            0
+  dtype: int64
+```
+
+<br>
+
+### 02. 이상치(Outliers) 처리
+- 이상치 : 일반적인 데이터 패턴에서 벗어난 값
+
+- IQR 활용 or 도메인(해당 분야) 전문가라면 판단 가능
+
+- 빅분기 시험에서는 이상치 처리를 명시한 것이 아니라면 생략 가능
+
+> 코드
+```python
+  train.describe()
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>29304.000000</td>
+      <td>29304.000000</td>
+      <td>2.930400e+04</td>
+      <td>29304.000000</td>
+      <td>29304.000000</td>
+      <td>29304.000000</td>
+      <td>29304.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>16264.027880</td>
+      <td>38.552996</td>
+      <td>1.897488e+05</td>
+      <td>10.080842</td>
+      <td>1093.858722</td>
+      <td>86.744506</td>
+      <td>40.434036</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>9384.518323</td>
+      <td>13.626025</td>
+      <td>1.055250e+05</td>
+      <td>2.570824</td>
+      <td>7477.435640</td>
+      <td>401.518928</td>
+      <td>12.321306</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000</td>
+      <td>-38.000000</td>
+      <td>1.228500e+04</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>8145.750000</td>
+      <td>28.000000</td>
+      <td>1.177890e+05</td>
+      <td>9.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>40.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>16253.500000</td>
+      <td>37.000000</td>
+      <td>1.783765e+05</td>
+      <td>10.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>40.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>24374.250000</td>
+      <td>48.000000</td>
+      <td>2.370682e+05</td>
+      <td>12.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>45.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>32560.000000</td>
+      <td>90.000000</td>
+      <td>1.484705e+06</td>
+      <td>16.000000</td>
+      <td>99999.000000</td>
+      <td>4356.000000</td>
+      <td>99.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+- train 데이터의 'age' 컬럼의 음수를 이상치로 판단하고 제거해보기
+
+<br>
+
+- train 데이터의 'age' 컬럼에서 음수 값 데이터 확인
+
+> 코드
+```python
+  train[train['age'] < 0]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education.num</th>
+      <th>marital.status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+      <th>native.country</th>
+      <th>income</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>39</th>
+      <td>29188</td>
+      <td>-33.0</td>
+      <td>Private</td>
+      <td>263561</td>
+      <td>Some-college</td>
+      <td>10</td>
+      <td>Married-civ-spouse</td>
+      <td>Craft-repair</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>60.0</td>
+      <td>United-States</td>
+      <td>&gt;50K</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>14325</td>
+      <td>-38.0</td>
+      <td>Private</td>
+      <td>22245</td>
+      <td>HS-grad</td>
+      <td>9</td>
+      <td>Married-civ-spouse</td>
+      <td>Exec-managerial</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>60.0</td>
+      <td>United-States</td>
+      <td>&gt;50K</td>
+    </tr>
+    <tr>
+      <th>26161</th>
+      <td>4292</td>
+      <td>-25.0</td>
+      <td>Private</td>
+      <td>200681</td>
+      <td>Some-college</td>
+      <td>10</td>
+      <td>Never-married</td>
+      <td>X</td>
+      <td>Own-child</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40.0</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+-  test 데이터의 'age' 컬럼에는 음수 값 데이터가 없음
+
+> 코드
+```python
+  test[test['age'] < 0]
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education.num</th>
+      <th>marital.status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+      <th>native.country</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+- age 가 1 이상인 데이터만 남기기
+
+> 코드
+```python
+  print(train.shape)
+  train = train[train['age'] > 0]
+  print(train.shape)
+```
+
+> 결과
+```python
+  (29304, 16)
+  (29301, 16)
+```
+- 전처리 전과 후의 크기 확인을 통해 3개가 줄어든 것 확인 가능
+
+<br>
+
+#### 💡 데이터 전처리 시 주의사항
+- train 데이터에 적용한 것을 test 데이터에도 똑같이 적용해야 함
+
+  - 입문자가 흔히 하는 실수
+ 
+    - train 데이터에는 적용하고 test 데이터에는 적용하지 않아 train 데이터와 test 데이터의 형태가 달라지는 것
+   
+- train 데이터에서의 행(레코드) 삭제는 test 데이터에는 적용 X
+
+  - train 데이터 중 행(레코드)는 일부 삭제할 수 있지만, test 데이터의 행은 삭제하면 안됨
+ 
+    - ex) 100개의 행이 있는 test 데이터라면 결과도 100개 값이 예측되어야 함
+   
+    - 임의로 삭제시 채점 불가
+
+<br>
+
+### 03. 인코딩(Encoding)
+- 컴퓨터가 이해하고 처리할 수 있는 형식으로 변환하는 과정
+
+- 범주형(텍스트) 데이터를 숫자로 변환하는 과정
+
+  - 머신러닝 모델에 입력 데이터로 사용하기 위한 필수 과정
+ 
+- 인코딩 또는 스케일링 전에 label 컬럼을 변수에 옮겨두기
+ 
+<br>
+
+> 코드
+```python
+  y_train = train.pop('income')
+  y_train
+```
+- train 은 label 값 포함하고 있고, label 은 수치형 데이터가 아닌 범주형 데이터
+
+  - 인코딩을 진행하기에 앞서 함께 원-핫 인코딩되는 것을 방지하기 위해 y_train 변수에 담아둠
+ 
+- pop() : income 컬럼을 y_train 에 대입하고, income 컬럼을 삭제해 이 두 가지를 한 줄로 유용하게 처리할 수 있는 함수
+
+> 결과
+```python
+  0         >50K
+  1        <=50K
+  2        <=50K
+  3         >50K
+  4        <=50K
+           ...  
+  29299    <=50K
+  29300    <=50K
+  29301    <=50K
+  29302    <=50K
+  29303    <=50K
+  Name: income, Length: 29301, dtype: object
+```
+
+<br>
+
+#### 💡 SettingWithCopyWarning 발생 시 해결 방법
+- 데이터를 변경하는 인코딩, 스케일링 등 전처리에서 워닝 발생 가능성 有
+
+- 워닝은 무시해도 되지만, 해결하는 것이 좋음
+
+- 해결 방벙
+
+  - .copy() 활용해 명시적으로 복사
+ 
+    - train 변수를 스케일링하기 전에 코드 중에서 어떤 작업의 결과가 train 에 담겨있다면 .copy() 함수 붙여 해결
+
+```python
+  df_copy = df[df['A'] > 10].copy()
+  df_copy['B'] = 20
+```
+
+<br>
+
+#### (1) 원-핫 인코딩
+- 판다스에서 기본적으로 제공
+
+- pd.get_dummies(train) 을 train 데이터 전체에 넣어주면 인코딩이 필요한 컬럼(object)만 자동으로 인코딩 진행된 후 결과값 반환
+
+- train 과 test 의 컬럼이 다르면 머신러닝 입력 데이터로 사용 불가
+
+<br>
+
+> 코드
+```python
+  train_oh = pd.get_dummies(train)
+  test_oh = pd.get_dummies(test)
+  print(train.shape, test.shape, train_oh.shape, test_oh.shape)
+```
+
+> 결과
+```python
+  (29301, 15) (3257, 15) (29301, 107) (3257, 103)
+```
+- train 데이터의 15개 컬럼이 107개 컬럼으로 변경된 것 확인
+
+- test 데이터의 15개 컬럼이 103개 컬럼으로 변경된 것 확인
+
+- train 과 test 데이터의 native.country 컬럼에서 카테고리 차이가 있었음
+
+  - 원핫 인코딩 시 컬럼 수의 불일치로 나타남
+
+<br>
+
+#### 💡 데이터를 합쳐서 인코딩하는 방법
+
+
+
+
+
+
+
+
+
+
+
 
