@@ -1527,15 +1527,604 @@ SECTION04 데이터 전처리
 <br>
 
 #### 💡 데이터를 합쳐서 인코딩하는 방법
+- 머신러닝을 통해 학습하고 예측하기 위해서는 train 컬럼와 test 컬럼이 일치해야 함
 
+- ex) train 에는 과자가 빼빼로, 고래밥, 콘칩 세 가지 종류 / test 에는 고래밥, 콘칩 두 가지 종류
 
+  - 원-핫 인코딩 후 컬럼수가 달라짐
+ 
+    - 데이터를 합치고 원-핫 인코딩 진행 후 다시 train 과 test 로 분할
 
+<br>
 
+> pd.concat() 통해 데이터를 위아래(axis=0)로 합침
+```python
+  print(train.shape, test.shape)
+  data = pd.concat([train, test], axis = 0)
+  print(data.shape)
+```
 
+> 결과
+```python
+  (29301, 15) (3257, 15)
+  (32558, 15)
+```
 
+<br>
 
+> get_dummies(data)f 로 합친 데이터를 원-핫 인코딩
+```python
+  data_oh = pd.get_dummies(data)
+  print(data_oh.shape)
+```
 
+> 결과
+```python
+  (32558, 107)
+```
 
+<br>
 
+> iloc 활용해 데이터 분할
+```python
+  train_oh = data_oh.iloc[:len(train)].copy()
+  test_oh = data_oh.iloc[len(train):].copy()
+  print(train_oh.shape, test_oh.shape)
+```
+- train 데이터 수는 len() 으로 찾기
 
+- 선택된 데이터를 새로운 변수에 옮겨 담을 때는 copy() 붙이기
 
+  - 'SettingWithCopyWarning' : copy() 사용하지 않아 발생한 문제
+
+> 결과
+```python
+  (29301, 107) (3257, 107)
+```
+
+<br>
+
+<br>
+
+#### (2) 레이블 인코딩
+- 사이킷런(scikit-learn) : 머신러닝과 데이터 분석을 위한 파이썬 라이브러리
+
+  - 사이킷런에서 제공하는 LabelEncoder 활용
+ 
+- 여러 컬럼에 레이블 인코딩을 적용하려면 각 컬럼에 대해 레이블 인코딩을 개별적으로 적용해야 함
+
+  - ex) 8개의 컬럼을 레이블 인코딩한다면 레이블 인코딩 코드를 컬럼명만 달리해서 8번 작성하거나 반복문 활욜
+ 
+    - for col in cols : 리스트(cols)에서 차례대로 컬럼명을 불러와col 변수에 담기
+   
+    - le = LabelEncoder() : 레이블 인코더 불러오기
+   
+    - train[col] = le.fit_transform(train[col])
+   
+      - fit : 매핑 사전 만들기 (ex) 빼빼로: 1, 고래밥: 2, 콘칩: 3
+     
+      - transform : 매핑 사전에 따라 데이터 변환
+     
+      - fit_transform : 이 두 작업을 한번에 처리
+     
+    - test[col] = le.transform(test[col])
+   
+      - test 에는 train 과 같은 숫자로 데이터를 변환하기 위해 fit 과정없이 transform 만 적용
+     
+    - 들여쓰기로 작성된 코드까지가 반복문의 범위
+   
+      - 처음으로 돌아가 cols 에서 다음 값 불러오기
+
+- 레이블 인코딩할 object 컬럼명을 리스트 형태로 만들기
+
+  - object 형만 선택하는 코드 활용 or cols 변수에 직접 리스트 형태로 만들
+
+    - 컬럼 수가 많지 않으면 후자 추천 : 직관적이고 오류 줄일 수 있음
+   
+      - 컬럼명 오타 주의(데이터 직접 입력 X, 컬럼명 복사-붙여넣기)
+
+> 코드
+```python
+  # cols = train.select_dtypes(include = 'object').columns      # 방법1
+  # cols = train.columns[train.dtypes == object]        # 방법2
+  cols = ['workclass', 'education', 'marital.status', 'occupation', 'relationship', 'race', 'sex', 'native.country']
+  cols
+```
+
+> 결과
+```python
+  ['workclass',
+   'education',
+   'marital.status',
+   'occupation',
+   'relationship',
+   'race',
+   'sex',
+   'native.country']
+```
+
+<br>
+
+> 코드
+```python
+  from sklearn.preprocessing import LabelEncoder
+  
+  for col in cols :
+      le = LabelEncoder()
+      train[col] = le.fit_transform(train[col])
+      test[col] = le.transform(test[col])
+      
+  train.head()
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education.num</th>
+      <th>marital.status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+      <th>native.country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3331</td>
+      <td>34.0</td>
+      <td>6</td>
+      <td>177331</td>
+      <td>15</td>
+      <td>10</td>
+      <td>2</td>
+      <td>9</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>4386</td>
+      <td>0</td>
+      <td>40.0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>19749</td>
+      <td>58.0</td>
+      <td>3</td>
+      <td>290661</td>
+      <td>11</td>
+      <td>9</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40.0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1157</td>
+      <td>48.0</td>
+      <td>3</td>
+      <td>125933</td>
+      <td>15</td>
+      <td>10</td>
+      <td>6</td>
+      <td>3</td>
+      <td>4</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1669</td>
+      <td>38.0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>693</td>
+      <td>58.0</td>
+      <td>3</td>
+      <td>100313</td>
+      <td>15</td>
+      <td>10</td>
+      <td>2</td>
+      <td>10</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1902</td>
+      <td>40.0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>12522</td>
+      <td>41.0</td>
+      <td>3</td>
+      <td>195661</td>
+      <td>15</td>
+      <td>10</td>
+      <td>2</td>
+      <td>13</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>54.0</td>
+      <td>38</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+### 04. 스케일링
+- 수치형 데이터의 범위를 조정하는 작업
+
+- 사이킷런 : 민맥스(최소-최대) 스케일링(Min-Max Scaling), 스탠더드 스케일링(Standard Scaling), 로버스트 스케일링(Robust Scaling) 등
+
+  - 추후 검증 데이터를 평가할 때 더 좋은 쪽 선택
+
+- 트리 기반 모델에서 큰 효과 보기 어려움
+
+  - 선형 회귀나 로지스틱 회귀와 같은 선형 모델은 스케일링의 영향 받음
+ 
+- 스케일링은 선택이기 때문에 1차 제출 후 시간적 여유가 있다면 적용해 비교하는 것을 추천함
+
+<br>
+
+> 스케일링 적용할 원본 데이터가 필요하므로 사본을 불러오는 함수 생성
+```python
+  cols = ['age', 'fnlwgt', 'education.num', 'capital.gain', 'capital.loss', 'hours.per.week']
+  
+  def get_data() :
+      train_copy = train.copy()
+      test_copy = test.copy()
+      return train_copy, test_copy
+```
+- 스케일링을 적용할 수치형 컬럼명을 리스트로 작성
+
+<br>
+
+#### 💡 display() 활용
+- print() 와 같은 출력 함수
+
+- 스케일링 전과 후의 가독성을 높이기 위해 display() 활용해 표 형태로 출력
+
+  - 시험 환경에서는 display() 사용 불가로 print() 활용
+
+<br>
+
+#### (1) 민맥스 스케일링
+- 데이터를 0과 1 사이로 변환
+
+  - 최소값이 0, 최대값이 1, 나머지 값들은 범위 안에서 매핑
+
+> 코드
+```python
+  train_copy, test_copy = get_data()
+  
+  from sklearn.preprocessing import MinMaxScaler
+  scaler = MinMaxScaler()
+  display(train_copy[cols].head(2))
+  train_copy[cols] = scaler.fit_transform(train_copy[cols])
+  test_copy[cols] = scaler.transform(test_copy[cols])
+  display(train_copy[cols].head(2))
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>34.0</td>
+      <td>177331</td>
+      <td>10</td>
+      <td>4386</td>
+      <td>0</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>58.0</td>
+      <td>290661</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.232877</td>
+      <td>0.112092</td>
+      <td>0.600000</td>
+      <td>0.04386</td>
+      <td>0.0</td>
+      <td>0.397959</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.561644</td>
+      <td>0.189060</td>
+      <td>0.533333</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.397959</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+#### 💡 코딩에서 스케일링과 레이블 인코딩의 차이점
+- train 데이터에 fit_transform 과 test 데이터에 transform 을 적용하는 것은 유사함
+
+  - 스케일링 : 다수의 컬럼에 한번에 적용 가능
+ 
+  - 레이블 인코딩 : 각 컬럼마다 적용
+ 
+    -여러 컬럼에 적용하기 위해서는 반복문 필수
+
+<br>
+
+#### (2) 스탠더드 스케일링
+- 데이터를 평균이 0이고 표준편차가 1인 분포로 변환하는 방벙
+
+> 코드
+```python
+  train_copy, test_copy = get_data()
+  
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  display(train_copy[cols].head(2))
+  train_copy[cols] = scaler.fit_transform(train_copy[cols])
+  test_copy[cols] = scaler.transform(test_copy[cols])
+  display(train_copy[cols].head(2))
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>34.0</td>
+      <td>177331</td>
+      <td>10</td>
+      <td>4386</td>
+      <td>0</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>58.0</td>
+      <td>290661</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.335121</td>
+      <td>-0.117705</td>
+      <td>-0.031462</td>
+      <td>0.440247</td>
+      <td>-0.216056</td>
+      <td>-0.035121</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.428590</td>
+      <td>0.956277</td>
+      <td>-0.420430</td>
+      <td>-0.146298</td>
+      <td>-0.216056</td>
+      <td>-0.035121</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<br>
+
+#### (3) 로버스트 스케일링(Robust Scaling)
+- 각 값의 중앙값을 빼고 1사분위수(Q1)와 3사분위수(Q3)의 차이(IQR)로 나누는 방법
+
+  - 다른 스케일링에 비해 이상치의 영향을 덜받음
+
+> 코드
+```python
+  from sklearn.preprocessing import RobustScaler
+  scaler = RobustScaler()
+  display(train[cols].head(2))
+  train[cols] = scaler.fit_transform(train[cols])
+  test[cols] = scaler.transform(test[cols])
+  display(train[cols].head(2))
+```
+
+> 결과
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>34.0</td>
+      <td>177331</td>
+      <td>10</td>
+      <td>4386</td>
+      <td>0</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>58.0</td>
+      <td>290661</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>fnlwgt</th>
+      <th>education.num</th>
+      <th>capital.gain</th>
+      <th>capital.loss</th>
+      <th>hours.per.week</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.15</td>
+      <td>-0.008711</td>
+      <td>0.000000</td>
+      <td>4386.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.05</td>
+      <td>0.941438</td>
+      <td>-0.333333</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+- 대부분의 사람들이 자본 이득(capital.gain)은 얻지 못했고 대부분 0에 가까움
+
+- capital.gain 의 Q1 과 Q3 이 0에 가깝다면 이 컬럼의 대부분의 값들이 변하지 않을 수 있음
+
+<br>
+
+#### 💡 target 변수가 숫자가 아닌 문자에서 레이블 인코딩이 필요하다면?
