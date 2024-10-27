@@ -227,8 +227,119 @@ SECTION01 이진 분류 평가지표
 
 SECTION02 다중 분류 평가지표
 ---
+- 이진 분류 평가지표와 유사
+  
+- 다중 분류로 평가하기 위해 정밀도, 재현율, F1 스코어는 평균을 계산하는 방식(파라미터) 필요
 
+  - Macro 평균(Macro-average) : 각 클래스에 대한 정밀도/재현율/F1 점수의 평균 계산
+ 
+  - Micro 평균(Micro-average) : 모든 클래스에 대한 전체적인 정밀도/재현율/F1 점수 계산
+ 
+  - Weighted 평균(Weighted-average) : 각 클래스에 대한 정밀도/재현율/F1 점수의 가중 평균 계산
+ 
+- 세 가지 클래스(종류)가 있는 다중 분류 데이터 생성
 
+  - 다중 분류는 3개 이상의 클래스(종류) 의미
+ 
+  - 숫자와 문자 형태로 인한 코딩에서의 차이 없음
+
+> 코드
+```python
+  # 다중 분류 데이터
+  y_true = pd.DataFrame([1, 2, 3, 3, 2, 1, 3, 3, 2, 1])   # 실제값
+  y_pred = pd.DataFrame([1, 2, 1, 3, 2, 1, 1, 2, 2, 1])   # 예측값
+  
+  y_true_str = pd.DataFrame(['A', 'B', 'C', 'C', 'B', 'A', 'C', 'C', 'B', 'A'])   # 실제값
+  y_pred_str = pd.DataFrame(['A', 'B', 'A', 'C', 'B', 'A', 'A', 'B', 'B', 'A'])   # 예측값
+```
+
+<br>
+
+### 01. 정확도(Accuracy)
+- 다중 분류에서 정확도의 평가 방법은 이진 분류와 같음
+
+> 코드
+```python
+  # 정확도(Accuracy)
+  from sklearn.metrics import accuracy_score
+  accuracy = accuracy_score(y_true, y_pred)
+  print('정확도 :', accuracy)
+  
+  accuracy = accuracy_score(y_true_str, y_pred_str)
+  print('정확도 :', accuracy)
+```
+
+> 결과
+```python
+  정확도 : 0.7
+  정확도 : 0.7
+```
+
+<br>
+
+### 02. 정밀도(Precision)
+- average 는 micro, macro, weighted 중 문제에서 요구하는 방식 선택
+
+<br>
+
+> 코드
+```python
+  # 정밀도(Precision)
+  from sklearn.metrics import precision_score
+  precision = precision_score(y_true, y_pred, average='macro')    # average = micro, macro, weighted
+  print('정밀도 :', precision)
+  
+  precision = precision_score(y_true_str, y_pred_str, average='macro')
+  print('정밀도 :', precision)
+```
+
+> 결과
+```python
+  정밀도 : 0.7833333333333333
+  정밀도 : 0.7833333333333333
+```
+
+<br>
+
+### 03. 재현율(Recall)
+
+> 코드
+```python
+  # 재현율(Recall)
+  from sklearn.metrics import recall_score
+  recall = recall_score(y_true, y_pred, average='macro')      # average = micro, macro, weighted
+  print('재현율 :', recall)
+  
+  recall = recall_score(y_true_str, y_pred_str, average='macro')
+  print('재현율 :', recall)
+```
+
+> 결과
+```python
+  재현율 : 0.75
+  재현율 : 0.75
+```
+
+<br>
+
+### 04. F1 스코어(F1 Score)
+
+> 코드
+```python
+  # F1 스코어(F1 Score)
+  from sklearn.metrics import f1_score
+  f1 = f1_score(y_true, y_pred, average='macro')      # average = micro, macro, weighted
+  print('F1 스코어 :', f1)
+  
+  f1 = f1_score(y_true_str, y_pred_str, average='macro')
+  print('F1 스코어 :', f1)
+```
+
+> 결과
+```python
+  F1 스코어 : 0.669047619047619
+  F1 스코어 : 0.669047619047619
+```
 
 <br>
 
