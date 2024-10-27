@@ -2024,19 +2024,6 @@ SECTION04 데이터 전처리
 
 > 결과
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2073,19 +2060,6 @@ SECTION04 데이터 전처리
 </div>
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2128,3 +2102,503 @@ SECTION04 데이터 전처리
 <br>
 
 #### 💡 target 변수가 숫자가 아닌 문자에서 레이블 인코딩이 필요하다면?
+- target 은 문자도 인식
+
+  - 일부 머신러닝 모델(Xgboost)에서는 숫자 형태의 target(label) 요구
+ 
+- 타깃을 레이블 인코딩하는 방법
+
+> 코드
+```python
+  y_train.value_counts()
+```
+
+> 결과
+```python
+  income
+  <=50K    22262
+  >50K      7039
+  Name: count, dtype: int64
+```
+
+<br>
+
+> map() 이용
+```python
+  target = y_train.map({'<=50K':0, '>50K':1})
+  target.value_counts()
+```
+
+> 결과
+```python
+  income
+  0    22262
+  1     7039
+  Name: count, dtype: int64
+```
+
+<br>
+
+> replace() 이용
+```python
+  target = y_train.replace('<=50K', 0).replace('>50K', 1)
+  target.value_counts()
+```
+
+> 결과
+```python
+  income
+  0    22262
+  1     7039
+  Name: count, dtype: int64
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION05 검증 데이터 나누기
+---
+- 학습된 모델의 성능을 평가하고 개선하기 위해 진행
+
+- 검증 데이터를 활용해 모델의 성능을 평가, 데이터 전처리 단계 또는 하이퍼파라미터 튜닝을 통해 개선 가능
+
+- 사이킷런의 train_test_split() 활용해 데이터 분리
+
+  - train 과 validation 나누는 용도로 활용
+ 
+  - test 데이터와는 관계 X
+ 
+- train_test_split(train, target, test_size=0.2, random_state=0)
+
+  - train : X 데이터, 데이터프레임 형태로 입력
+ 
+  - target : label(y) 데이터, 시리즈 형태로 입력
+ 
+  - test_size=0.2 : 검증용 데이터 비율, 0.2 는 전체 데이터 중에서 20% 의미
+ 
+  - random_state=0 : 랜덤적인 요소 고정, 작성하지 않으면 실행할 때마다 다른 값으로 나눠짐
+ 
+    - 실행할 때마다 같은 데이터로 나누기 위해 고정 필요
+   
+    - 숫자는 정수로 자유롭게 입력
+   
+- 반환값 4개
+
+  - X_train, X_val, y_train, y_val
+  
+    - X, X, y, y 로 암기
+
+> 코드
+```python
+  from sklearn.model_selection import train_test_split
+  
+  X_train, X_val, y_train, y_val = train_test_split(train, y_train, test_size=0.2, random_state=0)
+  
+  X_train.shape, X_val.shape, y_train.shape, y_val.shape
+```
+
+> 결과
+```python
+  ((23440, 15), (5861, 15), (23440,), (5861,))
+```
+
+<br>
+
+#### 💡 데이터 분할 이후 shape 보는 방법
+- X_train.shape, X_val.shape, y_train.shape, y_val.shape 값에서 두 가지 확인
+
+  - 데이터 분할 이후 X_train.shape, X_val.shape 의 컬럼 수(열 수) 일치
+ 
+  - 데이터 분할 이후 y_train.shape, y_val.shape 에서 컬럼(열) 부분에 1이 나타나지 않는 시리즈 형태
+ 
+- (23440,), (5861,) : 시리즈 형태, 머신러닝에서 타깃 변수 입력 형태
+
+  - (23440,1), (5861,1) : 데이터프레임 형태
+ 
+    - 머신러닝 모델에 입력될 경우 DataConversionWarning 경고 메시지 발생
+   
+    - train_test_split(train, target) 사용 시 target 이 시리즈가 아니라 데이터프레임으로 입력된 결과
+
+- 다중 변수 할당 : 파이썬은 다중 변수 할당 가능
+
+  - 변수 대입시에도 'a, b, c, d = 1, 2, 3, 4' 로 사용 가능
+ 
+  - 함수에서 4개의 결과를 반활할 때도 a, b, c, d = train_test_split() 으로 사용
+
+<br>
+
+---
+
+<br>
+
+SECTION06 머신러닝 학습  및 평가
+---
+- 의사결정 나무(Decision Tree) 모델은 학습을 통해 트리 구조 만듦
+
+  - 어떤 과정을 통해 결과가 도출되었는지 설명하기 쉬움
+ 
+  - 과적합되기 쉬워 성능에 한계 有
+ 
+- 과적합 보완
+
+  - 앙상블 기법 : 여러 개의 모델을 학습시켜 사용
+ 
+    - 배깅(bagging)
+   
+      - 랜덤포레스트(Random Forest)
+   
+    - 부스팅(boosting)
+   
+      - 라이트지비엠(LightGBM)
+
+|다이어트 성공과 실패를 알려주는 모델을 나타낸 의사결정 나무 예시|
+|-|
+|![이미지](./img/01.png)|
+
+<br>
+
+### 01. 랜덤포레스트(Random Forest)
+- 여러 개의 의사결정 나무를 기반으로 한 앙상블 학습 알고리즘
+
+- 사이킷런(sklearn.ensemble)에서 랜덤포레스트 분류 모델 불러와 3단계로 사용
+
+  - rf = RandomForestClassifier()  # 모델 선택
+ 
+  - rf.fit(X_train, y_train)       # 학습 진행
+ 
+  - pred = rf.predict_proba(X_val) # 예측
+ 
+    - predict : 예측된 각 레이블(클래스) 반환('<=50K', '>50K')
+   
+    - predict_proba : 각 레이블에 속할 확률값 반환
+   
+    - 첫 번째 값 : '<=50K' 인 확률
+   
+    - 두 번째 값 : '>50K' 인 확률
+
+> 코드
+```python
+  # 랜덤포레스트
+  from sklearn.ensemble import RandomForestClassifier
+  rf = RandomForestClassifier(random_state = 0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict_proba(X_val)      # 각 레이블에 속할 확률값 반환
+  
+  print(rf.classes_)
+  pred[:10]
+```
+
+> 결과
+```python
+  ['<=50K' '>50K']
+  array([[1.  , 0.  ],
+         [1.  , 0.  ],
+         [0.9 , 0.1 ],
+         [0.63, 0.37],
+         [1.  , 0.  ],
+         [0.99, 0.01],
+         [0.98, 0.02],
+         [0.94, 0.06],
+         [0.12, 0.88],
+         [0.88, 0.12]])
+```
+
+<br>
+
+### 02. 평가지표
+- 머신러닝 모델을 학습하고 나서 제대로 학습이 되었고, 예측 하고 있는지 검증 데이터로 평가 필요
+
+- 분류 모델의 평가 지표
+
+  - 정확도(Accuracy)
+ 
+  - 정밀도(Precision)
+ 
+  - 재현율(Recall)
+ 
+  - F1 스코어
+ 
+  - ROC_AUC
+
+<br>
+
+#### (1) ROC_AUC
+- 점수를 평가할 때는 확률값 필요
+
+- 머신러닝에서 예측할 때 확률값을 예측할 수 있는 predict_proba() 사용
+
+  - 각 클래스의 확률을 각각 예측 ⇒ 2차원 구조 결과 반환
+ 
+  - 반환된 결과, pred 첫 번째 열인 [0] 불러오면 '<=50K' 확률, 두 번째 열인 [1] 불러오면 '>50K' 확률
+
+<br>
+
+|구분(분류 모델)|평가지표|결과 및 설명|
+|:-:|:-:|-|
+|predict_proba()|roc_auc|2차원 형태: [[0.4, 0.6], [0.7, 0.3], [0.3, 0.7]]<br>각 클래스의 예측 확률 반환|
+|predict()|정확도, F1 Score, 정밀도, 재현율 등|1차원 형태: [1, 0, 1]<br>예측된 클래스(레이블) 반환|
+
+<br>
+
+> 코드
+```python
+  from sklearn.metrics import roc_auc_score
+  roc_auc = roc_auc_score(y_val, pred[:, 1])
+  print('roc_auc :', roc_auc)
+```
+
+> 결과
+```python
+  roc_auc : 0.9173623004487484
+```
+
+<br>
+
+#### (2) Accuracy(정확도)
+- 전체 데이터 중 올바르게 예측된 데이터의 비율
+
+  - 100개 중 86개 맞췄으면 0.86
+ 
+    - 1에 가까울수록 좋음
+      
+- predict() 활용
+
+  - 예측된 각 클래스(레이블) 반환
+
+> 코드
+```python
+  pred = rf.predict(X_val)
+  pred[:10]
+```
+
+> 결과
+```python
+  array(['<=50K', '<=50K', '<=50K', '<=50K', '<=50K', '<=50K', '<=50K',
+         '<=50K', '>50K', '<=50K'], dtype=object)
+```
+- '<=50K' 또는 '>50K' 인 예측값 확인 가능
+
+<br>
+
+> 코드
+```python
+  from sklearn.metrics import accuracy_score
+  accuracy = accuracy_score(y_val, pred)
+  print('accuracy_score :', accuracy)
+```
+
+> 결과
+```python
+  accuracy_score : 0.8694761986009213
+```
+
+<br>
+
+#### (3) F1 스코어
+- 정밀도(Precision)와 재현율(Recall)의 조화평균으로 계싼되는 평가지표
+
+  - 높을 수록 좋음
+ 
+- 양성 클래스를 1로 가정, target 이 <=50K, >50K 문자로 구성
+
+  - 어떤 값이 양성 클래스인지 pos_laver='>50K' 사용해 지정
+ 
+  - 만약 타깃이 0, 1 로 변환된 숫자였다면 f1_score(y_val, pred) 만 작성 가능
+
+> 코드
+```python
+  from sklearn.metrics import f1_score
+  f1 = f1_score(y_val, pred, pos_label = '>50K')
+  print('f1_score :', f1)
+```
+
+> 결과
+```python
+  f1_score : 0.6926476496584973
+```
+
+<br>
+
+### 03. 라이트지비엠(LightGBM)
+- 그래디언트 부스팅(Gradient Boosting) 기반의 앙상블 학습 알고리즘
+
+  - 머신러닝 모델 중 정형 데이터를 다룰 때 인기있는 모델
+ 
+- 사이킷런이 아닌 별도 라이브러리 활용
+
+  - fit(X, y) 로 학습
+ 
+  - predict(predict_proba) 로 예측
+ 
+- 평가지표 ROC_AUC, Accuracy, F1 스코어 모두 랜덤포레스트 모델 예측 결과보다 성능이 조금씩 향상됨
+
+<br>
+
+#### (1) random_state
+- 모델을 학습할 때 랜덤적인 요소가 존재하기 때문에 매번 성능 결과가 달라짐
+
+  - 랜덤적인 요소를 고정하기 위해서는 random_state = 0 설정해 사용
+ 
+    - 이 값이 같다고 해서 다른 환경에서도 같은 값이 나오는 것은 아님
+   
+    - 작업 중인 환경에서 여러 번 실행했을 때 동일한 결과가 나옴
+
+<br>
+
+#### (2) verbose
+- LightGBM 버전에 따라 출력 결과에 로그 메시지(세부사항) 함께 나타남
+
+  - 에러는 아니지만 신경쓰인다면 verbose=-1 사용해 로그 메시지 숨기기 가능
+
+> 코드
+```python
+  # !pip install lightgbm
+  
+  import lightgbm as lgb
+  lgbmc = lgb.LGBMClassifier(random_state=0, verbose=-1)
+  lgbmc.fit(X_train, y_train)
+  pred = lgbmc.predict_proba(X_val)
+  
+  roc_auc = roc_auc_score(y_val, pred[:, 1])
+  print('roc_auc :', roc_auc)
+  
+  pred = lgbmc.predict(X_val)
+  accuracy = accuracy_score(y_val, pred)
+  print('accuracy_score :', accuracy)
+  
+  f1 = f1_score(y_val, pred, pos_label='>50K')
+  print('f1_score :', f1)
+```
+
+> 결과
+```python
+  roc_auc : 0.9279535666686397
+  accuracy_score : 0.8771540692714553
+  f1_score : 0.7158642462509865
+```
+
+<br>
+
+---
+
+<br>
+
+SECTION07 예측 및 결과 파일 생성
+---
+- test 데이터 예측
+
+- 학습된 LightGBM 모델을 활용해 test 데이터 넣고 predict_proba 실행시 예측 확률값 반환받음
+
+> 코드
+```python
+  pred = lgbmc.predict_proba(test)
+  pred
+```
+
+> 결과
+```python
+  array([[0.89924007, 0.10075993],
+         [0.97622077, 0.02377923],
+         [0.9853122 , 0.0146878 ],
+         ...,
+         [0.93528667, 0.06471333],
+         [0.98996872, 0.01003128],
+         [0.96723292, 0.03276708]])
+```
+- 첫 번째 값이 '<=50K' 확률, 두 번째 값이 '>50K' 확률
+
+  - 두 번째 값을 pred[:, 1] 로 선택
+ 
+- 확률값의 순서를 확인하려면 'lgbmc.classes_(모델변수.classes_)'
+
+  - 문자가 아닌 0과 1이었다면 첫 번째가 0 확률값, 두 번째가 1 확률값
+
+<br>
+
+- 예측값을 데이터프레임으로 변경하고, 문제 요구사항대로 컬럼명을 'pred' 로 작성
+
+- result.csv 파일로 저장
+
+  - index = False 파라미터 적용 필수
+ 
+    - 하지 않으면 기존 인덱스도 함께 저장됨
+
+- pd.read_csv() 활용해 최종 확인 후 '제출' 버튼 클릭 (제출은 여러 번 가능)
+
+> 코드
+```python
+  submit = pd.DataFrame({'pred':pred[:, 1]})
+  submit.to_csv('result.csv', index=False)
+  
+  pd.read_csv('result.csv')
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.100760</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.023779</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.014688</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.798048</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.026542</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3252</th>
+      <td>0.009613</td>
+    </tr>
+    <tr>
+      <th>3253</th>
+      <td>0.321992</td>
+    </tr>
+    <tr>
+      <th>3254</th>
+      <td>0.064713</td>
+    </tr>
+    <tr>
+      <th>3255</th>
+      <td>0.010031</td>
+    </tr>
+    <tr>
+      <th>3256</th>
+      <td>0.032767</td>
+    </tr>
+  </tbody>
+</table>
+<p>3257 rows × 1 columns</p>
+</div>
+
+<br>
+
+
+
+
+
+
