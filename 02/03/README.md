@@ -349,7 +349,199 @@ SECTION02 다중 분류 평가지표
 
 SECTION03 회귀 평가지표
 ---
+- 대부분 오차 측정
 
+  - 오차는 작을수록 좋음 = 0에 가까울수록 성능이 좋은 모델
+ 
+  - 결정 계수(R-squared)만 유일하게 높을수록(1에 가까울수록) 좋음
+ 
+- 회귀 평가지표를 위한 데이터 생성
 
+  - 예측값은 일반적으로 소수값을 포함헤 예측됨
+ 
+> 코드
+```python
+  # 회귀 데이터
+  import pandas as pd
+  y_true = pd.DataFrame([1, 2, 5, 2, 4, 4, 7, 9])     # 실제값
+  y_pred = pd.DataFrame([1.14, 2.53, 4.87, 3.08, 4.21, 5.53, 7.51, 10.32])    # 예측값
+```
+
+<br>
+
+### 01. MSE(Mean Squared Error)
+- 실제값과 에측값의 차이를 제곱해 평균한 값
+
+  - 큰 오차에 대해 가중치 부여
+
+> 코드
+```python
+  # MSE(Mean Squared Error)
+  from sklearn.metrics import mean_squared_error
+  mse = mean_squared_error(y_true, y_pred)
+  print('MSE :', mse)
+```
+
+> 결과
+```python
+  MSE : 0.7339125000000001
+```
+
+<br>
+
+### 02. MAE(Mean Absolute Error)
+- 실제값과 예측값의 차이를 절대값으로 계산하고 평균한 값
+
+> 코드
+```python
+  # MAE(Mean Absolute Error)
+  from sklearn.metrics import mean_absolute_error
+  mae = mean_absolute_error(y_true, y_pred)
+  print('MAE :', mae)
+```
+
+> 결과
+```python
+  MAE : 0.68125
+```
+
+<br>
+
+### 03. 결정 계수(R-squared)
+- 회귀식이 얼마나 잘 예측(설명)하는지 나타내는 지표 = R²
+
+> 코드
+```python
+  # 결정 계수(R-squared)
+  from sklearn.metrics import r2_score
+  r2 = r2_score(y_true, y_pred)
+  print('결정 계수 :', r2)
+```
+
+> 결과
+```python
+  결정 계수 : 0.8859941747572815
+```
+
+<br>
+
+### 04. RMSE(Root Mean Squared Error)
+- 실제값과 예측값의 차이를 제곱해 평균을 낸 MSE 에 제곱근을 적용한 값
+
+- 큰 오차에 대해 가중치 부여
+
+> 코드
+```python
+  # RMSE(Root Mean Squared Error)
+  from sklearn.metrics import mean_squared_error
+  mse = mean_squared_error(y_true, y_pred)
+  rmse = mse ** 0.5       # 또는 mean_squared_error(y_true, y_pred, squared=False)
+  print('RMSE :', rmse)
+```
+
+> 결과
+```python
+  RMSE : 0.8566869323154171
+```
+
+<br>
+
+### 05. MSLE(Mean Squared Log Error)
+- 실제값과 예측값의 로그를 취한 후 차이를 제곱해 평균한 값
+
+- 작은 오차에 더 큰 가중치 부여
+
+> 코드
+```python
+  # MSLE(Mean Squared Log Error)
+  from sklearn.metrics import mean_squared_log_error
+  msle = mean_squared_log_error(y_true, y_pred)
+  print('MSLE :', msle)
+```
+
+> 결과
+```python
+  MSLE : 0.027278486182156947
+```
+
+<br>
+
+### 06. RMSLE(Root Mean Squared Log Error)
+- 실제값과 예측값의 로그를 취한 후 차이를 제곱해 평균한 값의 제곱근으로 계산한 값
+
+- 작은 오차에 더 큰 가중치 부여
+
+> 코드
+```python
+  # RMSLE(Root Mean Squared Log Error)
+  from sklearn.metrics import mean_squared_log_error
+  rmsle = mean_squared_log_error(y_true, y_pred) ** 0.5
+  print('RMSLE :', rmsle)
+```
+
+> 결과
+```python
+  RMSLE : 0.16516199981278062
+```
+
+<br>
+
+### 07. MAPE(Mean Absolute Percentage Error)
+- 예측값과 실제값 사이의 오차를 백분율로 나타낸 지표
+
+- 예측값(y_pred)이 실제값(y_true)에 얼마나 가까운지를 백분율로 나타내며, MAPE가 낮을수록 예측이 실제에 가까움
+
+> 코드
+```python
+  # MAPE(Mean Absolute Percentage Error)
+  mape = (abs((y_true - y_pred) / y_true)).mean() * 100
+  print('MAPE :', mape)
+```
+- 예측 오차의 절대값을 계산하고 실제값으로 나눔
+
+  - abs(y_true - y_pred) : 실제값과 예측값 간의 차이의 절대값을 계산
+ 
+  - (y_true - y_pred) / y_true : 예측 오차를 실제값으로 나눈 비율을 계산
+ 
+  - abs((y_true - y_pred) / y_true) : 오차 비율의 절대값을 구함
+ 
+- 계산된 MAPE를 백분율로 표시하기 위해 100을 곱함
+
+  - .mean() : 각 데이터 포인트에 대해 계산된 절대 오차 비율의 평균을 구함
+ 
+  - 결과적으로 MAPE는 평균 절대 퍼센트 오차(%)를 나타내는 값이 됨
+
+> 결과
+```python
+  MAPE : 0    20.319048
+  dtype: float64
+```
+
+<br>
+
+#### 💡 MAPE 사용할 때 분모에 0 이 있으면?
+- 실제값 중에 0이 있다면 계산 불가능
+
+  - 매우 작은 값을 더해 0이 되는 것을 방지하기도 함
+ 
+    - 실제 오차에는 큰 영향 X
+
+> 코드
+```python
+  epsilon = 1e-10
+  mape = (abs((y_true - y_pred) / (y_true + epsilon))).mean() * 100
+  print('MAPE :', mape)
+```
+
+> 결과
+```python
+  MAPE : 0    20.319048
+  dtype: float64
+```
+
+<br>
+
+#### 💡 평가지표를 보고 분류 or 회귀인지 알 수 있음
+- 회귀 평가지표에는 R²(결정 계수) 제외하고 Error(오차) 계산하는 단어가 포함되어 있음
 
 <br>
