@@ -427,8 +427,112 @@ SECTION03 탐색적 데이터 분석(EDA)
 
 SECTION04 데이터 전처리
 ---
+#### (1) 자료형이 object 인 컬럼명 확인
+- target 컬럼을 변수에 옮겨두고, 자료형이 object 인 컬럼명 확인
 
+> 코드
+```python
+  target = train.pop('Credit_Score')
+  cols = train.columns[train.dtypes == object]
+  cols
+```
 
+> 결과
+```python
+  Index(['Payment_of_Min_Amount', 'Credit_Mix', 'Payment_Behaviour'], dtype='object')
+```
+
+<br>
+
+#### (2) LightGBM 
+- 레이블 인코딩 또는 원-핫 인코딩 진행하는 대신 LightGBM 사용
+
+  - 인코딩 없이 자료형만 'category' 로 변경하면 됨
+ 
+> 코드
+```python
+  train['Payment_of_Min_Amount'] = train['Payment_of_Min_Amount'].astype('category')
+  train['Credit_Mix'] = train['Credit_Mix'].astype('category')
+  train['Payment_Behaviour'] = train['Payment_Behaviour'].astype('category')
+  
+  test['Payment_of_Min_Amount'] = test['Payment_of_Min_Amount'].astype('category')
+  test['Credit_Mix'] = test['Credit_Mix'].astype('category')
+  test['Payment_Behaviour'] = test['Payment_Behaviour'].astype('category')
+  
+  train[cols].info()
+```
+
+> 결과
+```python
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 10000 entries, 0 to 9999
+  Data columns (total 3 columns):
+   #   Column                 Non-Null Count  Dtype   
+  ---  ------                 --------------  -----   
+   0   Payment_of_Min_Amount  10000 non-null  category
+   1   Credit_Mix             10000 non-null  category
+   2   Payment_Behaviour      10000 non-null  category
+  dtypes: category(3)
+  memory usage: 29.9 KB
+```
+
+<br>
+
+#### (3) 컬럼 샘플 확인
+- 자료형만 object 에서 category 로 변경
+
+  - 출력한 데이터는 문자 그대로임
+
+> 코드
+```python
+  train[cols].head()
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Payment_of_Min_Amount</th>
+      <th>Credit_Mix</th>
+      <th>Payment_Behaviour</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Yes</td>
+      <td>Bad</td>
+      <td>High_spent_Medium_value_payments</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Yes</td>
+      <td>Bad</td>
+      <td>High_spent_Small_value_payments</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Yes</td>
+      <td>Bad</td>
+      <td>Low_spent_Large_value_payments</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NM</td>
+      <td>Standard</td>
+      <td>High_spent_Small_value_payments</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Yes</td>
+      <td>Bad</td>
+      <td>High_spent_Medium_value_payments</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
@@ -438,8 +542,20 @@ SECTION04 데이터 전처리
 
 SECTION05 검증 데이터 나누기
 ---
+- train 데이터를 활용해 검증 데이터(20%) 분할
 
+> 코드
+```python
+  # 검증 데이터 나누기
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  X_train.shape, X_val.shape, y_train.shape, y_val.shape
+```
 
+> 결과
+```python
+  ((8000, 20), (2000, 20), (8000,), (2000,))
+```
 
 <br>
 
@@ -449,8 +565,90 @@ SECTION05 검증 데이터 나누기
 
 SECTION06 머신러닝 학습 및 평가
 ---
+### 01. 평가지표 불러오기
+- 다중 분류 모델 평가 : f1_score, accuracy_score
 
+> 코드
+```python
+  from sklearn.metrics import f1_score
+  from sklearn.metrics import accuracy_score
+```
 
+<br>
+
+### 02. 랜덤포레스트
+- ValueError 발생
+  
+  - category 자료형 자동 인식 불가
+  
+    - 문자열을 숫자로 인코딩하지 않았기 때문에 에러 발생
+
+> 코드
+```python
+  from sklearn.ensemble import RandomForestClassifier
+  rf = RandomForestClassifier(random_state=0)
+  rf.fit(X_train, y_train)
+```
+
+> 결과
+```python
+  ValueError                                Traceback (most recent call last)
+  C:\Users\Public\Documents\ESTsoft\CreatorTemp\ipykernel_264700\1460245499.py in ?()
+        1 from sklearn.ensemble import RandomForestClassifier
+        2 rf = RandomForestClassifier(random_state=0)
+  ----> 3 rf.fit(X_train, y_train)
+  (생략)
+  ValueError: could not convert string to float: 'Yes'
+```
+
+<br>
+
+### 03. LightGBM
+- LightGBM 분류 모델을 불러와 학습하고 예측하는 경우 에러 없이 정상 작동
+
+  - 입력값은 인코딩 없어 범주형 변수를 category 로만 변경하면 됨
+ 
+  - 결측치 처리 변환하지 않고 그대로 사용해도 LightGBM 은 결측값 그 자체를 입력값으로 받음
+ 
+- verbose = -1 : 로그가 출력되지 않게 설정하는 값
+
+> 코드
+```python
+  import lightgbm as lgb
+  lgbmc = lgb.LGBMClassifier(random_state=0, verbose=-1)
+  lgbmc.fit(X_train, y_train)
+  pred = lgbmc.predict(X_val)
+  pred
+```
+
+> 결과
+```python
+  array([2, 2, 2, ..., 3, 2, 2], dtype=int64)
+```
+
+<br>
+
+### 04. accuracy_score
+- 이진 분류와 다중 분류의 평가 방식 동일
+
+- f1_score 에서는 문제에서 요구하는 대로 average 에 옵션값(micro, macro, weighted) 지정
+
+- 1 에 가까우면 좋은 성능을 보임
+
+> 코드
+```python
+  accuracy = accuracy_score(y_val, pred)
+  print('accuracy_score :', accuracy)
+  
+  f1 = f1_score(y_val, pred, average='macro')
+  print('f1_score :', f1)
+```
+
+> 결과
+```python
+  accuracy_score : 0.6985
+  f1_score : 0.6777379561595467
+```
 
 <br>
 
@@ -460,11 +658,105 @@ SECTION06 머신러닝 학습 및 평가
 
 SECTION07 예측 및 결과 파일 생성
 ---
+- test 데이터 예측
 
+- 문제에서 f1(macro) 을 평가지표로 안내
 
+  - predict() 로 예측
+ 
+  - 예측한 결과값은 1, 2, 3 클래스로 구분됨
+ 
+> 코드
+```python
+  pred = lgbmc.predict(test)
+  pred
+```
+
+> 결과
+```python
+  array([2, 1, 1, ..., 1, 1, 2], dtype=int64)
+```
 
 <br>
+ 
+- 시험에서 요구한 대로 예측 결과를 데이터프레임으로 만들기
 
+  - 컬럼명은 pred, 저장할 파일명은 result.csv
+ 
+  - index = False 필수
+ 
+- 제출한 csv 파일 불러와 확인
+
+  - 제출 양식에서 요구하는 형태와 맞는지 컬럼명과 파일명 확인
+
+> 코드
+```python
+  submit = pd.DataFrame({'pred':pred})
+  submit.to_csv('result.csv', index = False)
+  
+  pd.read_csv('result.csv')
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>9995</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9996</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9997</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9998</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9999</th>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+<p>10000 rows × 1 columns</p>
+</div>
+
+<br>
 
 
 
