@@ -955,13 +955,184 @@ SECTION06 머신러닝 학습 및 평가
 
 <br>
 
+### 02. 랜덤포레스트
+- 랜덤포레스트는 분류도 있고 회귀도 있음
+
+  - 회귀로 사용할 때는 RandomForestRegressor
+
+> 코드
+```python
+  # 랜덤포레스트
+  from sklearn.ensemble import RandomForestRegressor
+  rf = RandomForestRegressor(random_state = 0)
+  rf.fit(X_train, y_train)
+  y_pred = rf.predict(X_val)
+  
+  result = mean_squared_error(y_val, y_pred)
+  print('MSE :', result)
+  
+  result = mean_absolute_error(y_val, y_pred)
+  print('MAE :', result)
+  
+  result = r2_score(y_val, y_pred)
+  print('R2 :', result)
+  
+  result = rmse(y_val, y_pred)
+  print('RMSE :', result)
+```
+
+> 결과
+```python
+  MSE : 1101802.8117346708
+  MAE : 747.2971172067448
+  R2 : 0.5755845326933362
+  RMSE : 1049.6679530854844
+```
+- RMSE 결과 살펴보면 선형 회귀로 예측한 결과보다 더 낮은 것 확인 가능
+
+- 다시 실행했을 때도 동일한 값을 얻기 위해 random_state 고정
+
+<br>
+
+### 03. LightGBM
+- 랜덤포레스트와 같이 회귀 모델이 있으며 LGBMRegressor 사용
+
+> 코드
+```python
+  # LightGBM
+  import lightgbm as lgb
+  model = lgb.LGBMRegressor(random_state=0)
+  model.fit(X_train, y_train)
+  y_pred = model.predict(X_val)
+  
+  result = mean_squared_error(y_val, y_pred)
+  print('MSE :', result)
+  
+  result = mean_absolute_error(y_val, y_pred)
+  print('MAE :', result)
+  
+  result = r2_score(y_val, y_pred)
+  print('R2 :', result)
+  
+  result = rmse(y_val, y_pred)
+  print('RMSE :', result)
+```
+
+> 결과
+```python
+  MSE : 1115654.3482227568
+  MAE : 736.6367966578568
+  R2 : 0.5702489079618556
+  RMSE : 1056.2454015155554
+```
+- 랜덤포레스트와 비슷하지만 더 높음
+
+<br>
+
 ---
 
 <br>
 
 SECTION07 예측 및 결과 파일 생성
 ---
+- test 데이터 예측
 
+  - 여러 모델을 사용했을 때 이 단계에서 모델 잘못 사용하는 경우 有
+ 
+  - 랜덤포레스트는 rf, LightGBM 은 model 변수에 있음
 
+> 코드
+```python
+  pred = model.predict(test)
+  pred
+```
+
+> 결과
+```python
+  array([1226.50504175,  830.18920951, 1788.76644309, ..., 3666.34876099,
+          990.65125496, 1224.1960178 ])
+```
+
+<br>
+
+- 시험에서 요구한 대로 예측결과를 데이터프레임으로 만들고 컬럼명은 pred, 저장할 파일명은 result.csv 로 저장
+
+  - index = False 설정 필수
+ 
+> 코드
+```python
+  submit = pd.DataFrame({'pred':pred})
+  submit.to_csv('result.csv', index=False)
+```
+
+<br>
+
+- 제출한 csv 파일 불러와서 확인
+
+  - 제출 양식에서 요구하는 형태가 맞는지 컬럼명과 파일명 확인
+
+> 코드
+```python
+  pd.read_csv('result.csv')
+```
+
+> 결과
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1226.505042</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>830.189210</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1788.766443</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1644.510784</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2831.798098</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1700</th>
+      <td>285.648607</td>
+    </tr>
+    <tr>
+      <th>1701</th>
+      <td>481.591492</td>
+    </tr>
+    <tr>
+      <th>1702</th>
+      <td>3666.348761</td>
+    </tr>
+    <tr>
+      <th>1703</th>
+      <td>990.651255</td>
+    </tr>
+    <tr>
+      <th>1704</th>
+      <td>1224.196018</td>
+    </tr>
+  </tbody>
+</table>
+<p>1705 rows × 1 columns</p>
+</div>
 
 <br>
