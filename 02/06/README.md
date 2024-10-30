@@ -532,7 +532,7 @@ SECTION02 이직 여부 예측
 
 <br>
 
-#### (2) 전처리
+#### (2) 전처리 및 예측
 
 > 코드
 ```python
@@ -700,22 +700,358 @@ SECTION02 이직 여부 예측
 
 SECTION03 신용카드 신천자의 미래 신용 예측
 ---
+- 신용카드 신청자의 채무 불이행 예측
 
+  - 제공된 데이터 목록 : creditcard_train.csv, creditcard_test.csv
+ 
+  - 예측할 컬럼 : target(0: 채무 이행, 1: 채무 불이행)
+ 
+- 학습용 데이터(train)을 이용해 신용카드 신청자의 데이터를 바탕으로 미래의 채무 불이행 예측 모델 생성
 
+- 평가용 데이터(test)에 적용해 얻은 예측값을 아래 와 같은 형식의 csv 파일로 생성
 
+  - 제출 파일은 다음 1개의 컬럼 포함
+ 
+    - pred : 예측값
+   
+    - 제출 파일명 : 'result3.csv'
+   
+  - 제출한 모델의 성능은 f1 평가지표에 따라 채점
 
 <br>
 
+### 01. 베이스라인
+- 데이터를 불러오고, 간단한 탐색적 데이터 분석 진행
 
+#### (1) EDA
 
+> 코드
+```python
+  # 1. 문제 정의
+  # 평가 : f1
+  # target : STATUS
+  # 최종 파일 : result.csv(컬럼 1개 pred)
+  
+  # 2. 라이브러리 및 데이터 불러오기
+  import pandas as pd
+  
+  train = pd.read_csv('./data/creditcard_train.csv')
+  test = pd.read_csv('./data/creditcard_test.csv')
+  
+  # 3. 탐색적 데이터 분석(EDA)
+  print('==== 데이터 크기 ====')
+  print(train.shape, test.shape)
+  
+  print('\n==== 데이터 정보(자료형) ====')
+  print(train.info())
+  
+  print('\n==== train 결측치 수 ====')
+  print(train.isnull().sum())
+  
+  print('\n==== test 결측치 수 ====')
+  print(test.isnull().sum())
+  
+  print('\n==== 범주형 데이터 카테고리 =====')
+  cols = train.select_dtypes(include='object').columns
+  for col in cols:
+      set_train = set(train[col])
+      set_test = set(test[col])
+      same = (set_train == set_test)
+      if same:
+          print(col, '\t카테고리 동일함')
+      else:
+          print(col, '\t카테고리 동일하지 않음')
+          
+  print('\n==== target 빈도 ====')
+  print(train['STATUS'].value_counts())
+```
 
+> 결과
+```python
+  ==== 데이터 크기 ====
+  (25519, 19) (7591, 18)
+  
+  ==== 데이터 정보(자료형) ====
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 25519 entries, 0 to 25518
+  Data columns (total 19 columns):
+   #   Column               Non-Null Count  Dtype  
+  ---  ------               --------------  -----  
+   0   ID                   25519 non-null  int64  
+   1   CODE_GENDER          25519 non-null  object 
+   2   FLAG_OWN_CAR         25519 non-null  object 
+   3   FLAG_OWN_REALTY      25519 non-null  object 
+   4   CNT_CHILDREN         25519 non-null  int64  
+   5   AMT_INCOME_TOTAL     25519 non-null  float64
+   6   NAME_INCOME_TYPE     25519 non-null  object 
+   7   NAME_EDUCATION_TYPE  25519 non-null  object 
+   8   NAME_FAMILY_STATUS   25519 non-null  object 
+   9   NAME_HOUSING_TYPE    25519 non-null  object 
+   10  DAYS_BIRTH           25519 non-null  int64  
+   11  DAYS_EMPLOYED        25519 non-null  int64  
+   12  FLAG_MOBIL           25519 non-null  int64  
+   13  FLAG_WORK_PHONE      25519 non-null  int64  
+   14  FLAG_PHONE           25519 non-null  int64  
+   15  FLAG_EMAIL           25519 non-null  int64  
+   16  OCCUPATION_TYPE      17543 non-null  object 
+   17  CNT_FAM_MEMBERS      25519 non-null  float64
+   18  STATUS               25519 non-null  int64  
+  dtypes: float64(2), int64(9), object(8)
+  memory usage: 3.7+ MB
+  None
+  
+  ==== train 결측치 수 ====
+  ID                        0
+  CODE_GENDER               0
+  FLAG_OWN_CAR              0
+  FLAG_OWN_REALTY           0
+  CNT_CHILDREN              0
+  AMT_INCOME_TOTAL          0
+  NAME_INCOME_TYPE          0
+  NAME_EDUCATION_TYPE       0
+  NAME_FAMILY_STATUS        0
+  NAME_HOUSING_TYPE         0
+  DAYS_BIRTH                0
+  DAYS_EMPLOYED             0
+  FLAG_MOBIL                0
+  FLAG_WORK_PHONE           0
+  FLAG_PHONE                0
+  FLAG_EMAIL                0
+  OCCUPATION_TYPE        7976
+  CNT_FAM_MEMBERS           0
+  STATUS                    0
+  dtype: int64
+  
+  ==== test 결측치 수 ====
+  ID                     0
+  CODE_GENDER            0
+  FLAG_OWN_CAR           0
+  FLAG_OWN_REALTY        0
+  CNT_CHILDREN           0
+  AMT_INCOME_TOTAL       0
+  NAME_INCOME_TYPE       0
+  NAME_EDUCATION_TYPE    0
+  NAME_FAMILY_STATUS     0
+  NAME_HOUSING_TYPE      0
+  DAYS_BIRTH             0
+  DAYS_EMPLOYED          0
+  FLAG_MOBIL             0
+  FLAG_WORK_PHONE        0
+  FLAG_PHONE             0
+  FLAG_EMAIL             0
+  OCCUPATION_TYPE        0
+  CNT_FAM_MEMBERS        0
+  dtype: int64
+  
+  ==== 범주형 데이터 카테고리 =====
+  CODE_GENDER 	카테고리 동일함
+  FLAG_OWN_CAR 	카테고리 동일함
+  FLAG_OWN_REALTY 	카테고리 동일함
+  NAME_INCOME_TYPE 	카테고리 동일함
+  NAME_EDUCATION_TYPE 	카테고리 동일함
+  NAME_FAMILY_STATUS 	카테고리 동일함
+  NAME_HOUSING_TYPE 	카테고리 동일함
+  OCCUPATION_TYPE 	카테고리 동일하지 않음
+  
+  ==== target 빈도 ====
+  STATUS
+  0    25085
+  1      434
+  Name: count, dtype: int64
+```
+- train 데이터의 OCCUPATION_TYPE 컬럼에 결측치 有
 
+- 불균형 심함
 
+  - 정상(채무 이행)은 25,085개가 있지만, 비정상(채무 불이행)은 434개밖에 없음
+ 
+  - 머신러닝에서 흔히 발생하는 문제
 
+- 분류 문제에서 한 클래스가 다른 클래스의 수보다 월등히 많은 경우
 
+  - 모델은 다수의 클래스를 예측하는 데 편향될 수 있음
 
+<br>
 
+#### (2) 전처리 및 예측
+- 데이터(행 또는 컬럼) 삭제시 반드시 삭제 전과 후 크기 비교
 
+  - 예상한 숫자만큼 삭제가 진행되었는지 검증할 필요 있음
+ 
+  - 행을 삭제한다면 타겟 컬럼은 행을 삭제한 이후에 변수로 옮겨야 함
+
+> 코드
+```python
+  # 4. 데이터 전처리
+  # 결측치 처리
+  print('삭제 전 :', train.shape)
+  train.dropna(subset=['OCCUPATION_TYPE'], inplace=True)
+  print('삭제후: ', train.shape)
+  
+  target = train.pop('STATUS')
+  
+  # 원-핫 인코딩
+  train = pd.get_dummies(train)
+  test = pd.get_dummies(test)
+  
+  # 5. 검증 데이터 분할
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  
+  # 6. 머신러닝 학습 및 평가
+  from sklearn.ensemble import RandomForestClassifier
+  rf = RandomForestClassifier(random_state=0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict(X_val)
+  
+  from sklearn.metrics import f1_score
+  f1 = f1_score(y_val, pred)
+  print('\nF1 :', f1)
+  
+  # 7. 예측 및 결과 파일 생성
+  pred = rf.predict(test)
+  submit = pd.DataFrame({'pred': pred})
+  submit.to_csv('result3.csv', index = False)
+  
+  print('\n==== 제출 파일 샘플 데이터 ====')
+  print(pd.read_csv('result3.csv').head())
+```
+- 베이스라인에서 범주형 자료형은 원-핫 인코딩 적용
+
+- 평가지표가 F1 스코어이므로 예측은 predict() 사용
+
+  - 0 도는 1 의 결과값 얻음
+
+> 결과
+```python
+  삭제 전 : (25519, 19)
+  삭제후:  (17543, 19)
+  
+  F1 : 0.22018348623853212
+  
+  ==== 제출 파일 샘플 데이터 ====
+     pred
+  0     0
+  1     0
+  2     0
+  3     0
+  4     0
+```
+
+<br>
+
+### 02. 성능 개선
+- 심각한 불균형 데이터일 경우 평가지표가 낮게 나올 수도 있음
+
+- F1 스코어는 1에 가까울수록 좋은 성능
+
+- **데이터 전처리**
+
+  - **레이블 인코딩** : 베이스라인에 있는 원-핫 인코딩을 레이블 인코딩으로 변경
+ 
+  - 스케일링(Standard Scaler, Min-Max Scaler, Robust Scaler) : 효과 X
+ 
+  - id 제거
+ 
+- **하이퍼파라미터 튜닝**
+
+  - **max_depth** : 3 ~ 7
+ 
+  - **n_estimaors** : 200 ~ 500
+ 
+  - **class_weight**='balanced'
+
+<br>
+
+|데이터 전처리/하이퍼파라미터 튜닝|F1|제출|
+|-|-|-|
+|베이스라인|0.22018348623853212|선택 / 1차 제출|
+|레이블 인코딩|0.23636363636363636|선택|
+|결측치(최빈값)|0.2727272727272727|선택|
+|id 제외|0.2972972972972973|선택|
+|스케일링(Standard, Min-Max, Robust)|0.2972972972972973||
+|max_depth = 3, 5, 7|0.0||
+|n_estimators = 200|0.29931972789115646|선택 / 2차 제출|
+|n_estimators = 400|0.2972972972972973||
+|n_estimators = 500|0.2972972972972973||
+|n_estimators = 200, class_weight = 'balanced'|0.3241106719367589|선택 / 3차 제출|
+
+<br>
+
+> 코드
+```python
+  # 2. 라이브러리 및 데이터 불러오기
+  import pandas as pd
+  
+  train = pd.read_csv('./data/creditcard_train.csv')
+  test = pd.read_csv('./data/creditcard_test.csv')
+  
+  # 4. 데이터 전처리
+  # 결측치 처리(최빈값)
+  freq = train['OCCUPATION_TYPE'].mode()[0]
+  train['OCCUPATION_TYPE'] = train['OCCUPATION_TYPE'].fillna(freq)
+  test['OCCUPATION_TYPE'] = test['OCCUPATION_TYPE'].fillna(freq)
+  
+  target = train.pop('STATUS')
+  
+  # id 제외
+  train = train.drop('ID', axis=1)
+  test = test.drop('ID', axis=1)
+  
+  # 스케일링(성능 개선 효과 없음)
+  # from sklearn.preprocessing import RobustScaler
+  # scaler = RobustScaler()
+  # n_cols = train.select_dtypes(exclude='object').columns[:-1]     # STATUS 제외한 int, float
+  # train[n_cols] = scaler.fit_transform(train[n_cols])
+  # test[n_cols] = scaler.transform(test[n_cols])
+  
+  # 레이블 인코딩
+  from sklearn.preprocessing import LabelEncoder
+  cols = train.select_dtypes(include='object').columns
+  for col in cols:
+      le = LabelEncoder()
+      train[col] = le.fit_transform(train[col])
+      test[col] = le.transform(test[col])
+      
+  # 5. 검증 데이터 나누기
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  
+  # 6. 머신러닝 학습 및 평가
+  from sklearn.ensemble import RandomForestClassifier
+  rf = RandomForestClassifier(n_estimators=500, class_weight='balanced', random_state=0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict(X_val)
+  
+  from sklearn.metrics import f1_score
+  f1 = f1_score(y_val, pred)
+  print('F1 :', f1)
+  
+  # 7. 예측 및 결과 파일 생성
+  pred = rf.predict(test)
+  submit = pd.DataFrame({'pred': pred})
+  submit.to_csv('result3.csv', index=False)
+```
+- 하이퍼파라미터로는 큰 효과 보기 어려움
+
+  - 트리의 깊이를 제한하는 max_depth 는 결과가 0점으로 매우 성능이 저하됨
+  
+  - n_estimators 는 약간의 차이만 있음
+
+- 랜덤포레스트에는 불균형한 클래스를 자동으로 균형 있게 조정할 수 있는 calss_weight 활용 방법 有
+
+  - 기본값은 모든 클래스에 동일한 가중치를 둠
+ 
+  - 불균형 데이터일 경우 calss_weight='balanced' 설정
+ 
+    - 적은 수의 샘플을 가진 클래스에 더 큰 가중치를 자동으로 부여
+
+> 결과
+```python
+  F1 : 0.3241106719367589
+```
+
+<br>
 
 
 
