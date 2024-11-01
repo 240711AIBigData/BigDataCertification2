@@ -739,13 +739,290 @@ SECTION02 약물 종류 예측
 
 SECTION03 유리 종류 예측
 ---
+- 유리 식별데이터에서 유리의 종류 예측
 
+  - 제공된 데이터 목록 : glass_train.csv, glass_test.csv
+ 
+  - 예측할 컬럼 : Type(1, 2, 3, 5, 6, 7)
+ 
+- 학습용 데이터(train.csv)를 이용해 약물 종류를 예측하는 모델 생성
 
+- 평가용 데이터(test.csv)에 적용해 얻은 예측값을 아래와 같은 형식의 csv 파일로 생성
 
+  - 제출 파일은 다음 1개의 컬럼 포함
+ 
+    - pred : 예측값
+   
+    - 제출 파일명 : 'result3.csv'
+   
+  - 제출한 모델의 성능은 f1-weighted 평가지표에 따라 채점
+ 
+<br>
+
+### 01. 베이스라인
+- 데이터를 불러오고, 간단한 탐색적 데이터 분석 진행
+
+<br>
+
+#### (1) EDA
+> 코드
+```python
+  # 1. 문제 정의
+  # 평가 : f1-weighted
+  # target : Type
+  # 최종 파일 : result3.csv
+  
+  # 2. 라이브러리 및 데이터 불러오기
+  import pandas as pd
+  
+  train = pd.read_csv('./data/glass_train.csv')
+  test = pd.read_csv('./data/glass_test.csv')
+  
+  # 3. 탐색적 데이터 분석 (EDA)
+  print('==== 데이터 크기 ====')
+  print('Train Shape :', train.shape )
+  print('Test Shape :', test.shape)
+  
+  print('\n==== train 데이터 샘플 ====')
+  print(train.head())
+  
+  print('\n==== test 데이터 샘플 ====')
+  print(test.head())
+  
+  print('\n==== 데이터 정보(자료형) ====')
+  print(train.info())
+  
+  print('\n==== train 결측치 수 ====')
+  print(train.isnull().sum())
+  
+  print('\n==== test 결측치 수 ====')
+  print(train.isnull().sum())
+  
+  print('\n==== target 빈도 ====')
+  print(train['Type'].value_counts())
+```
+
+> 결과
+```python
+  ==== 데이터 크기 ====
+  Train Shape : (149, 10)
+  Test Shape : (65, 9)
+  
+  ==== train 데이터 샘플 ====
+          RI     Na    Mg    Al     Si     K    Ca   Ba    Fe  Type
+  0  1.51829  14.46  2.24  1.62  72.38  0.00  9.26  0.0  0.00     6
+  1  1.51610  13.33  3.53  1.34  72.67  0.56  8.33  0.0  0.00     3
+  2  1.52172  13.48  3.74  0.90  72.01  0.18  9.61  0.0  0.07     1
+  3  1.51905  13.60  3.62  1.11  72.64  0.14  8.76  0.0  0.00     1
+  4  1.51631  13.34  3.57  1.57  72.87  0.61  7.89  0.0  0.00     2
+  
+  ==== test 데이터 샘플 ====
+          RI     Na    Mg    Al     Si     K     Ca    Ba    Fe
+  0  1.51748  12.86  3.56  1.27  73.21  0.54   8.38  0.00  0.17
+  1  1.52058  12.85  1.61  2.17  72.18  0.76   9.70  0.24  0.51
+  2  1.52475  11.45  0.00  1.88  72.19  0.81  13.24  0.00  0.34
+  3  1.51690  13.33  3.54  1.61  72.54  0.68   8.11  0.00  0.00
+  4  1.52177  13.75  1.01  1.36  72.19  0.33  11.14  0.00  0.00
+  
+  ==== 데이터 정보(자료형) ====
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 149 entries, 0 to 148
+  Data columns (total 10 columns):
+   #   Column  Non-Null Count  Dtype  
+  ---  ------  --------------  -----  
+   0   RI      149 non-null    float64
+   1   Na      149 non-null    float64
+   2   Mg      149 non-null    float64
+   3   Al      149 non-null    float64
+   4   Si      149 non-null    float64
+   5   K       149 non-null    float64
+   6   Ca      149 non-null    float64
+   7   Ba      149 non-null    float64
+   8   Fe      149 non-null    float64
+   9   Type    149 non-null    int64  
+  dtypes: float64(9), int64(1)
+  memory usage: 11.8 KB
+  None
+  
+  ==== train 결측치 수 ====
+  RI      0
+  Na      0
+  Mg      0
+  Al      0
+  Si      0
+  K       0
+  Ca      0
+  Ba      0
+  Fe      0
+  Type    0
+  dtype: int64
+  
+  ==== test 결측치 수 ====
+  RI      0
+  Na      0
+  Mg      0
+  Al      0
+  Si      0
+  K       0
+  Ca      0
+  Ba      0
+  Fe      0
+  Type    0
+  dtype: int64
+  
+  ==== target 빈도 ====
+  Type
+  2    53
+  1    49
+  7    23
+  3     9
+  5     8
+  6     7
+  Name: count, dtype: int64
+```
+- 데이터 자료형이 모두 수치형 데이터
+
+  - 별도 전처리 없이 베이스라인 구축
+
+- 결측치 없음
+
+- target 은 6가지
+
+<br>
+
+#### (2) 전처리 및 예측
+
+> 코드
+```python
+  # 4. 데이터 전처리
+  target = train.pop('Type')
+  
+  # 5. 검증 데이터 나누기
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  
+  # 6. 머신러닝 학습 및 평가
+  from sklearn.ensemble import RandomForestClassifier
+  rf = RandomForestClassifier(random_state=0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict(X_val)
+  
+  from sklearn.metrics import f1_score
+  f1 = f1_score(y_val, pred, average='weighted')
+  print('f1 :', f1)
+  
+  # 7. 예측 및 결과 파일 생성
+  pred = rf.predict(test)
+  submit = pd.DataFrame({'pred':pred})
+  submit.to_csv('result3.csv', index=False)
+  
+  print('\n==== 제출 파일 (샘플 5개) ====')
+  print(pd.read_csv('result3.csv').head())
+```
+
+> 결과
+```python
+  f1 : 0.6119801766860591
+  
+  ==== 제출 파일 (샘플 5개) ====
+     pred
+  0     1
+  1     2
+  2     2
+  3     2
+  4     2
+```
+
+<br>
+
+### 02. 성능 개선
+- 랜덤포레스는 여러 개의 의사결정 나무로 이루어진 앙상블 모델
+
+  - 트리 기반 모델은 피처의 대소 관계를 중심으로 학습하기 때문에 스케일링에 크게 민감하지 않음
+ 
+- n_estimators 설정으로 성능에 크게 변화가 있을 때 같은 결과라면 낮은 설정 선택
+
+  - n_setimators 값이 크면 트리의 수가 많아져 연산 속도가 느려짐
+ 
+- 데이터 전처리
+
+  - 스케일링 : 성능 변화 X
+ 
+- 하이퍼파라미터 튜닝
+
+  - max_depth : 5, 7, 10
+ 
+  - n_estimators : 200, 500
 
 <BR>
 
+|데이터 전처리/하이퍼파라미터 튜닝|f1|제출|
+|-|-|-|
+|베이스라인|0.6119801766860591|선택 / 1차 제출|
+|스케일링(Standard, Min-Max, Robust)|0.6119801766860591||
+|max_depth = 5|0.6410714285714286|선택|
+|max_depth = 7|0.6119801766860591||
+|max_depth = 10|0.6119801766860591||
+|max_depth = 5, n_estimators = 200|0.6507936507936507|선택 / 2차 제출|
+|max_depth = 5, n_estimators = 500|0.6507936507936507||
 
+<br>
+
+> 코드
+```python
+  # 2. 라이브러리 및 데이터 불러오기
+  import pandas as pd
+  
+  train = pd.read_csv('./data/glass_train.csv')
+  test =pd.read_csv('./data/glass_test.csv')
+  
+  # 4. 데이터 전처리
+  target = train.pop('Type')
+  
+  # 스케일링 (효과 X)
+  # from sklearn.preprocessing import StandardScaler
+  # scaler = StandardScaler()
+  # cols = train.columns
+  # train[cols] = scaler.fit_transform(train[cols])
+  # test[cols] = scaler.transform(test[cols])
+  
+  # 5. 검증 데이터 나누기
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  
+  # 6. 머신러닝 학습 및 평가
+  from sklearn.ensemble import RandomForestClassifier
+  rf = RandomForestClassifier(max_depth=5, n_estimators=200, random_state=0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict(X_val)
+  
+  from sklearn.metrics import f1_score
+  f1 = f1_score(y_val, pred, average='weighted')
+  print('f1 :', f1)
+  
+  # 7. 예측 및 결과 파일 생성
+  pred = rf.predict(test)
+  submit = pd.DataFrame({'pred':pred})
+  submit.to_csv('result3.csv', index=False)
+  
+  print('\n==== 제출 파일 (샘플 5개) ====')
+  print(pd.read_csv('result3.csv').head())
+```
+
+> 결과
+```python
+  f1 : 0.6507936507936507
+  
+  ==== 제출 파일 (샘플 5개) ====
+     pred
+  0     1
+  1     5
+  2     5
+  3     2
+  4     2
+```
+
+<br>
 
 
 
