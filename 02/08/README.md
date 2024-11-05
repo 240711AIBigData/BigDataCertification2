@@ -472,9 +472,348 @@ train['price'].hist()
 
 SECTION02 노트북 가격 예측
 ---
+- 노트북 정보로 가격 예측
 
+  - 제공된 데이터 목록 : laptop_train.csv, laptop_test.csv
+ 
+  - 예측할 컬럼 : price
+ 
+- 학습용 데이터(train)을 이용해 노트북 가격을 예측하는 모델 생성
 
+- 평가용 데이터(test)에 적용해 얻은 예측값을 아래 형식의 csv 파일로 생성
 
+  - 제출 파일은 다음 1개의 컬럼 포함
+ 
+    - pred : 예측값(가격)
+   
+    - 제출 파일명 : 'result2.csv'
+   
+  - 제출한 모델의 성능은 R²(결정 계수) 평가지표에 따라 채점
+
+<br>
+
+### 01. 베이스라인
+- 데이터를 불러오고, 간단한 탐색적 데이터 분석 진행
+
+<br>
+
+#### (1) EDA
+
+> 코드
+```python
+  # 1. 문제 정의
+  # 평가 : R²
+  # target : Price
+  # 최종 파일 : result2.csv (컬럼 1개 pred, 1 확률값)
+  
+  # 2. 라이브러리 및 데이터 불러오기
+  import pandas as pd
+  
+  train = pd.read_csv('./data/laptop_train.csv')
+  test = pd.read_csv('./data/laptop_test.csv')
+  
+  # 3. 탐색적 데이터 분석(EDA)
+  print('==== 데이터 크기 ====')
+  print('Train Shape :', train.shape)
+  print('Test Shape :', test.shape)
+  
+  print('\n==== 데이터 정보(자료형) ====')
+  print(train.info())
+  
+  print('\n==== train 결측치 수 ====')
+  print(train.isnull().sum())
+  
+  print('\n==== test 결측치 수 ====')
+  print(test.isnull().sum())
+  
+  print('\n==== 카테고리 비교 ====')
+  cols = train.select_dtypes(include='object').columns
+  for col in cols:
+      set_train = set(train[col])
+      set_test = set(test[col])
+      same = (set_train == set_test)
+      if same:
+          print(col, '\t카테고리 동일함')
+      else:
+          print(col, '\t카테고리 동일하지 않음')
+          
+  print('\n==== target 기술 통계 ====')
+  print(train['Price'].describe())
+```
+
+> 결과
+```python
+  ==== 데이터 크기 ====
+  Train Shape : (91, 10)
+  Test Shape : (39, 9)
+  
+  ==== 데이터 정보(자료형) ====
+  <class 'pandas.core.frame.DataFrame'>
+  RangeIndex: 91 entries, 0 to 90
+  Data columns (total 10 columns):
+   #   Column              Non-Null Count  Dtype  
+  ---  ------              --------------  -----  
+   0   Brand               91 non-null     object 
+   1   Model               82 non-null     object 
+   2   Series              55 non-null     object 
+   3   Processor           86 non-null     object 
+   4   Processor_Gen       86 non-null     object 
+   5   RAM                 85 non-null     float64
+   6   Hard_Disk_Capacity  85 non-null     object 
+   7   OS                  85 non-null     object 
+   8   Rating              91 non-null     float64
+   9   Price               91 non-null     int64  
+  dtypes: float64(2), int64(1), object(7)
+  memory usage: 7.2+ KB
+  None
+  
+  ==== train 결측치 수 ====
+  Brand                  0
+  Model                  9
+  Series                36
+  Processor              5
+  Processor_Gen          5
+  RAM                    6
+  Hard_Disk_Capacity     6
+  OS                     6
+  Rating                 0
+  Price                  0
+  dtype: int64
+  
+  ==== test 결측치 수 ====
+  Brand                  0
+  Model                  5
+  Series                14
+  Processor              2
+  Processor_Gen          2
+  RAM                    2
+  Hard_Disk_Capacity     2
+  OS                     2
+  Rating                 0
+  dtype: int64
+  
+  ==== 카테고리 비교 ====
+  Brand 	카테고리 동일하지 않음
+  Model 	카테고리 동일하지 않음
+  Series 	카테고리 동일하지 않음
+  Processor 	카테고리 동일하지 않음
+  Processor_Gen 	카테고리 동일하지 않음
+  Hard_Disk_Capacity 	카테고리 동일하지 않음
+  OS 	카테고리 동일하지 않음
+  
+  ==== target 기술 통계 ====
+  count        91.000000
+  mean      53540.813187
+  std       21371.760428
+  min       17640.000000
+  25%       39490.000000
+  50%       46840.000000
+  75%       60194.500000
+  max      129990.000000
+  Name: Price, dtype: float64
+```
+- 학습용 데이터가 91개인 매우 작은 데이터 크기
+
+- train, test 데이터에 결측치 有, object 컬럼의 경우 카테고리가 모두 동일하지 않음
+
+<br>
+
+#### (2) 전처리 및 예측
+
+> 코드
+```python
+  # 4. 데이터 전처리
+  target = train.pop('Price')
+  
+  # 결측치 처리(범주형)
+  c_cols = ['Model', 'Series', 'Processor', 'Processor_Gen', 'Hard_Disk_Capacity', 'OS']
+  train[c_cols] = train[c_cols].fillna('X')
+  test[c_cols] = test[c_cols].fillna('X')
+  
+  # 결측치 처리(수치형)
+  n_cols = ['RAM']
+  train[c_cols] = train[c_cols].fillna(-1)
+  test[c_cols] = test[c_cols].fillna(-1)
+  
+  # 원-핫 인코딩
+  combined = pd.concat([train, test])
+  combined_dummies = pd.get_dummies(combined)
+  n_train = len(train)
+  train = combined_dummies[:n_train]
+  test = combined_dummies[n_train:]
+  
+  # 5. 검증 데이터 나누기
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  print(X_train.shape, X_val.shape, y_train.shape, y_val.shape)
+  
+  # 6. 머신러닝 학습 및 평가
+  from sklearn.ensemble import RandomForestRegressor
+  rf = RandomForestRegressor(random_state=0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict(X_val)
+  
+  from sklearn.metrics import r2_score
+  result = r2_score(y_val, pred)
+  print('\nR2 :', result)
+  
+  # 7. 예측 및 결과 파일 생성
+  pred = rf.predict(test)
+  submit = pd.DataFrame({'pred':pred})
+  submit.to_csv('result2.csv', index=False)
+  
+  print('\n==== 제출 파일 (샘플 5개) ====')
+  print(pd.read_csv('result2.csv').head())
+```
+- 결측치 처리를 위해 범주형 컬럼에는 X 값 대입, 수치형 데이터에는 -1 값 대입
+
+  - 결측치를 표시하기 위한 임의값
+ 
+- train 과 test 합쳐서 인코딩 후 다시 train 과 test 로 나누기
+
+- r2 는 사이킷런에서 평가지표 함수 제공
+
+> 결과
+```python
+  (72, 119) (19, 119) (72,) (19,)
+
+  R2 : 0.7637860886010525
+  
+  ==== 제출 파일 (샘플 5개) ====
+         pred
+  0  40720.15
+  1  39409.13
+  2  59492.65
+  3  39960.00
+  4  43535.17
+```
+
+<br>
+
+### 02. 성능 개선
+- 데이터 전처리
+
+  - Series 컬럼 삭제 : 40% 정도의 결측치를 갖고 있는 Series 컬럼 삭제
+  
+    - 40% 결측치를 대체하는 대신 이 컬럼을 삭제해 모델의 성능 높이기
+ 
+  - Model 컬럼 삭제 : 여러 희소한 카테고리 값 有
+ 
+    - Brand 컬럼이 Model 정보를 부분적으로 포함
+   
+      - Model 컬럼 삭제하니 모델 성능 향상
+     
+- 하이퍼파라미터 튜닝
+
+  - 간단한 튜닝 시도했으나 뚜렷한 개선 X
+ 
+<br>
+
+|데이터 전처리/하이퍼파라미터 튜닝|R²|제출|
+|-|-|-|
+|베이스라인|0.7637860886010525|선택 / 1차 제출|
+|Series 컬럼 삭제|0.779055103270554|선택|
+|Model 컬럼 삭제|0.8109566453793982|선택 / 2차 제출|
+|max_depth = 10|0.8071431979459575||
+|max_depth = 15|0.8109566453793982||
+|max_depth = 20|0.8109566453793982||
+|n_estimators = 200|0.796874056256514||
+|n_estimators = 500|0.7874514926096796||
+
+<br>
+
+> 코드
+```python
+  # 2. 라이브러리 및 데이터 불러오기
+  import pandas as pd
+  
+  train = pd.read_csv('./data/laptop_train.csv')
+  test = pd.read_csv('./data/laptop_test.csv')
+  
+  # 4. 데이터 전처리
+  target = train.pop('Price')
+  
+  # Series 결측치 삭제
+  train = train.drop('Series', axis=1)
+  test = test.drop('Series', axis=1)
+  
+  # Brand 컬럼이 Model 컬럼에 포함되는지 확인하는 함수
+  def check_brand_in_model(row):
+      brand = str(row['Brand']).lower()
+      model = str(row['Model']).lower()
+      return brand in model
+  
+  # 각 행에 대해 브랜드가 모델 이름에 포함되는지를 확인
+  brand_in_model = train.apply(check_brand_in_model, axis=1)
+  
+  # 포함된 비율 확인
+  print('브랜드가 모델 정보에 포함될 비율 :', brand_in_model.mean())
+  
+  # 샘플 출력
+  print('\n', train[brand_in_model][['Brand', 'Model']].head())
+  
+  # Model 결측치 삭제
+  train = train.drop('Model', axis=1)
+  test = test.drop('Model', axis=1)
+  
+  # 결측치 처리(범주형)
+  c_cols = ['Processor', 'Processor_Gen', 'Hard_Disk_Capacity', 'OS']
+  train[c_cols] = train[c_cols].fillna('X')
+  test[c_cols] = test[c_cols].fillna('X')
+  
+  # 결측치 처리(수치형)
+  n_cols = ['RAM']
+  train[c_cols] = train[c_cols].fillna(-1)
+  test[c_cols] = test[c_cols].fillna(-1)
+  
+  # 원-핫 인코딩
+  combined = pd.concat([train, test])
+  combined_dummies = pd.get_dummies(combined)
+  n_train = len(train)
+  train = combined_dummies[:n_train]
+  test = combined_dummies[n_train:]
+  
+  # 5. 검증 데이터 나누기
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, y_train, y_val = train_test_split(train, target, test_size=0.2, random_state=0)
+  
+  # 6. 머신러닝 학습 및 평가
+  from sklearn.ensemble import RandomForestRegressor
+  rf = RandomForestRegressor(random_state=0)
+  rf.fit(X_train, y_train)
+  pred = rf.predict(X_val)
+  
+  from sklearn.metrics import r2_score
+  result = r2_score(y_val, pred)
+  print('\nr2 :', result)
+  
+  # 7. 예측 및 결과 파일 생성
+  pred = rf.predict(test)
+  submit = pd.DataFrame({'pred':pred})
+  submit.to_csv('result2.csv', index=False)
+  
+  print('\n==== 제출 파일 (샘플 5개) ====')
+  print(pd.read_csv('result2.csv').head())
+```
+
+> 결과
+```python
+  브랜드가 모델 정보에 포함될 비율 : 0.02197802197802198
+  
+      Brand Model
+  19    HP    HP
+  22  ASUS  ASUS
+  
+  r2 : 0.8109566453793982
+  
+  ==== 제출 파일 (샘플 5개) ====
+         pred
+  0  40008.05
+  1  40648.49
+  2  59986.05
+  3  39960.00
+  4  45183.02
+```
 
 <br>
 
