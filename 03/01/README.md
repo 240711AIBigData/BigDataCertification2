@@ -764,8 +764,292 @@ SECTION03 대응 표본 검정
 
 SECTION04 독립 표본 검정
 ---
+### 01. 독립 표본 검정(Independent sample t-test)
+- 두 그룹(표본) 간의 평균이 서로 다름을 판단하는 통계 방법
 
+  - ex) 남자와 여자의 소득 차이가 있는지 없는지 가설 검정
+ 
+    - A 그룹과 B 그룹을 나눔
+    
+    - 각 그룹을 대상으로 적절한 통계적 검정을 통해 두 그룹 사이에 통계적으로 유의미한 차이가 있는지 없는지 결론 내림
+   
+      - 통계적으로 유의미하다 : 우연히 발생할 수 있는 차이와 실제로 의미 있는 차이를 구분하기 위해 사용
+     
+|-|
+|-|
+|![이미지](./img/04.png)|
 
+- 독립 표본 검정에서 두 모평균을 비교할 때는 scipy.stats 의 ttest_ind() 활용
+
+```python
+  ttest_ind(a, b, alternative, equal_val)
+```
+- a : 첫 번째 모집단에서 뽑은 표본 데이터
+
+- b : 두 번째 모집단에서 뽑은 표본 데이터(a 와 b 의 데이터 수는 다를 수 있음)
+
+- alternative(대립가설 정의)
+
+  - μ1 > μ2 : greater, a 의 평균 > b 의 평균
+    
+  - μ1 < μ2 : less, a 의 평균 < b 의 평균
+    
+  - μ1 != μ2 : two-sided(기본값), 두 표본 그룹 간의 평균에 차이 有
+ 
+- equal_val
+
+  - True : 두 모집단의 분산이 같다고 가정(기본값)
+ 
+  - False : 두 모집단의 분산이 다르다고 가정
+
+<br>
+
+#### ✏️ 문제
+> 다음은 어느 학교의 반별 수학 시험 점수다.<br>
+> 1반과 2반의 평균 점수가 차이가 있는지 유의 수준 0.05 하에서 가설검정하시오.<br>
+> (μ1 : 1반 평귱, μ2 : 2반 평균)
+
+**(1) 양측 검정**
+- 귀무가설(H₀) : 반별 수학 평균 점수는 같다 (μ1 = μ2)
+
+- 대립가설(H₁) : 반별 수학 평균 점수는 다르다 (μ1 != μ2)
+
+> 코드
+```python
+  # 독립 표본 검정의 경우 표본 데이터 길이가 다를 수 있음
+  import pandas as pd
+  class1 = [85, 90, 92, 88, 86, 89, 83, 87]
+  class2 = [80, 82, 88, 85, 84]
+```
+
+<br>
+
+> 코드
+```python
+  from scipy.stats import ttest_ind
+  ttest_ind(class1, class2)
+```
+- alternative 값이 없다면 기본값인 양측 검정 실시
+
+> 결과
+```python
+  TtestResult(statistic=2.2108140580092237, pvalue=0.04914857789252186, df=11.0)
+```
+- ttest_ind() 함수 활용해 검정 통계량(t-통계량)과 p-value 확인
+
+  - t-통계량 : 2.2108140580092237 , p-value : 0.04914857789252186
+ 
+- 0.04(p-value) < 0.05(유의수준) : 귀무가설 기각, 대립가설 채택
+
+<br>
+
+- 모분산이 다르다면 equal_var 파라미터에 False (기본값은 True)
+
+> 코드
+```python
+  print(stats.ttest_ind(class1, class2, equal_var=False))
+```
+
+> 결과
+```python
+  TtestResult(statistic=2.1818699281825236, pvalue=0.059589330071355334, df=8.272682358753572)
+```
+- 0.059(p-value) > 0.05(유의수준) : 귀무가설 채택, 대립가설 기각
+
+<br>
+
+<details>
+  <summary>💡 '모분산이 같다' 기본 설정은 파이썬과 R 이 다름</summary>
+
+- 파이썬(사이파이 t-test) : 모분산이 같다
+
+  - 기본값 : equal_var = True
+ 
+- R(t-test) : 모분산이 다르다
+
+  - 기본값 : equal_var = False
+
+</details>
+
+<br>
+
+**(2) 단측 검정(μ1 < μ2, 모분산은 동일)**
+- 귀무가설(H₀) : 반별 수학 평균 점수는 같다 (μ1 = μ2)
+
+- 대립가설(H₁) : 2반 수학 평균 점수가 더 높다 (μ1 < μ2)
+
+- ttest_ind(a, b, alternative, equal_var) 함수 사용시 alternative 인수에 설정하는 옵션
+
+  - 비교 대상인 두 집단의 관계에 따라 달라짐
+ 
+    - 대립가설 : a(첫 번째 인수) > b(두 번째 인수)
+   
+      - alternative = 'greater'
+     
+    - 대립가설 : a(첫 번째 인수) < b(두 번째 인수)
+   
+      - alternative = 'less'
+
+> 코드
+```python
+  print(stats.ttest_ind(class1, class2, alternative='less', equal_var=True))
+```
+
+> 결과
+```python
+  TtestResult(statistic=2.2108140580092237, pvalue=0.9754257110537391, df=11.0)
+```
+- 0.97(p-value) > 0.05(유의수준) : 귀무가설 채택
+
+  - 2반의 수학 평균 점수가 1반보다 통계적으로 유의하게 높다는 증거가 충분하지 않음
+
+<br>
+
+**(3) 단측 검정(μ1 > μ2, 모분산은 동일)**
+- 귀무가설(H₀) : 반별 수학 평균 점수는 같다 (μ1 = μ2)
+
+- 대립가설(H₁) : 1반 수학 평균 점수가 더 높다 (μ1 > μ2)
+
+> 코드
+```python
+  print(stats.ttest_ind(class1, class2, alternative='greater', equal_var=True))
+```
+
+> 결과
+```python
+  TtestResult(statistic=2.2108140580092237, pvalue=0.02457428894626093, df=11.0)
+```
+- 0.02(p-value) < 0.05(유의수준) : 귀무가설 기각, 대립가설 채택
+
+<br>
+
+#### 💡 독립 표본 검정 수행 과정
+- 독립 표본 검정을 수행할 때는 두 집단의 데이터가 등분산성을 갖는지 확인하는 단계 필요
+
+  - 두 집단의 데이터에 대해 정규성 검정 시행
+ 
+    - shapiro() 함수 사용해 각 데이터셋의 정규성 여부 평가
+
+    - 데이터가 정규성을 만족하지 않는 경우 비모수 검정인 Mann0Whitney U 검정으로 대체 분석 진행
+   
+  - levene() 함수로 등분산성 검정 진행
+ 
+    - 통과한 데이터에 대해 ttest_ind() 함수 이용해 독립 표본 검정 실행
+   
+    - 두 집단의 분산이 서로 다르다고 추정되는 경우 Welch 의 t-검정 실시
+
+|-|
+|-|
+|![이미지](./img/05.png)|
+
+<br>
+
+#### ✏️ 문제
+> 다음은 어느 학교의 반별 수학 시험 점수다.<br>
+> 1반과 2반의 평균 점수가 차이가 있는지 유의 수준 0.05 하에서 가설검정하시오.<br>
+> (μ1 : 1반 평귱, μ2 : 2반 평균)
+
+- 귀무가설(H₀) : 반별 수학 평균 점수는 같다 (μ1 = μ2)
+
+- 대립가설(H₁) : 2반 수학 평균 점수가 더 높다 (μ1 < μ2)
+
+**(1) 모수 검정**
+- 두 클래스 간의 평균 차이를 비교하는 데이터를 불러오고, 정규성 검정 진행
+
+> 코드
+```python
+  import pandas as pd
+  class1 = [85, 90, 92, 88, 86, 89, 83, 87]
+  class2 = [80, 82, 88, 85, 84]
+  
+  from scipy import stats
+  print(stats.shapiro(class1))
+  print(stats.shapiro(class2))
+```
+
+> 결과
+```python
+  ShapiroResult(statistic=0.9981893537736595, pvalue=0.999986994137081)
+  ShapiroResult(statistic=0.9917398436295009, pvalue=0.9854182266624983)
+```
+- class1 : 0.99(p-value) > 0.05(유의수준) : 정규성 만족
+
+- class2 : 0.98(p-value) > 0.05(유의수준) : 정규성 만족
+
+<br>
+
+> 코드
+```python
+  print(stats.levene(class1, class2))
+```
+- Levene(레빈) 검정 수행
+
+> 결과
+```python
+  LeveneResult(statistic=0.0027925869510027727, pvalue=0.958802951766629)
+```
+- 0.95(p-value) > 0.05(유의수준) : 등분산성 만족
+
+<br>
+
+> 코드
+```python
+  print(stats.ttest_ind(class1, class2, alternative='less', equal_var=True))
+```
+- 독립 표본 t-검정 수행
+
+  - 대립가설 만족하려면 class1 평균이 더 작아야 함
+ 
+    - alternative='less'
+   
+    - equal_var=True 기본값으로 생략 가능
+
+> 결과
+```python
+  TtestResult(statistic=2.2108140580092237, pvalue=0.9754257110537391, df=11.0)
+```
+- 0.97(p-value) > 0.05(유의수준) : 귀무가설 채택, 대립가설 기각
+
+<br>
+
+**(2) 비모수 검정**
+
+> 코드
+```python
+  # 정규성에 위배되는 데이터 생성
+  import pandas as pd
+  class1 = [85, 90, 92, 88, 86, 89, 83, 87]
+  class2 = [88, 82, 88, 85, 130]
+  
+  from scipy import stats
+  print(stats.shapiro(class1))
+  print(stats.shapiro(class2))
+```
+- 샤피로-윌크 검정
+
+> 결과
+```python
+  ShapiroResult(statistic=0.9981893537736595, pvalue=0.999986994137081)
+  ShapiroResult(statistic=0.6689955781406137, pvalue=0.004410368331716993)
+```
+- class1 : 0.99(p-value) > 0.05(유의수준) : 정규 분포 따름
+
+- class2 : 0.00(p-value) < 0.05(유의수준) : 정규 분포 따르지 않음
+
+  - 정규성 가정이 위배된 경우 비모수 검정인 Mann-Whitney(맨-휘트니) U 검정 수행
+
+<br>
+
+> 코드
+```python
+  print(stats.mannwhitneyu(class1, class2, alternative='less'))
+```
+
+> 결과
+```python
+  MannwhitneyuResult(statistic=21.5, pvalue=0.6159273392555747)
+```
+- 0.61(p-value) > 0.05(유의수준) : 귀무가설 채택, 대립가설 기각
 
 <br>
 
