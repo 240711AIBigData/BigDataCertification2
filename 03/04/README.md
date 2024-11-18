@@ -1102,11 +1102,9 @@ SECTION04 범주형 변수
 
   - material_type 변수는 범주형 (강의, 독학, 독서)
  
-<br>?
+<br>
 
 > 종속변수 score, 독립변수 study_hours, material_type 사용해 회귀 모델 생성
-
-> 코드
 ```python
   from statsmodels.formula.api import ols
   model = ols('score ~ study_hours + material_type', data=df).fit()
