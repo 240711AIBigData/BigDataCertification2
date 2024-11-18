@@ -249,9 +249,11 @@ SECTION02 단순 선형 회귀 분석
 |X 데이터,<br>features(특징, 피처)|톡립변수,<br>설명변수|온도, 강수량, 습도, 시간, 평일/주말 등|
 |y 데이터,<br>label,<br>target|종속변수,<br>반응변수,<br>결과변수|매출액, 주문량 등|
 
-<br>
 
 </details>
+
+<br>
+
 
 #### (1) 단순 선형 회귀식
 ```
@@ -330,9 +332,11 @@ SECTION02 단순 선형 회귀 분석
 |statsmodels.formula.api 의 ols<br>(함수)|소문자로 사용<br>ols()|R 스타일의 공식을 사용해 모델을 생성하고, 결과를 분석<br>ols(종송변수 ~ 독립변수1 + 독립변수2, data=df)|
 |statsmodles.api 의 OLS<br>(클래스)|대문자로 사용<br>OLS()|작업형2에서 사용했던 model.fit(X, y) 방식과 유사<br>단, OLS(y, X).fit() 로 순서가 다름<br>OLS(종속변수, 독립변수 데이터프레임)|
 
-<br>
 
 </details>
+
+<br>
+
 
 - **제곱합**
 
@@ -463,9 +467,10 @@ SECTION02 단순 선형 회귀 분석
 |P>\|t\||각 계수의 t 통계량에 대한 p-value|
 |[0.025 0.975]|95% 신뢰 구간, 각 계수에 대한 95% 신뢰 구간|
 
-<br>
 
 </details>
+
+<br>
 
 **2. 회귀 모델의 결정 계수 구하기**
 - model.summary() 함수 값을 확인하는 방법 or 별도 값만 출력
@@ -615,9 +620,11 @@ SECTION02 단순 선형 회귀 분석
 
   - 부동 소수점 : 컴퓨터에서 소수점이 있는 숫자를 표현하고 연산하는 방식
 
-<br>
 
 </details>
+
+<br>
+
 
 #### ✏️ 심화
 **1. 몸무게의 95% 신뢰 구간 구하기**
@@ -676,11 +683,336 @@ SECTION02 단순 선형 회귀 분석
 
 <br>
 
-SECTION03 다중 선형 회귀 분석
+SECTION03 다중 선형 회귀 분석(Multiple Linear Regression)
 ---
+- 2개 이상의 독립변수와 하나의 종속변수 간의 관계를 분석하는 방법
 
+- 중선형 회귀 분석이라고도 함
 
+- 단순 선형 회귀 분석과 다중 선형 회귀 분석은 독립변수 개수만 다를 뿐, 분석 방법에는 큰 차이가 없음
 
+> 다중 선형 회귀식
+```
+  y = α + β₁X + β₂X + β₃X + ε
+```
+- y : 종속변수
+
+- X : 독립변수
+
+- α(알파) : 절편(상수항)
+
+- β(베타) : 기울기
+
+- ε(엡실론) : 오차항(직선이 설명하지 못하는 변동, 정규 분포를 따름)
+
+- 종속변수를 가장 잘 설명하는 회귀 계수들을 추정함
+
+  - 회귀 계수 : 기울기, 절편 등
+
+<br>
+
+#### ✏️ 문제
+> 다음은 매출액, 광고비, 직원 수에 관한 데이터다. 광고비와 직원 수는 독립변수고, 매출액은 종속변수다.<br>
+> 다중 선형 회귀 모델을 구축하고 각 소문제의 값을 구하시오.
+
+> 코드
+```python
+  import pandas as pd
+  
+  data = {
+      '매출액' : [300, 320, 250, 360, 315, 328, 310, 335, 326, 280, 290, 300, 315, 328, 310, 335, 300, 400, 500, 600],
+      '광고비' : [70, 75, 30, 80, 72, 77, 70, 82, 70, 80, 68, 90, 72, 77, 70, 82, 40, 20, 75, 80],
+      '직원수' : [15, 16, 14, 20, 19, 17, 16, 19, 15, 20, 14, 5, 16, 17, 16, 14, 30, 40, 10, 50]
+  }
+  
+  df = pd.DataFrame(data)
+  print(df.head(3))
+```
+
+> 결과
+```python
+     매출액  광고비  직원수
+  0  300   70   15
+  1  320   75   16
+  2  250   30   14
+```
+
+<br>
+
+**1. 주어진 데이터로 최소제곱법을 이용한 다중 선형 회귀 모델을 구축하고 통계적 요약 출력**
+- statsmodel 의 ols() 함수 활용해 회귀 모델 생성 후 종속변수와 독립변수를 활용해 학습
+
+- 독립변수가 여러 개일 때는 플러스(+) 사용해 formula 를 '매출액 ~ 광고비 + 직원 수' 로 작성
+
+> 코드
+```python
+  from statsmodels.formula.api import ols
+  model = ols('매출액 ~ 광고비 + 직원수', data=df).fit()
+  print(model.summary())
+```
+
+> 결과
+```python
+                              OLS Regression Results                            
+  ==============================================================================
+  Dep. Variable:                  매출액   R-squared:                       0.512
+  Model:                            OLS   Adj. R-squared:                  0.454
+  Method:                 Least Squares   F-statistic:                     8.907
+  Date:                Mon, 18 Nov 2024   Prob (F-statistic):            0.00226
+  Time:                        11:03:53   Log-Likelihood:                -108.22
+  No. Observations:                  20   AIC:                             222.4
+  Df Residuals:                      17   BIC:                             225.4
+  Df Model:                           2                                         
+  Covariance Type:            nonrobust                                         
+  ==============================================================================
+                   coef    std err          t      P>|t|      [0.025      0.975]
+  ------------------------------------------------------------------------------
+  Intercept    101.0239     71.716      1.409      0.177     -50.284     252.331
+  광고비          1.8194      0.807      2.255      0.038       0.117       3.522
+  직원수          5.9288      1.430      4.147      0.001       2.912       8.945
+  ==============================================================================
+  Omnibus:                       30.534   Durbin-Watson:                   1.354
+  Prob(Omnibus):                  0.000   Jarque-Bera (JB):               64.655
+  Skew:                           2.444   Prob(JB):                     9.13e-15
+  Kurtosis:                      10.327   Cond. No.                         401.
+  ==============================================================================
+  
+  Notes:
+  [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+```
+
+<br>
+
+<details>
+  <summary>💡 model.summary() 함수에서 n>=20 관련 워닝 발생</summary>
+
+<br>
+
+- 표본의 크기가 20개 미만이라면 발생할 수 있는 워닝
+
+  - 무시하고 진행해도 괜찮음
+
+</details>
+
+<br>
+
+**2. 광고비와 매출액의 상관 계수 구하기**
+- corr() 함수를 활용해 상관 계수 구하기
+
+> 코드
+```python
+  print('상관계수 :', df['광고비'].corr(df['매출액']))
+```
+
+> 결과
+```python
+  상관계수 : 0.13316981737040343
+```
+
+<br>
+
+**3. 광고비와 매출액의 t-검정의 p-value 구하기**
+- 일반적으로 상관 계수를 묻는 문제라면 피어슨 상관 계수와 t-검정 결과를 의미
+
+> 코드
+```python
+  from scipy import stats
+  print(stats.pearsonr(df['광고비'], df['매출액']))
+```
+
+> 결과
+```python
+  PearsonRResult(statistic=0.13316981737040343, pvalue=0.5756778801904272)
+```
+
+<br>
+
+**4. 회귀 모델의 결정 계수 구하기**
+- 모델의 결정 계수는 model.summary() 함수로도 확인 가능
+
+> 코드
+```python
+  print('결정계수(R-squared) :', model.rsquared)
+```
+
+> 결과
+```python
+  결정계수(R-squared) : 0.5116964327009044
+```
+
+<br>
+
+**5. 회귀 모델에서 회귀 계수(기울기와 절편) 구하기**
+- 회귀 계수는 model.summary() 함수로도 확인 가능
+
+> 코드
+```python
+  print('회귀계수 :\n', round(model.params))
+```
+
+> 결과
+```python
+  회귀계수 :
+  Intercept       101.0
+  광고비            2.0
+  직원수            6.0
+  dtype: float64
+```
+- 절편 : 101.0
+
+- 광고비 기울기 : 2.0
+
+- 직원수 기울기 : 6.0
+
+<br>
+
+**6. 회귀 모델에서 광고비의 회귀 계수가 통계적으로 유의한지 검정했을 때의 p-value**
+- 광고비 회귀 계수의 p-value 는 model.summary() 함수로도 확인 가능
+
+> 코드
+```python
+  print('p-value :', model.pvalues['광고비'])
+```
+
+> 결과
+```python
+  p-value : 0.037643506476960256
+```
+
+<br>
+
+**7. 광고비 50, 직원수 20인 데이터가 있을 때 구축한 회귀 모델에서의 예상 매출액**
+- 주어진 데이터를 데이터프레임으로 생성 후 앞서 만든 모델을 사용해 예측
+
+  - 반드시 기존 데이터와 컬럼명이 같아야 함
+ 
+- 결과값은 시리즈 형태로 반환
+
+> 코드
+```python
+  new_data = pd.DataFrame({
+      '광고비' : [50],
+      '직원수' : [20]
+  })
+  result = model.predict(new_data)
+  print('새로운 데이터의 매출액 :', result)
+```
+
+> 결과
+```python
+  새로운 데이터의 매출액 : 0    310.57033
+  dtype: float64
+```
+
+<br>
+
+**8. 회귀 모델의 잔차의 제곱합 구하기**
+- 실제 값에서 예측값을 빼면 잔차가 나오고, 그 값을 제곱한 후 모두 던하면 잔차 제곱합
+
+> 코드
+```python
+  df['잔차'] = df['매출액'] - model.predict(df)
+  print('잔차 제곱합 :', sum(df['잔차']**2))
+```
+
+> 결과
+```python
+  잔차 제곱합 : 58686.17827156106
+```
+
+<br>
+
+<details>
+  <summary>💡 잔차 구하는 방법</summary>
+
+<br>
+
+- df['매출액'] - model.predict(df) 대신 statsmodels 에서 제공하는 resid 활용 가능
+
+> model.resid 를 제곱한 값을 모두 더해 잔차 제곱합 구하기
+
+> 코드
+```python
+  print(sum(model.resid**2))
+```
+
+> 결과
+```python
+  58686.17827156106
+```
+
+</details>
+
+<br>
+
+**9. 회귀 모델의 MSE 구하기**
+- MSE : 평균 제곱 오차
+
+> 코드
+```python
+  MSE = (df['잔차']**2).mean()
+  print('MSE :', MSE)
+```
+
+> 결과
+```python
+  MSE : 2934.308913578053
+```
+
+<br>
+
+**10. 각 변수별 95% 신뢰 구간 구하기**
+- 각 변수별 95% 신뢰 구간은 model.summary() 함수로도 확인 가능
+
+- 정확한 값 또는 95% 가 아닌 다른 값을 확인하기 위해서는 model.conf_int(alpha=0.05) 사용
+
+  - alpha=0.05 : 95% 의미
+ 
+  - alpha=0.1 : 90% 의미
+
+> 코드
+```python
+  print('95% 신뢰구간 :\n', model.conf_int(alpha=0.05))
+```
+
+> 결과
+```python
+  95% 신뢰구간 :
+                      0           1
+  Intercept   -50.283684  252.331429
+  광고비         0.116785    3.522069
+  직원수         2.912406    8.945105
+```
+
+<br>
+
+**11. 광고비 45, 직원수 22일 때 95% 신뢰 구간과 예측 구간 구하기**
+- get_prediction() 함수와 summary_frame() 함수를 사용해 예측값과 신뢰 구간, 예측 구간 구하기
+
+  - mean_ci_lower, mean_ci_upper : 95% 신뢰 구간 하한 및 상한 의미
+ 
+  - obs_ci_lower, obs_ci_upper : 예측 구간 하한 및 상한 의미
+
+> 코드
+```python
+  new_data = pd.DataFrame({
+      '광고비' : [45],
+      '직원수' : [22]
+  })
+  pred = model.get_prediction(new_data)
+  result = pred.summary_frame(alpha=0.05)
+  print('예측값의 신뢰구간과 예측구간 :\n', result)
+```
+
+> 결과
+```python
+  예측값의 신뢰구간과 예측구간 :
+            mean    mean_se  mean_ci_lower  mean_ci_upper  obs_ci_lower  \
+  0  313.330707  22.502058     265.855514       360.8059     180.58875   
+  
+     obs_ci_upper  
+  0    446.072663  
+```
 
 <br>
 
