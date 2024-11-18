@@ -1022,14 +1022,217 @@ SECTION03 다중 선형 회귀 분석(Multiple Linear Regression)
 
 SECTION04 범주형 변수
 ---
+- 회귀 분석에서 독립변수로 수치형 변수와 범주형 변수를 함께 사용할 때
 
+  - 범주형 변수는 통상적으로 원-핫 인코딩(One-Hot Encoding) 같은 방법을 사용해 수치화
+ 
+    - 범주형 변수의 각 범주를 대표하는 새로운 이진(0 또는 1) 변수를 생성하는 과정
+   
+    - 변환한 변수들은 회귀 모델에서 독립변수로 사용 가능
+   
+<br>
 
+### 01. 범주형 변수 자동 원-핫 인코딩
+- 스태츠모델(statsmodels)의 ols() 함수
 
+  - 회귀 모델 생성 시 범주형 변수가 포함되어 있으면 이를 자동으로 인식하고 내부적으로 원-핫 인코딩 처리 진행
+ 
+  - 사용자가 별도로 범주형 변수를 수치형으로 변환하는 작업 없이도 모델 생성 가능
+
+<br>
+ 
+> 코드
+```python
+  import pandas as pd
+  import statsmodels.api as sm
+  df = pd.read_csv('./data/study.csv')
+  df.head()
+```
+
+> 결과
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>study_hours</th>
+      <th>material_type</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>71</td>
+      <td>강의</td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>34</td>
+      <td>독학</td>
+      <td>63</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>91</td>
+      <td>도서</td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>80</td>
+      <td>독학</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>40</td>
+      <td>강의</td>
+      <td>79</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <br>
 
+- 불러온 데이터의 변수 : study_hours(학습 시간), material_type(학습 자료 유형), score(점수)
 
+  - material_type 변수는 범주형 (강의, 독학, 독서)
+ 
+<br>?
 
+> 종속변수 score, 독립변수 study_hours, material_type 사용해 회귀 모델 생성
+
+> 코드
+```python
+  from statsmodels.formula.api import ols
+  model = ols('score ~ study_hours + material_type', data=df).fit()
+  print(model.summary())
+```
+- material_type 범주형 변수는 별도의 처리 없이 ols() 함수를 사용해 모델에 포함시킴
+
+> 결과
+```python
+                              OLS Regression Results                            
+  ==============================================================================
+  Dep. Variable:                  score   R-squared:                       0.969
+  Model:                            OLS   Adj. R-squared:                  0.968
+  Method:                 Least Squares   F-statistic:                     991.9
+  Date:                Mon, 18 Nov 2024   Prob (F-statistic):           4.42e-72
+  Time:                        15:23:25   Log-Likelihood:                -238.89
+  No. Observations:                 100   AIC:                             485.8
+  Df Residuals:                      96   BIC:                             496.2
+  Df Model:                           3                                         
+  Covariance Type:            nonrobust                                         
+  =======================================================================================
+                            coef    std err          t      P>|t|      [0.025      0.975]
+  ---------------------------------------------------------------------------------------
+  Intercept              59.2111      0.799     74.147      0.000      57.626      60.796
+  material_type[T.도서]    -8.6696      0.678    -12.778      0.000     -10.016      -7.323
+  material_type[T.독학]   -17.6129      0.634    -27.790      0.000     -18.871     -16.355
+  study_hours             0.4839      0.011     43.810      0.000       0.462       0.506
+  ==============================================================================
+  Omnibus:                        1.754   Durbin-Watson:                   2.173
+  Prob(Omnibus):                  0.416   Jarque-Bera (JB):                1.216
+  Skew:                           0.231   Prob(JB):                        0.544
+  Kurtosis:                       3.280   Cond. No.                         228.
+  ==============================================================================
+  
+  Notes:
+  [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+```
+- 결정 계수(R-squared) : 0.969
+
+  - 모델은 전체 변동의 약 96.9% 설명하고 있음
+ 
+- 회귀 계수(Coefficients)에서 절편(Intercept) : 59.2111
+
+  - 다른 모든 변수들이 0일 때의 예상 점수
+ 
+  - 이 값은 '강의'에 해당됨
+ 
+- '강의'를 사용한 경우의 예상 점수 : Intercept(절편) = 59.21
+
+- '도서'를 사용한 경우의 예상 점수 : Intercept + material_type_도서의 계수 = 59.21 - 8.67 = 50.54
+
+- '독학'을 사용한 경우의 예상 점수 : Intercept + material_type_독학의 계수 = 59.21 - 17.61 = 41.60
+
+- 도서와 독학의 예상 점수를 각각 계산할 수 있는 이유는 동시에 1의 값을 갖는 경우는 없기 때문
+
+- study_hours : 회귀 계수가 약 0.484 로 공부 시간이 1시간 증가할 때마다 점수는 약 0.494 점 증가
+
+- material_type_도서 : 약 -8.67 로 공부 자료 유형이 '도서'인 경우 '강의'에 비해 점수가 약 8.67 점 낮음
+
+- material_type_독학 : 약 -17.61 로 공부 자료 유형이 '독학'인 경우 '강의'에 비해 점수가 약 17.61 점 낮음
+
+- 모든 독립변수들의 p-value 가 0.05 보다 작으므로 통계적으로 유의미함
+
+<br>
+
+<details>
+  <summary>💡 원-핫 인코딩된 변수(컬럼)는 왜 2개(도서, 독학)일까?</summary>
+
+<br>
+
+- 판다스의 pd.get_dummies() 활용해 원-핫 인코딩 가능
+
+  - 주의 : 회귀 모델에서 다중공선성(독립변수들 간의 높은 상관관계가 존재하는 현상) 문제 방지
+ 
+    - 첫 번째 카테고리를 제외한 카테고리 -1 개로 변수를 생성 (drop+first = True)
+   
+    - ex) pd.get_dummies(df, drop_first=True)
+
+</details>
+
+<br>
+
+### 02. 숫자로 표현된 범주형 변수 처리
+- 회귀 분석에서 범주형 변수가 숫자로 표현되어 있는 경우에는 주의 필요
+
+  - 숫자로 표현된 범주형 변수를 적절히 처리하는 것이 중요
+
+- 숫자로 된 범주형 변수를 회귀 모델에 직접 입력시 모델은 이 변수를 연속현 수치 변수로 오해하고 분석 가능성 有
+
+  - 변수의 실제 의미와 다르게 처리되어 분석 결과에 오류 초래
+ 
+- 작업형3은 정답이 있는 문제이므로 문제에서 범주형 변수라고 알려 줄 때만 수동변환
+
+  - **범주형 변수 자동 인식**
+ 
+    - statsmodels 의 ols() 함수는 문자열로 된 범주형 변수를 자동으로 인식하고, 원-핫 인코딩 수행
+   
+    - 변수가 숫자로 되어 있는 경우에는 자동 인식과 처리가 이루어지지 않음
+ 
+  - **수동 변환**
+ 
+    - 숫자로 된 범주형 변수를 statsmodels 에서 범주형으로 처리하려면 사용자가 변수를 명시적으로 범주형(C())으로 변환
+
+<br>
+
+> ols() 함수 내에서 모델 공식 작성
+```python
+  # material_type 이 강의, 도서, 독학이 아닌 종류(숫자) 1, 2, 3 인 경우
+  ols('score ~ study_hours + C(material_type)', data=df).fit()
+```
+- c(변수명) 구문 사용해 숫자 범주형 변수를 범주형으로 명시 가능
+
+<br>
+
+<details>
+  <summary>💡 숫자로 표현된 범주형 변수인지 판단하는 방법</summary>
+
+<br>
+
+- 시험에서 숫자로 표현된 범주형 변수인지 아닌지 판단하는 것은 시험문제
+
+  - 문제에서 명확하게 설명하거나 문제에서 범주형 변수로 인식할 수 있는 근거가 있다면 범주형 변수로 판단
+
+</details>
+
+<br>
 
 
 
