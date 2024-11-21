@@ -1097,8 +1097,190 @@ SECTION08 다중 선형 회귀
 
 SECTION09 로지스틱 회귀
 ---
+### ✏️ 문제
+> 주어진 데이터를 사용하여 데이터를 앞 50% 의 a 와 나머지 50% 의 b 로 나누십시오.<br>
+> a 데이터로 로지스틱 회귀 모델을 적합하고, 다음 문제에 답하시오.
 
+<br>
 
+> 입력값
+```python
+  1. 종속변수 target 과 모든 독립변수를 사용하여 로지스틱 회귀 모델 적합 후, 유의하지 않은 독립변수의 계수(유의수준 0.05)
+  
+  2. p-value 가 0.05 보다 작은 유의한 변수만 사용하여 수정된 모델 만들고 적합
+      이 수정된 모델에서 가장 큰 p-value 를 가진 변수의 이름
+  
+  3. 수정된 모델에서 독립변수 중 가장 큰 양의 회귀계수를 가진 변수의 이름
+  
+  4. 수정된 모델에서 로그 우도
+  
+  5. 수정된 모델에서 잔차이탈도
+  
+  6. 수정된 모델에서 'booked' 변수가 3 증가할 때 오즈비
+  
+  7. 수정된 모델에서 p-value 가 0.05 보다 작은 회귀계수의 총합
+      단, 상수항(절편) 회귀계수도 유의할 경우 포함
+  
+  8. 수정된 모델로 b 데이터를 사용해 예측한 후, b 데이터의 target 과 비교해 정확도(Accuracy) 계산
+      정확도는 0과 1 사이의 값
+  
+  9. 8 에서 계산한 정확도를 바탕으로 오류율 계산
+```
+
+<br>
+
+> 데이터
+```python
+  import pandas as pd
+  df = pd.read_csv('https://raw.githubusercontent.com/lovedlim/bigdata_analyst_cert/main/part4/ch8/customer_travel.csv')
+  print(df.head())
+```
+
+> 결과
+```python
+     age  service  social  booked  target
+  0   34        6       0       1       0
+  1   34        5       1       0       1
+  2   37        3       1       0       0
+  3   30        2       0       0       0
+  4   30        1       0       0       0
+```
+
+<br>
+
+> 힌트
+```python
+  logit()
+```
+
+<br>
+
+#### 풀이
+> 코드
+```python
+  # 데이터 분할
+  midpoint = len(df) // 2
+  a = df.iloc[:midpoint]
+  b = df.iloc[midpoint:]
+  
+  # 데이터 확인
+  print(a.shape, b.shape, '\n')
+  
+  # 1. 유의하지 않은 독립변수의 개수
+  from statsmodels.formula.api import logit
+  formula = 'target ~ age + service + social + booked'
+  model = logit(formula, data=a).fit()
+  print(model.summary())
+  print(model.pvalues)
+  print('1. :', sum(model.pvalues[1:] >= 0.05), '\n')   # 상수항(Intercept) 제외
+  
+  # 2. 수정된 모델에서 가장 큰 p-value 를 가진 변수의 이름
+  formula = 'target ~ age + service + booked'
+  model = logit(formula, data=a).fit()
+  print(model.summary())
+  print('2. :', model.pvalues[1:].idxmax(), '\n')   # 상수항(Intercept) 제외
+  
+  # 3. 수정된 모델에서 독립변수 중 가장 큰 양의 회귀계수를 가진 변수의 이름
+  print('3. :', model.params[1:].idxmax(), '\n')
+  
+  # 4. 로그 우도
+  print('4.: ', model.llf, '\n')
+  
+  # 5. 잔차이탈도
+  print('5. :', model.llf * -2, '\n')
+  
+  # 6. 'booked' 변수가 3 증가할 때 오즈비
+  print('6. :', model.params['booked'] *3, '\n')
+  
+  # 7. p-value 가 0.05 보다 작은 회귀계수의 총합
+  print('7. :', model.params[model.pvalues < 0.05].sum(), '\n')   # 상수항(절편) 포함
+  
+  # 8. 정확도
+  pred = model.predict(b)
+  pred = (pred > 0.5).astype(int)
+  from sklearn.metrics import accuracy_score
+  accuracy = accuracy_score(b['target'], pred)
+  print('8. :', accuracy, '\n')
+  
+  # 9. 오류율
+  error_rate = 1 - accuracy
+  print('9. :', error_rate)
+```
+- 데이터프레임 df 를 절반으로 나누어 a 와 b 로 분할하고, a 데이터를 사용해 모델 생성
+
+- 접합된 모델에서 변수를 묻는 문제라면 상수항(절편)은 제외할 필요 有
+
+- 로그 우도는 summary() 에서 Log-Likelihood 값으로 확인 가능
+
+> 결과
+```python
+  (400, 5) (400, 5) 
+  
+  Optimization terminated successfully.
+           Current function value: 0.527521
+           Iterations 6
+                             Logit Regression Results                           
+  ==============================================================================
+  Dep. Variable:                 target   No. Observations:                  400
+  Model:                          Logit   Df Residuals:                      395
+  Method:                           MLE   Df Model:                            4
+  Date:                Thu, 21 Nov 2024   Pseudo R-squ.:                 0.05254
+  Time:                        09:12:39   Log-Likelihood:                -211.01
+  converged:                       True   LL-Null:                       -222.71
+  Covariance Type:            nonrobust   LLR p-value:                 0.0001052
+  ==============================================================================
+                   coef    std err          z      P>|z|      [0.025      0.975]
+  ------------------------------------------------------------------------------
+  Intercept      2.3314      1.204      1.937      0.053      -0.028       4.691
+  age           -0.1043      0.038     -2.781      0.005      -0.178      -0.031
+  service        0.0452      0.079      0.572      0.567      -0.110       0.200
+  social         0.1920      0.247      0.779      0.436      -0.291       0.675
+  booked        -0.9542      0.272     -3.512      0.000      -1.487      -0.422
+  ==============================================================================
+  Intercept    0.052781
+  age          0.005413
+  service      0.567383
+  social       0.436256
+  booked       0.000445
+  dtype: float64
+  1. : 2 
+  
+  Optimization terminated successfully.
+           Current function value: 0.528275
+           Iterations 6
+                             Logit Regression Results                           
+  ==============================================================================
+  Dep. Variable:                 target   No. Observations:                  400
+  Model:                          Logit   Df Residuals:                      396
+  Method:                           MLE   Df Model:                            3
+  Date:                Thu, 21 Nov 2024   Pseudo R-squ.:                 0.05119
+  Time:                        09:12:39   Log-Likelihood:                -211.31
+  converged:                       True   LL-Null:                       -222.71
+  Covariance Type:            nonrobust   LLR p-value:                 4.446e-05
+  ==============================================================================
+                   coef    std err          z      P>|z|      [0.025      0.975]
+  ------------------------------------------------------------------------------
+  Intercept      2.3632      1.200      1.970      0.049       0.012       4.715
+  age           -0.1023      0.037     -2.744      0.006      -0.175      -0.029
+  service        0.0389      0.079      0.496      0.620      -0.115       0.193
+  booked        -0.9683      0.271     -3.567      0.000      -1.500      -0.436
+  ==============================================================================
+  2. : service 
+  
+  3. : service 
+  
+  4.:  -211.31019836322207 
+  
+  5. : 422.62039672644414 
+  
+  6. : -2.904872756182284 
+  
+  7. : 1.292605228739193 
+  
+  8. : 0.765 
+  
+  9. : 0.235
+```
 
 <br>
 
